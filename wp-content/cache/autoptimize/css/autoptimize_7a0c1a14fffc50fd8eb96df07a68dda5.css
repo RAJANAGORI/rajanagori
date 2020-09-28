@@ -4326,7 +4326,7 @@ clip-path: polygon(20% 0%, 100% 0, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0 100
 @media (min-width: 1200px) {
   .section.started .started-content .logo {
     top: -1.5vh;
-    left: -18.5vw;
+    left: -20.5vw;
     width: 19vw;
     height: 56vh;
   }
