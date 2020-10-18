@@ -3893,7 +3893,7 @@ body .section.resume-widget {
 }
 .section .title {
   position: relative;
-  margin: 0 0 35px 35px;
+  margin: 40px 0 35px 35px;
 }
 .section .title .title_inner {
   display: inline-block;
@@ -3924,7 +3924,7 @@ body .section.resume-widget {
     padding-right: 30px;
   }
   .section .title {
-    margin: 0 0 30px;
+    margin: 40px 0 30px;
   }
 }
 .section.started {
