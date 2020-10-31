@@ -12,8 +12,6 @@
 
 - 📫 How to reach me **rajanagori19@gmail.com**
 
-- ⚡ Fun fact **I Secure Network and Web-Apps**
-
 ### Connect with me:
 
 <p align="left">  <a href="https://linkedin.com/in/raja-nagori" target="blank"><img align="left" src="https://cdn.jsdelivr.net/npm/simple-icons@3.0.1/icons/linkedin.svg" alt="raja-nagori" height="30" width="40" /></a>
