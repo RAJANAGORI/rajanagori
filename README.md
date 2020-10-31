@@ -2,21 +2,17 @@
 <p align="center">
 <a href="#"><img title="FROM INDIA" src="https://img.shields.io/badge/FROM-INDIA-green?colorA=%23FF9933&colorB=%23138808&style=for-the-badge"></a>
 </p>
-<h3 align="center">A passionate Security & Automation Engineer</h3>
+<h3 align="center">Passionate about Cyber Security </h3>
 
 
 
-- 🔭 I’m currently working on **My Personal Project**
+- 🔭 I’m currently working on **Nightingale**
 
-- 🌱 I’m currently learning **Everything** 
-
-- 👯 I’m looking to collaborate on **Instagram**
-
-- 💬 Ask me about **Cyber Security | Network Penetration Testing | Routing and Switching**
+- 💬 Ask me about **Cyber Security | Network Penetration Testing**
 
 - 📫 How to reach me **rajanagori19@gmail.com**
 
-- ⚡ Fun fact **I Secure Network and Website**
+- ⚡ Fun fact **I Secure Network and Web-Apps**
 
 ### Connect with me:
 
