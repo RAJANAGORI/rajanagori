@@ -5,7 +5,7 @@
 <h3 align="center">Passionate about Cyber Security Professional</h3>
 
 
-- 🔭 I’m currently working on **Nightingale**
+- 🔭 I’m currently working on **Nightingale**[ Repo-Here](https://github.com/RAJANAGORI/Nightingale) .
 
 - 💬 Ask me about **Cyber Security | Network Penetration Testing**
 
@@ -43,13 +43,13 @@
 
 <br />
 <br />
+<a href="https://github.com/RAJANAGORI"><img align="left" width="50%" height="50%" src="https://github-readme-stats.vercel.app/api?username=RAJANAGORI&show_icons=true&include_all_commits=true&theme=dark" alt="Arsenio's github stats" /></a>
 
-<p align="center"><img align="center" src="https://github-readme-stats.vercel.app/api/top-langs/?username=rajanagori&layout=compact" alt="rajanagori" /></p>
+<a href="https://github.com/RAJANAGORI/Nightingale"><img align="center" width="50%" height="50%" src="https://github-readme-stats.vercel.app/api/pin/?username=RAJANAGORI&repo=Nightingale&theme=dark" /></a>
 
-<br />
+<a href="https://github.com/RAJANAGORI/Jenkins-Docker"><img align="right" width="50%" height="50%" src="https://github-readme-stats.vercel.app/api/pin/?username=RAJANAGORI&repo=Jenkins-Docker&theme=dark"/></a>
 
-<p align="center"><img align="center" src="https://github-readme-stats.vercel.app/api/top-langs/?username=rajanagori&theme=white-blue" alt="rajanagori" /></p>
+<a href="https://github.com/RAJANAGORI/Sonar-Postgres-Docker"><img align="right" width="50%" height="50%" src="https://github-readme-stats.vercel.app/api/pin/?username=RAJANAGORI&repo=Sonar-Postgres-Docker&theme=dark"/></a>
 
-<br />
+<a href="https://github.com/RAJANAGORI/OpenLDAP-Docker"><img align="right" width="50%" height="50%" src="https://github-readme-stats.vercel.app/api/pin/?username=RAJANAGORI&repo=OpenLDAP-Docker&theme=dark"/></a>
 
-<p align="center">&nbsp;<img align="center" src="https://github-readme-stats.vercel.app/api?username=rajanagori&show_icons=true" alt="rajanagori" /></p>
