@@ -2,8 +2,7 @@
 <p align="center">
 <a href="#"><img title="FROM INDIA" src="https://img.shields.io/badge/FROM-INDIA-green?colorA=%23FF9933&colorB=%23138808&style=for-the-badge"></a>
 </p>
-<h3 align="center">Passionate about Cyber Security </h3>
-
+<h3 align="center">Passionate about Cyber Security Professional</h3>
 
 
 - 🔭 I’m currently working on **Nightingale**
@@ -14,8 +13,13 @@
 
 ### Connect with me:
 
-<p align="left">  <a href="https://linkedin.com/in/raja-nagori" target="blank"><img align="left" src="https://cdn.jsdelivr.net/npm/simple-icons@3.0.1/icons/linkedin.svg" alt="raja-nagori" height="30" width="40" /></a>
-<a href="https://instagram.com/raja_nagori" target="blank"><img align="left" src="https://cdn.jsdelivr.net/npm/simple-icons@3.0.1/icons/instagram.svg" alt="raja_nagori" height="30" width="40" /></a></p>
+<p align="left">  <a href="https://www.linkedin.com/in/aaaguirrep/">
+  <img align="left" alt="Raja Nagori | Linkedin" width="20px" src="https://github.com/RAJANAGORI/rajanagori/blob/master/img/readmeImages/linkedin.png" />
+</a>
+<a href="https://twitter.com/RajaNagori7">
+  <img align="left" alt="Arsenio Aguirre | Twitter" width="21px" src="https://github.com/RAJANAGORI/rajanagori/blob/master/img/readmeImages/twitter.svg" />
+</a>
+</p>
 
 <br />
 <br />
