@@ -45,7 +45,7 @@
 <br />
 <a href="https://github.com/RAJANAGORI"><img align="left" width="50%" height="50%" src="https://github-readme-stats.vercel.app/api?username=RAJANAGORI&show_icons=true&include_all_commits=true&theme=dark" alt="Arsenio's github stats" /></a>
 
-<a href="https://github.com/RAJANAGORI/Nightingale"><img align="center" width="50%" height="50%" src="https://github-readme-stats.vercel.app/api/pin/?username=RAJANAGORI&repo=Nightingale&theme=dark" /></a>
+<a href="https://github.com/RAJANAGORI/Nightingale"><img align="left" width="50%" height="50%" src="https://github-readme-stats.vercel.app/api/pin/?username=RAJANAGORI&repo=Nightingale&theme=dark" /></a>
 
 <a href="https://github.com/RAJANAGORI/Jenkins-Docker"><img align="right" width="50%" height="50%" src="https://github-readme-stats.vercel.app/api/pin/?username=RAJANAGORI&repo=Jenkins-Docker&theme=dark"/></a>
 
