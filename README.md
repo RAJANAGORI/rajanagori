@@ -13,7 +13,8 @@
 
 ### Connect with me:
 
-<p align="left">  <a href="www.linkedin.com/in/raja-nagori/">
+<p align="left">  
+<a href="https://www.linkedin.com/in/raja-nagori/">
   <img align="left" alt="Raja Nagori | Linkedin" width="20px" src="https://github.com/RAJANAGORI/rajanagori/blob/master/img/readmeImages/linkedin.png" />
 </a>
 <a href="https://twitter.com/RajaNagori7">
