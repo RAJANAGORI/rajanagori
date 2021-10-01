@@ -1164,22 +1164,22 @@ input[type="text"],
   padding: 0;
 }
 .skills-second-style .skill-container.skill-1 .skill-percentage {
-  width: 70%;
+  width: 80%;
 }
 .skills-second-style .skill-container.skill-2 .skill-percentage {
   width: 85%;
 }
 .skills-second-style .skill-container.skill-3 .skill-percentage {
-  width: 75%;
+  width: 65%;
 }
 .skills-second-style .skill-container.skill-4 .skill-percentage {
   width: 100%;
 }
 .skills-second-style .skill-container.skill-5 .skill-percentage {
-  width: 40%;
+  width: 70%;
 }
 .skills-second-style .skill-container.skill-6 .skill-percentage {
-  width: 90%;
+  width: 50%;
 }
 .skills-second-style .skill-container.skill-7 .skill-percentage {
   width: 100%;
