@@ -418,7 +418,7 @@ input[type="submit"]:focus {
   background-color: rgba(255, 255, 255, 0.2);
 }
 .header-buttons {
-  margin-top: 50px;
+  margin-top: 360px;
 }
 .header-buttons .btn-primary {
   background-color: transparent;
