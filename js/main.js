@@ -1,10 +1,187 @@
-(function($){"use strict";function portfolio_init(){var portfolio_grid=$('.portfolio-grid'),portfolio_filter=$('.portfolio-filters');if(portfolio_grid){portfolio_grid.shuffle({speed:450,itemSelector:'figure'});portfolio_filter.on("click",".filter",function(e){portfolio_grid.shuffle('update');e.preventDefault();$('.portfolio-filters .filter').parent().removeClass('active');$(this).parent().addClass('active');portfolio_grid.shuffle('shuffle',$(this).attr('data-group'));});}}
-function mobileMenuHide(){var windowWidth=$(window).width(),siteHeader=$('#site_header');if(windowWidth<1025){siteHeader.addClass('mobile-menu-hide');$('.menu-toggle').removeClass('open');setTimeout(function(){siteHeader.addClass('animate');},500);}else{siteHeader.removeClass('animate');}}
-function customScroll(){var windowWidth=$(window).width();if(windowWidth>1024){$('.animated-section, .single-page-content').each(function(){$(this).perfectScrollbar();});}else{$('.animated-section, .single-page-content').each(function(){$(this).perfectScrollbar('destroy');});}}
-$(function(){$('#contact_form').validator();$('#contact_form').on('submit',function(e){if(!e.isDefaultPrevented()){var url="contact_form/contact_form.php";$.ajax({type:"POST",url:url,data:$(this).serialize(),success:function(data)
-{var messageAlert='alert-'+data.type;var messageText=data.message;var alertBox='<div class="alert '+messageAlert+' alert-dismissable"><button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>'+messageText+'</div>';if(messageAlert&&messageText){$('#contact_form').find('.messages').html(alertBox);$('#contact_form')[0].reset();}}});return false;}});});$(window).on('load',function(){$(".preloader").fadeOut(800,"linear");var ptPage=$('.animated-sections');if(ptPage[0]){PageTransitions.init({menu:'ul.main-menu',});}}).on('resize',function(){mobileMenuHide();$('.animated-section').each(function(){$(this).perfectScrollbar('update');});customScroll();});$(document).on('ready',function(){var movementStrength=23;var height=movementStrength/$(document).height();var width=movementStrength/$(document).width();$("body").on('mousemove',function(e){var pageX=e.pageX-($(document).width()/2),pageY=e.pageY-($(document).height()/2),newvalueX=width*pageX*-1,newvalueY=height*pageY*-1,elements=$('.lm-animated-bg');elements.addClass('transition');elements.css({"background-position":"calc( 50% + "+newvalueX+"px ) calc( 50% + "+newvalueY+"px )",});setTimeout(function(){elements.removeClass('transition');},300);})
-$('.menu-toggle').on("click",function(){$('#site_header').addClass('animate');$('#site_header').toggleClass('mobile-menu-hide');$('.menu-toggle').toggleClass('open');});$('.main-menu').on("click","a",function(e){mobileMenuHide();});$('.sidebar-toggle').on("click",function(){$('#blog-sidebar').toggleClass('open');});var $portfolio_container=$(".portfolio-grid");$portfolio_container.imagesLoaded(function(){portfolio_init(this);});var $container=$(".blog-masonry");$container.imagesLoaded(function(){$container.masonry();});customScroll();$('.text-rotation').owlCarousel({loop:true,dots:false,nav:false,margin:0,items:1,autoplay:true,autoplayHoverPause:false,autoplayTimeout:3800,animateOut:'animated-section-scaleDown',animateIn:'animated-section-scaleUp'});$(".testimonials.owl-carousel").owlCarousel({nav:true,items:3,loop:false,navText:false,autoHeight:true,margin:25,responsive:{0:{items:1,},480:{items:1,},768:{items:2,},1200:{items:2,}}});$(".clients.owl-carousel").imagesLoaded().owlCarousel({nav:true,items:2,loop:false,navText:false,margin:10,autoHeight:true,responsive:{0:{items:2,},768:{items:4,},1200:{items:5,}}});$('.form-control').val('').on("focusin",function(){$(this).parent('.form-group').addClass('form-group-focus');}).on("focusout",function(){if($(this).val().length===0){$(this).parent('.form-group').removeClass('form-group-focus');}});$('body').magnificPopup({delegate:'a.lightbox',type:'image',removalDelay:300,mainClass:'mfp-fade',image:{titleSrc:'title',gallery:{enabled:true},},iframe:{markup:'<div class="mfp-iframe-scaler">'+
-'<div class="mfp-close"></div>'+
-'<iframe class="mfp-iframe" frameborder="0" allowfullscreen></iframe>'+
-'<div class="mfp-title mfp-bottom-iframe-title"></div>'+
-'</div>',patterns:{youtube:{index:'youtube.com/',id:null,src:'%id%?autoplay=1'},vimeo:{index:'vimeo.com/',id:'/',src:'//player.vimeo.com/video/%id%?autoplay=1'},gmaps:{index:'//maps.google.',src:'%id%&output=embed'}},srcAction:'iframe_src',},callbacks:{markupParse:function(template,values,item){values.title=item.el.attr('title');}},});$("#map").googleMap({zoom:16});$("#map").addMarker({address:"S601 Townsend Street, San Francisco, California, USA",});});})(jQuery);
+var before = document.getElementById("before");
+var liner = document.getElementById("liner");
+var command = document.getElementById("typer"); 
+var textarea = document.getElementById("texter"); 
+var terminal = document.getElementById("terminal");
+
+var git = 0;
+var pw = false;
+let pwd = false;
+var commands = [];
+
+setTimeout(function() {
+  loopLines(banner, "", 80);
+  textarea.focus();
+}, 100);
+
+window.addEventListener("keyup", enterKey);
+
+console.log(
+  "%cYou hacked my password!😠",
+  "color: #04ff00; font-weight: bold; font-size: 24px;"
+);
+console.log("%cPassword: '" + password + "' - I wonder what it does?🤔", "color: grey");
+
+//init
+textarea.value = "";
+command.innerHTML = textarea.value;
+
+function enterKey(e) {
+  if (e.keyCode == 181) {
+    document.location.reload(true);
+  }
+  if (pw) {
+    let et = "*";
+    let w = textarea.value.length;
+    command.innerHTML = et.repeat(w);
+    if (textarea.value === password) {
+      pwd = true;
+    }
+    if (pwd && e.keyCode == 13) {
+      loopLines(secret, "color2 margin", 120);
+      command.innerHTML = "";
+      textarea.value = "";
+      pwd = false;
+      pw = false;
+      liner.classList.remove("password");
+    } else if (e.keyCode == 13) {
+      addLine("Wrong password", "error", 0);
+      command.innerHTML = "";
+      textarea.value = "";
+      pw = false;
+      liner.classList.remove("password");
+    }
+  } else {
+    if (e.keyCode == 13) {
+      commands.push(command.innerHTML);
+      git = commands.length;
+      addLine("rajanagori@about-me:~$ " + command.innerHTML, "no-animation", 0);
+      commander(command.innerHTML.toLowerCase());
+      command.innerHTML = "";
+      textarea.value = "";
+    }
+    if (e.keyCode == 38 && git != 0) {
+      git -= 1;
+      textarea.value = commands[git];
+      command.innerHTML = textarea.value;
+    }
+    if (e.keyCode == 40 && git != commands.length) {
+      git += 1;
+      if (commands[git] === undefined) {
+        textarea.value = "";
+      } else {
+        textarea.value = commands[git];
+      }
+      command.innerHTML = textarea.value;
+    }
+  }
+}
+
+function commander(cmd) {
+  switch (cmd.toLowerCase()) {
+    case "help":
+      loopLines(help, "color2 margin", 80);
+      break;
+    case "whois":
+      loopLines(whois, "color2 margin whois", 80);
+      break;
+    case "conference":
+      loopLines(conference, "color2 margin", 80);
+      break;
+    case "video":
+      addLine("Opening YouTube...", "color2", 80);
+      newTab(youtube);
+      break;
+    case "sudo":
+      addLine("Oh no, you're not admin...", "color2", 80);
+      setTimeout(function() {
+        window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
+      }, 1000); 
+      break;
+    case "social":
+      loopLines(social, "color2 margin", 80);
+      break;
+    case "projects":
+      loopLines(projects, "color2 margin", 80);
+      break;
+    case "blog":
+      addLine("Opening blog...", "color2", 80);
+      newTab(blog);
+      break;
+    case "password":
+      addLine("<span class=\"inherit\"> Lol! You're joking, right? You\'re gonna have to try harder than that!😂</span>", "error", 100);
+      break;
+    case "history":
+      addLine("<br>", "", 0);
+      loopLines(commands, "color2", 80);
+      addLine("<br>", "command", 80 * commands.length + 50);
+      break;
+    case "email":
+      addLine('Opening mailto:<a href="mailto:raja.nagori@owasp.org">raja.nagori@owasp.org</a>...', "color2", 80);
+      newTab(email);
+      break;
+    case "clear":
+      setTimeout(function() {
+        terminal.innerHTML = '<a id="before"></a>';
+        before = document.getElementById("before");
+      }, 1);
+      break;
+    // socials
+    case "youtube":
+      addLine("Opening YouTube...", "color2", 80);
+      newTab(youtube);
+      break;
+    case "twitter":
+      addLine("Opening Twitter...", "color2", 0);
+      newTab(twitter);
+      break;
+    case "linkedin":
+      addLine("Opening LinkedIn...", "color2", 0);
+      newTab(linkedin);
+      break;
+    case "instagram":
+      addLine("Opening Instagram...", "color2", 0);
+      newTab(instagram);
+      break;
+    case "github":
+      addLine("Opening GitHub...", "color2", 0);
+      newTab(github);
+      break;
+    default:
+      addLine("<span class=\"inherit\">Command not found. For a list of commands, type <span class=\"command\">'help'</span>.</span>", "error", 100);
+      break;
+  }
+}
+
+function newTab(link) {
+  setTimeout(function() {
+    window.open(link, "_blank");
+  }, 500);
+}
+
+function addLine(text, style, time) {
+  var t = "";
+  for (let i = 0; i < text.length; i++) {
+    if (text.charAt(i) == " " && text.charAt(i + 1) == " ") {
+      t += "&nbsp;&nbsp;";
+      i++;
+    } else {
+      t += text.charAt(i);
+    }
+  }
+  setTimeout(function() {
+    var next = document.createElement("p");
+    next.innerHTML = t;
+    next.className = style;
+
+    before.parentNode.insertBefore(next, before);
+
+    window.scrollTo(0, document.body.offsetHeight);
+  }, time);
+}
+
+function loopLines(name, style, time) {
+  name.forEach(function(item, index) {
+    addLine(item, style, index * time);
+  });
+}
