@@ -164,7 +164,42 @@ body {
       text-align: justify;
     }
   }
-  
+  @media only screen and (max-width: 640px) { 
+    body {
+      margin: 0;
+      padding: 15px 10px;
+      min-height: 99%;
+      width: 100%;
+      min-width: 320px;
+    }
+    
+    #command {
+      font-size: 14px;
+      line-height: 30px;
+    }
+    
+    p {
+      font-size: 12.5px;
+    }
+    
+    .cursor {
+      font-size: 12px;
+    }
+    
+    textarea {
+      left: -1000px;
+      position: absolute;
+      font-size: 12.5px;
+    }
+    
+    .whois-info {
+      font-size: 13px;
+    }
+    
+    .whois-loading, .whois-error {
+      font-size: 13px;
+    }
+  }
   /* Whois styles */
   .whois-info {
     color: #DCDCCC;
