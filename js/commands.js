@@ -8,6 +8,7 @@ var email = 'mailto:raja.nagori@owasp.org';
 var nightingale = 'https://github.com/RAJANAGORI/Nightingale';
 var secucode = 'https://secucode.gitbook.io';
 var blog = 'https://medium.com/@rajanagori';
+var wiki = 'https://nightingale-wiki.gitbook.io';
 
 // This content is about the "WHOIS"
 whois = [
@@ -67,6 +68,7 @@ help = [
   '<span class="command">video</span>          My Youtube Channel',
   '<span class="command">social</span>         My Social platforms',
   '<span class="command">projects</span>       My Open Source Projects',
+  '<span class="command">wiki</span>           Nightingale Wiki',
   '<span class="command">conference</span>     Conference list',
   '<span class="command">blog</span>           My Medium Blog',
   '<span class="command">history</span>        You know what it is:p',

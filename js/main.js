@@ -99,6 +99,10 @@ function commander(cmd) {
     case "projects":
       loopLines(projects, "color2 margin", 80);
       break;
+    case "wiki":
+      addLine("Opening nightingale wiki...", "color2", 80);
+      newTab(wiki);
+      break;
     case "blog":
       addLine("Opening blog...", "color2", 80);
       newTab(blog);
