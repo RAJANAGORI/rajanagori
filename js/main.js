@@ -107,6 +107,10 @@ function commander(cmd) {
       addLine("Opening blog...", "color2", 80);
       newTab(blog);
       break;
+    case "resume":
+      addLine("Opening resume...", "color2", 80);
+      newTab(resume);
+      break;
     case "password":
       addLine("<span class=\"inherit\"> Lol! You're joking, right? You\'re gonna have to try harder than that!😂</span>", "error", 100);
       break;

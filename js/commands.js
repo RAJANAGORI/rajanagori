@@ -9,6 +9,8 @@ var nightingale = 'https://github.com/RAJANAGORI/Nightingale';
 var secucode = 'https://secucode.gitbook.io';
 var blog = 'https://medium.com/@rajanagori';
 var wiki = 'https://nightingale-wiki.gitbook.io';
+var resume = 'https://github.com/RAJANAGORI/rajanagori/blob/master/Raja_Nagori.pdf';
+var Android_Spyware = 'https://github.com/RAJANAGORI/Android-spyware';
 
 // This content is about the "WHOIS"
 whois = [
@@ -53,6 +55,7 @@ projects = [
   "<br>",
   '1. Nightingale <a href="' + nightingale + '" target="_blank">github/nightingale' + "</a>",
   '2. SecuCode <a href="' + secucode + '" target="_blank">gitbook/secucode' + "</a>",
+  '3. Android Spyware <a href="' + Android_Spyware + '" target="_blank">github/Android_spyware' + "</a>",
   "<br>"
 ];
 
@@ -68,6 +71,7 @@ help = [
   '<span class="command">video</span>          My Youtube Channel',
   '<span class="command">social</span>         My Social platforms',
   '<span class="command">projects</span>       My Open Source Projects',
+  '<span class="command">resume</span>         My Resume',
   '<span class="command">wiki</span>           Nightingale Wiki',
   '<span class="command">conference</span>     Conference list',
   '<span class="command">blog</span>           My Medium Blog',
