@@ -104,8 +104,7 @@ function commander(cmd) {
       newTab(wiki);
       break;
     case "blog":
-      addLine("Opening blog...", "color2", 80);
-      newTab(blog);
+      loopLines(blogs, "color2 margin", 80);
       break;
     case "resume":
       addLine("Opening resume...", "color2", 80);

@@ -7,10 +7,19 @@ var github = "https://github.com/RAJANAGORI";
 var email = 'mailto:raja.nagori@owasp.org';
 var nightingale = 'https://github.com/RAJANAGORI/Nightingale';
 var secucode = 'https://secucode.gitbook.io';
-var blog = 'https://medium.com/@rajanagori';
+// var blog = 'https://medium.com/@rajanagori';
 var wiki = 'https://nightingale-wiki.gitbook.io';
 var resume = 'https://github.com/RAJANAGORI/rajanagori/blob/master/Raja_Nagori.pdf';
 var Android_Spyware = 'https://github.com/RAJANAGORI/Android-spyware';
+var wiregaurd = 'https://medium.com/@rajanagori/wireguard-a-new-tunneling-protocol-207d4aa893d0';
+var xss = 'https://medium.com/@rajanagori/tales-of-xss-navigating-web-vulnerabilities-71f2ef61af9b';
+var xxe = 'https://medium.com/@rajanagori/a-long-story-of-xxe-vulnerability-6a9a33276602';
+var ios = 'https://medium.com/@rajanagori/ios-application-vulnerability-assessment-and-penetration-testing-263e9da452fd';
+var androidp1 = 'https://medium.com/@rajanagori/android-vulnerability-assessment-and-penetration-testing-part-1-382838a3d230';
+var androidp2 = 'https://medium.com/@rajanagori/android-vulnerability-assessment-and-penetration-testing-part-2-6558612c9382';
+var ipbypass = 'https://medium.com/@rajanagori/bypass-ip-block-with-the-x-forwarded-for-header-8c1dbd89ae58';
+var burplocalhost = 'https://medium.com/@rajanagori/why-localhost-and-burpsuite-are-not-best-friends-169e7ef1752c';
+var xssautomation = 'https://medium.com/@rajanagori/xss-automation-using-waybackurl-and-gf-grep-finding-4f6745f70a22';
 
 // This content is about the "WHOIS"
 whois = [
@@ -59,6 +68,19 @@ projects = [
   '2. SecuCode <a href="' + secucode + '" target="_blank">gitbook/secucode' + "</a>",
   '3. Android Spyware <a href="' + Android_Spyware + '" target="_blank">github/Android_spyware' + "</a>",
   "<br>"
+];
+
+blogs = [
+  "<br",
+  '1. Wireguard : A new tunneling protocol <a href="' + wiregaurd + '" target="_blank">medium' + "</a>", 
+  '2. Tales of XSS: Navigating Web Vulnerabilities <a href="' + xss + '" target="_blank">medium' + "</a>", 
+  '3. A Long Story of XXE Vulnerability!! <a href="' + xxe + '" target="_blank">medium' + "</a>", 
+  '4. iOS Application Vulnerability Assessment and Penetration Testing. <a href="' + ios + '" target="_blank">medium' + "</a>", 
+  '5. Android Vulnerability Assessment and Penetration Testing Part 1 <a href="' + androidp1 + '" target="_blank">medium' + "</a>", 
+  '6. Android Vulnerability Assessment and Penetration Testing Part 2 <a href="' + androidp2 + '" target="_blank">medium' + "</a>", 
+  '7. Bypass Blocked IP with the X-Forwarded For Header <a href="' + ipbypass + '" target="_blank">medium' + "</a>", 
+  '8. XSS Automation using Waybackurl And gf (Grep-Finding) <a href="' + xssautomation + '" target="_blank">medium' + "</a>", 
+  '9. Why localhost and BurpSuite are not best friends. <a href="' + burplocalhost + '" target="_blank">medium' + "</a>"
 ];
 
 secret = [
