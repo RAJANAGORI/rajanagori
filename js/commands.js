@@ -8,7 +8,7 @@ var email = 'mailto:raja.nagori@owasp.org';
 var nightingale = 'https://github.com/RAJANAGORI/Nightingale';
 var secucode = 'https://secucode.gitbook.io';
 // var blog = 'https://medium.com/@rajanagori';
-var wiki = 'https://nightingale-wiki.gitbook.io';
+var wiki = 'https://github.com/RAJANAGORI/Nightingale/wiki/1-%F0%9F%9A%80-Nightingale-Docker-for-Pentesters';
 var resume = 'https://github.com/RAJANAGORI/rajanagori/blob/master/Raja_Nagori.pdf';
 var Android_Spyware = 'https://github.com/RAJANAGORI/Android-spyware';
 var wiregaurd = 'https://medium.com/@rajanagori/wireguard-a-new-tunneling-protocol-207d4aa893d0';
@@ -112,4 +112,5 @@ banner = [
   "+-+-+-+-+ +-+-+-+-+-+-+",
   "<span class=\"color2\">For a list of available commands, type</span> <span class=\"command\">'help'</span><span class=\"color2\">.</span>",
   "<span class=\"color2\">Note: Don't think about</span> <span class=\"command\">'SUDO'</span><span class=\"color2\">.</span>",
+  "<span class=\"color2\">Inspiration: ForrestKnight</span> <span class=\"command\">'type youtube'</span><span class=\"color2\">.</span>"
 ];

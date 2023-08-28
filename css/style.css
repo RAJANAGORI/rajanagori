@@ -6,7 +6,7 @@ body {
     width: 100%;
     min-width: 550px;
     color: #72d969;
-    background: #171717 ;
+    background: #000000 ;
     font-family: cursor, monospace;
     overflow-x: hidden;
   }
@@ -116,7 +116,7 @@ body {
     color: #DCDCCC;
   }
   .color2 {
-    color: #a0bfef;
+    color: #ff0000;
   }
   .command {
     color: #fc8f00;

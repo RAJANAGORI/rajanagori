@@ -93,6 +93,12 @@ function commander(cmd) {
         window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
       }, 1000);
       break;
+    case "youtube":
+      addLine("Sending you to the link...", "color2", 80);
+      setTimeout(function () {
+        window.open('https://youtu.be/KtYby2QN0kQ?si=FN3fcEEVzT5gwGXv');
+      }, 2000);
+      break;
     case "social":
       loopLines(social, "color2 margin", 80);
       break;
