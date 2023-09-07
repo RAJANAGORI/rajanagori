@@ -5,7 +5,7 @@ body {
     min-height: 99%;
     width: 100%;
     min-width: 550px;
-    color: #72d969;
+    color: #FFFF00;
     background: #000000 ;
     font-family: cursor, monospace;
     overflow-x: hidden;
@@ -70,7 +70,7 @@ body {
     opacity: 0;
   }
   #liner::before {
-    color: #cc6e16;
+    color: #FFFF00;
     content: "rajanagori@about-me:~$";
   }
   #liner.password::before {
@@ -116,10 +116,10 @@ body {
     color: #DCDCCC;
   }
   .color2 {
-    color: #ff0000;
+    color: #00FFFF;
   }
   .command {
-    color: #fc8f00;
+    color: #FF00FF;
     text-shadow: 0 0 4px #fc8f00; 
   }
   .error {
