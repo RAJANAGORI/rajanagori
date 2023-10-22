@@ -99,6 +99,12 @@ function commander(cmd) {
         window.open('https://youtu.be/KtYby2QN0kQ?si=FN3fcEEVzT5gwGXv');
       }, 2000);
       break;
+    case "slack":
+      addLine("Sending you to the link...", "color2", 80);
+      setTimeout(function () {
+        window.open('https://join.slack.com/share/enQtNjA2OTUwOTI1NDc3NC1iOWY3ZDk0NzJhYWFkYTc4OWFlMDk0YTlkMDhkMmY2N2MxMjRkYWMxMzU2MzllZjRhMDdkMTdjZmJmYTUyYjZl');
+      }, 2000);
+      break;
     case "social":
       loopLines(social, "color2 margin", 80);
       break;
