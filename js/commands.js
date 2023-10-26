@@ -24,7 +24,7 @@ var xssautomation = 'https://medium.com/@rajanagori/xss-automation-using-wayback
 // This content is about the "WHOIS"
 whois = [
   "<br>",
-  "- Raja Nagori is an IT Security Analyst II at FIS Global",
+  "- Raja Nagori is a Product Security Engineer at Splunk",
   "<br>",
   "- He has a Bachelor's degree in Computer Science and Engineering",
   "<br>",
@@ -48,7 +48,8 @@ conference = [
   "2. Blackhat Aresenal Asia 2022",
   "3. OWASP Global Appsec EU 2022",
   "4. Docker Hands on Practice #6",
-  "5. Blackhat Aresenal MEA (Shortlisted)",
+  "5. Blackhat Aresenal MEA 2022 (Shortlisted)",
+  "6. Blackhat Aresenal MEA 2023 (Shortlisted)"
   "<br>"
 ];
 
