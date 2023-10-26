@@ -10,7 +10,7 @@ var secucode = 'https://secucode.gitbook.io';
 // var blog = 'https://medium.com/@rajanagori';
 var wiki = 'https://github.com/RAJANAGORI/Nightingale/wiki/1-%F0%9F%9A%80-Nightingale-Docker-for-Pentesters';
 var resume = 'https://github.com/RAJANAGORI/rajanagori/blob/master/Raja_Nagori.pdf';
-var Android_Spyware = 'https://github.com/RAJANAGORI/Android-spyware';
+var AndroidSpyware = 'https://github.com/RAJANAGORI/Android-spyware';
 var wiregaurd = 'https://medium.com/@rajanagori/wireguard-a-new-tunneling-protocol-207d4aa893d0';
 var xss = 'https://medium.com/@rajanagori/tales-of-xss-navigating-web-vulnerabilities-71f2ef61af9b';
 var xxe = 'https://medium.com/@rajanagori/a-long-story-of-xxe-vulnerability-6a9a33276602';
@@ -67,7 +67,7 @@ projects = [
   "<br>",
   '1. Nightingale <a href="' + nightingale + '" target="_blank">github/nightingale' + "</a>",
   '2. SecuCode <a href="' + secucode + '" target="_blank">gitbook/secucode' + "</a>",
-  '3. Android Spyware <a href="' + Android_Spyware + '" target="_blank">github/Android_spyware' + "</a>",
+  '3. Android Spyware <a href="' + AndroidSpyware + '" target="_blank">github/Android_spyware' + "</a>",
   "<br>"
 ];
 
