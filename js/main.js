@@ -99,6 +99,12 @@ function commander(cmd) {
         window.open('https://youtu.be/KtYby2QN0kQ?si=FN3fcEEVzT5gwGXv');
       }, 2000);
       break;
+    case "discuss":
+      addLine("Sending you to the link...", "color2", 80);
+      setTimeout(function () {
+        window.open('https://github.com/RAJANAGORI/Nightingale/discussions/11');
+      }, 2000);
+      break;
     case "slack":
       addLine("Sending you to the link...", "color2", 80);
       setTimeout(function () {
