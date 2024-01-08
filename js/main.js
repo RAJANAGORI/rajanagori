@@ -93,6 +93,12 @@ function commander(cmd) {
         window.open('https://www.youtube.com/watch?v=dQw4w9WgXcQ');
       }, 1000);
       break;
+    case "interview":
+      addLine("Redirecting, please wait....", "color2", 80);
+      setTimeout(function () {
+        window.open('https://rajanagori.github.io/interview/');
+      }, 1000);
+      break;
     case "youtube":
       addLine("Sending you to the link...", "color2", 80);
       setTimeout(function () {

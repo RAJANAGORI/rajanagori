@@ -102,6 +102,7 @@ help = [
   '<span class="command">blog</span>           My Medium Blog',
   '<span class="command">history</span>        You know what it is:p',
   '<span class="command">email</span>          My Email address',
+  '<span class="command">interview</span>      Interview',
   '<span class="command">clear</span>          Clear terminal',
   "<br>",
 ];
