@@ -7,7 +7,6 @@ var github = "https://github.com/RAJANAGORI";
 var email = 'mailto:raja.nagori@owasp.org';
 var nightingale = 'https://github.com/RAJANAGORI/Nightingale';
 var secucode = 'https://secucode.gitbook.io';
-// var blog = 'https://medium.com/@rajanagori';
 var wiki = 'https://github.com/RAJANAGORI/Nightingale/wiki/1-%F0%9F%9A%80-Nightingale-Docker-for-Pentesters';
 var resume = 'https://github.com/RAJANAGORI/rajanagori/blob/master/Raja_Nagori.pdf';
 var AndroidSpyware = 'https://github.com/RAJANAGORI/Android-spyware';
@@ -20,6 +19,8 @@ var androidp2 = 'https://medium.com/@rajanagori/android-vulnerability-assessment
 var ipbypass = 'https://medium.com/@rajanagori/bypass-ip-block-with-the-x-forwarded-for-header-8c1dbd89ae58';
 var burplocalhost = 'https://medium.com/@rajanagori/why-localhost-and-burpsuite-are-not-best-friends-169e7ef1752c';
 var xssautomation = 'https://medium.com/@rajanagori/xss-automation-using-waybackurl-and-gf-grep-finding-4f6745f70a22';
+var interviewprep = 'https://rajanagori.github.io/interview/interview/';
+var threatmodeling = 'https://rajanagori.github.io/interview/threatmodel/';
 
 // This content is about the "WHOIS"
 whois = [
@@ -68,6 +69,13 @@ projects = [
   '1. Nightingale <a href="' + nightingale + '" target="_blank">github/nightingale' + "</a>",
   '2. SecuCode <a href="' + secucode + '" target="_blank">gitbook/secucode' + "</a>",
   '3. Android Spyware <a href="' + AndroidSpyware + '" target="_blank">github/Android_spyware' + "</a>",
+  "<br>"
+];
+
+interview = [
+  "<br>",
+  '1. Interview Preparation <a href="' + interviewprep + '" target="_blank">Interview Question' + "</a>",
+  '2. Threat Modeling Preparation <a href="' + threatmodeling + '" target="_blank">Threat Modeling' + "</a>",
   "<br>"
 ];
 
