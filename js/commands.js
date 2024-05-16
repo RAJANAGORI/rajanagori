@@ -19,8 +19,8 @@ var androidp2 = 'https://medium.com/@rajanagori/android-vulnerability-assessment
 var ipbypass = 'https://medium.com/@rajanagori/bypass-ip-block-with-the-x-forwarded-for-header-8c1dbd89ae58';
 var burplocalhost = 'https://medium.com/@rajanagori/why-localhost-and-burpsuite-are-not-best-friends-169e7ef1752c';
 var xssautomation = 'https://medium.com/@rajanagori/xss-automation-using-waybackurl-and-gf-grep-finding-4f6745f70a22';
-var interviewprep = 'https://rajanagori.github.io/interview/interview/';
-var threatmodeling = 'https://rajanagori.github.io/interview/threatmodel/';
+var interviewprep = 'https://interview.rajanagori.in/interview/';
+var threatmodeling = 'https://interview.rajanagori.in/threatmodel/';
 
 // This content is about the "WHOIS"
 whois = [
@@ -76,6 +76,12 @@ interview = [
   "<br>",
   '1. Interview Preparation <a href="' + interviewprep + '" target="_blank">Interview Question' + "</a>",
   '2. Threat Modeling Preparation <a href="' + threatmodeling + '" target="_blank">Threat Modeling' + "</a>",
+  "<br>"
+];
+
+game = [
+  "<br>",
+  '<span class="command">startGame</span> Have some maths game',
   "<br>"
 ];
 
