@@ -1,24 +1,44 @@
-/* Default styles */
+:root {
+  --main-text-color: #F6B17A; /* Yellow */
+  --background-color: #222831; /* Black */
+  --selection-text-color: #211830;
+  --selection-background-color: #519975;
+  --cursor-color: #73ABAD;
+  --cursor-background-color: #73ABAD;
+  --liner-color: #d4d474;
+  --index-color: #DCDCCC;
+  --color2: #a7dbde;
+  --command-color: #ED7D31;
+  --command-text-shadow: #8b8175;
+  --error-color: #B89076;
+  --white-color: #ffffff;
+  --inherit-link-color: #ff5d00;
+  --link-hover-background-color: #73ABAD;
+  --link-hover-color: #211830;
+  --command-text-color: #FB8B24;
+}
+
 body {
   margin: 0;
   padding: 15px 20px;
   min-height: 99%;
   width: 100%;
   min-width: 550px;
-  color: #FFFF00;
-  background: #000000;
+  color: var(--main-text-color);
+  background: var(--background-color);
   font-family: cursor, monospace;
   overflow-x: hidden;
 }
 
-/* Selection styles */
+
 ::selection {
-  color: #211830;
-  background-color: #519975;
+  color: var(--selection-text-color);
+  background-color: var(--selection-background-color);
 }
+
 ::-moz-selection {
-  color: #211830;
-  background-color: #519975;
+  color: var(--selection-text-color);
+  background-color: var(--selection-background-color);
 }
 
 /* Textarea styles */
@@ -36,8 +56,8 @@ b {
 /* Cursor styles */
 .cursor {
   font-size: 12px;
-  color: #73ABAD;
-  background-color: #73ABAD;
+  color: var(--cursor-color);
+  background-color: var(--cursor-background-color);
   position: relative;
   opacity: 1;
   height: 1.5em;
@@ -60,7 +80,7 @@ b {
 #command {
   cursor: text;
   height: 50px;
-  color: #73ABAD;
+  color: var(--command-text-color);
 }
 
 #liner {
@@ -72,7 +92,7 @@ b {
 }
 
 #liner::before {
-  color: #FFFF00;
+  color: var(--liner-color);
   content: "rajanagori@about-me:~$";
 }
 
@@ -119,43 +139,43 @@ p {
 
 /* Index, color2, command, error, and white styles */
 .index {
-  color: #DCDCCC;
+  color: var(--index-color);
 }
 
 .color2 {
-  color: #00FFFF;
+  color: var(--color2);
 }
 
 .command {
-  color: #00ff80;
-  text-shadow: 0 0 4px #fc8f00;
+  color: var(--command-color);
+  text-shadow: 0 0 4px var(--command-text-shadow);
 }
 
 .error {
-  color: #B89076;
+  color: var(--error-color);
 }
 
 .white {
-  color: #fff;
+  color: var(--white-color);
 }
 
 /* Inherit, a, a:hover, and a:focus styles */
 .inherit,
 a {
-  color: #e87575;
+    color: var(--inherit-link-color);
 }
 
 a {
-  text-decoration: inherit;
+    text-decoration: inherit;
 }
 
 a:hover {
-  background: #73ABAD;
-  color: #211830;
+    background: var(--link-hover-background-color);
+    color: var(--link-hover-color);
 }
 
 a:focus {
-  outline: 0;
+    outline: 0;
 }
 
 /* Whois styles */
