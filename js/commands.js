@@ -154,6 +154,8 @@ secret = [
 
 help = [
   "<br>",
+  '<span class="command">Commands</span>       Description',
+  "<br>",
   '<span class="command">whois</span>          About Me',
   '<span class="command">video</span>          My Youtube Channel',
   '<span class="command">social</span>         My Social platforms',
