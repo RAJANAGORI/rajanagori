@@ -93,12 +93,15 @@ whois = [
 
 conference = [
   "<br>",
-  "1. Blackhat Aresenal Asia 2023",
-  "2. Blackhat Aresenal Asia 2022",
-  "3. OWASP Global Appsec EU 2022",
-  "4. Docker Hands on Practice #6",
-  "5. Blackhat Aresenal MEA 2022 (Shortlisted)",
-  "6. Blackhat Aresenal MEA 2023 (Shortlisted)",
+  "1. Blackhat Aresenal Asia 2024",
+  "2. Blackhat Aresenal Asia 2023",
+  "3. Blackhat Aresenal Asia 2022",
+  "4. OWASP Global Appsec EU 2022",
+  "5. Docker Hands on Practice #6",
+  "6. Blackhat Aresenal MEA 2022 (Shortlisted)",
+  "7. Blackhat Aresenal MEA 2023 (Shortlisted)",
+  "8. IWCON 2023",
+  "9. c0c0n 2024",
   "<br>"
 ];
 
