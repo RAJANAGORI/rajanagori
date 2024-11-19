@@ -100,8 +100,8 @@ conference = [
   "5. Docker Hands on Practice #6",
   "6. Blackhat Aresenal MEA 2022 (Shortlisted)",
   "7. Blackhat Aresenal MEA 2023 (Shortlisted)",
-  "8. IWCON 2023",
-  "9. c0c0n 2024",
+  "8. IWCON - 2023",
+  "9. c0c0n - 2024",
   "<br>"
 ];
 
