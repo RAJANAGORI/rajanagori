@@ -1,5 +1,5 @@
 // These are the variable for the direct links
-var youtube = "https://www.youtube.com/@insiderlearners";
+var youtube = "https://www.youtube.com/@rajanagorii";
 var twitter = "https://www.twitter.com/RajaNagori7";
 var linkedin = "https://www.linkedin.com/in/raja-nagori";
 var instagram = "https://www.instagram.com/insiderlearners";
