@@ -171,7 +171,7 @@ function commander(cmd) {
     // Theme commands
     case "set-theme":
       addLine("Usage: set-theme [theme-name]", "color2", 0);
-      addLine("Available themes: default, light, cyberpunk, matrix, retro", "color2", 0);
+      addLine("Available themes: default, light, cyberpunk, matrix, retro, hacker", "color2", 0);
       break;
     case "set-animation":
       addLine("Usage: set-animation [speed]", "color2", 0);
@@ -350,11 +350,13 @@ function setTheme(themeName) {
       addMatrixEffect();
     } else if (themeName === 'cyberpunk') {
       addCyberpunkEffect();
+    } else if (themeName === 'hacker') {
+      addHackerEffect();
     } else {
       removeVisualEffects();
     }
   } else {
-    addLine("Theme not found. Available themes: default, light, cyberpunk, matrix, retro", "error", 0);
+    addLine("Theme not found. Available themes: default, light, cyberpunk, matrix, retro, hacker", "error", 0);
   }
 }
 
@@ -467,10 +469,64 @@ function addCyberpunkEffect() {
   document.body.appendChild(glitch);
 }
 
+function addHackerEffect() {
+  // Add hacker-style terminal effects
+  var hacker = document.createElement('div');
+  hacker.id = 'hacker-effect';
+  hacker.style.cssText = `
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+    background: 
+      radial-gradient(circle at 25% 25%, rgba(0, 255, 65, 0.1) 0%, transparent 50%),
+      radial-gradient(circle at 75% 75%, rgba(255, 107, 107, 0.1) 0%, transparent 50%),
+      linear-gradient(45deg, transparent 49%, rgba(0, 212, 255, 0.05) 50%, transparent 51%);
+    animation: hackerScan 4s ease-in-out infinite;
+  `;
+  
+  if (!document.getElementById('hacker-styles')) {
+    var style = document.createElement('style');
+    style.id = 'hacker-styles';
+    style.textContent = `
+      @keyframes hackerScan {
+        0%, 100% { 
+          opacity: 0.3; 
+          transform: translateY(0) scale(1);
+          filter: hue-rotate(0deg);
+        }
+        25% { 
+          opacity: 0.6; 
+          transform: translateY(-2px) scale(1.02);
+          filter: hue-rotate(90deg);
+        }
+        50% { 
+          opacity: 0.4; 
+          transform: translateY(0) scale(1);
+          filter: hue-rotate(180deg);
+        }
+        75% { 
+          opacity: 0.7; 
+          transform: translateY(2px) scale(1.01);
+          filter: hue-rotate(270deg);
+        }
+      }
+    `;
+    document.head.appendChild(style);
+  }
+  
+  document.body.appendChild(hacker);
+}
+
 function removeVisualEffects() {
   var matrix = document.getElementById('matrix-effect');
   var cyberpunk = document.getElementById('cyberpunk-effect');
+  var hacker = document.getElementById('hacker-effect');
   
   if (matrix) matrix.remove();
   if (cyberpunk) cyberpunk.remove();
+  if (hacker) hacker.remove();
 }

@@ -195,6 +195,13 @@ themes = {
     text: "#00ff00",
     command: "#ffff00",
     cursor: "#ff00ff"
+  },
+  hacker: {
+    name: "Hacker Mode",
+    background: "#0d1117",
+    text: "#00ff41",
+    command: "#ff6b6b",
+    cursor: "#00d4ff"
   }
 };
 
@@ -285,7 +292,7 @@ banner = [
   "|R|A|J|A| |N|A|G|O|R|I|",
   "+-+-+-+-+ +-+-+-+-+-+-+",
   "<span class=\"color2\">For a list of available commands, type</span> <span class=\"command\">'help'</span><span class=\"color2\">.</span>",
-  "<span class=\"color2\">NEW: Try</span> <span class=\"command\">'set-theme cyberpunk'</span> <span class=\"color2\">or</span> <span class=\"command\">'skills-matrix'</span>",
+  "<span class=\"color2\">NEW: Try</span> <span class=\"command\">'set-theme hacker'</span> <span class=\"color2\">or</span> <span class=\"command\">'skills-matrix'</span>",
   "<span class=\"color2\">Keyboard shortcuts:</span> <span class=\"command\">Ctrl+T</span> <span class=\"color2\">(themes),</span> <span class=\"command\">Tab</span> <span class=\"color2\">(autocomplete)</span>",
   "<span class=\"color2\">Inspiration: ForrestKnight</span> <span class=\"command\">'type youtube'</span><span class=\"color2\">.</span>",
   "<span class=\"color2\">Slack - #project-nightingale</span> <span class=\"command\">'type slack'</span><span class=\"color2\">.</span>",
