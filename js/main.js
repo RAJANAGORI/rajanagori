@@ -89,7 +89,7 @@ function commander(cmd) {
       loopLines(help, "color2 margin", animationSpeed[currentAnimationSpeed]);
       break;
     case "whois":
-      loopLines(whois, "color2 margin whois", animationSpeed[currentAnimationSpeed]);
+      loopLines(whois, "color2 margin whois", 0);
       break;
     case "conference":
       loopLines(conference, "color2 margin", animationSpeed[currentAnimationSpeed]);
