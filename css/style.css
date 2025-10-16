@@ -267,3 +267,140 @@ a:focus {
   font-size: 14px;
   text-align: center;
 }
+
+/* Enhanced visual effects */
+.glitch {
+  animation: glitch 0.3s ease-in-out infinite alternate;
+}
+
+@keyframes glitch {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 2px); }
+  40% { transform: translate(-2px, -2px); }
+  60% { transform: translate(2px, 2px); }
+  80% { transform: translate(2px, -2px); }
+  100% { transform: translate(0); }
+}
+
+.holographic {
+  background: linear-gradient(45deg, #ff0080, #00ffff, #ff0080, #00ffff);
+  background-size: 400% 400%;
+  animation: holographic 2s ease infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+@keyframes holographic {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.particle-effect {
+  position: relative;
+  overflow: hidden;
+}
+
+.particle-effect::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  animation: particle 2s infinite;
+}
+
+@keyframes particle {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+/* Enhanced cursor effects */
+.cursor.trail {
+  box-shadow: 0 0 10px var(--cursor-color), 0 0 20px var(--cursor-color), 0 0 30px var(--cursor-color);
+  animation: cursorTrail 1s ease-in-out infinite alternate;
+}
+
+@keyframes cursorTrail {
+  0% { box-shadow: 0 0 10px var(--cursor-color), 0 0 20px var(--cursor-color), 0 0 30px var(--cursor-color); }
+  100% { box-shadow: 0 0 20px var(--cursor-color), 0 0 30px var(--cursor-color), 0 0 40px var(--cursor-color); }
+}
+
+/* Auto-complete styling */
+.autocomplete-suggestion {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--cursor-color);
+  padding: 2px 6px;
+  margin: 2px;
+  border-radius: 3px;
+  display: inline-block;
+  font-size: 0.9em;
+}
+
+/* Theme-specific enhancements */
+.theme-matrix {
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(0, 255, 0, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(0, 255, 0, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(0, 255, 0, 0.05) 0%, transparent 50%);
+}
+
+.theme-cyberpunk {
+  background-image: 
+    radial-gradient(circle at 20% 80%, rgba(255, 0, 128, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(0, 255, 255, 0.1) 0%, transparent 50%);
+}
+
+.theme-retro {
+  background-image: 
+    repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255, 255, 0, 0.1) 2px, rgba(255, 255, 0, 0.1) 4px);
+}
+
+/* Responsive improvements */
+@media only screen and (max-width: 768px) {
+  .holographic {
+    animation-duration: 3s;
+  }
+  
+  .glitch {
+    animation-duration: 0.5s;
+  }
+}
+
+/* Haptic feedback simulation */
+.haptic-feedback {
+  animation: haptic 0.1s ease-in-out;
+}
+
+@keyframes haptic {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); }
+}
+
+/* Loading animations */
+.loading-dots::after {
+  content: '';
+  animation: loadingDots 1.5s infinite;
+}
+
+@keyframes loadingDots {
+  0%, 20% { content: ''; }
+  40% { content: '.'; }
+  60% { content: '..'; }
+  80%, 100% { content: '...'; }
+}
+
+/* Success animations */
+.success-flash {
+  animation: successFlash 0.5s ease-in-out;
+}
+
+@keyframes successFlash {
+  0% { background-color: transparent; }
+  50% { background-color: rgba(0, 255, 0, 0.2); }
+  100% { background-color: transparent; }
+}

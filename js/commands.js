@@ -159,6 +159,91 @@ secret = [
   "<br>"
 ];
 
+// Theme configurations
+themes = {
+  default: {
+    name: "Default Terminal",
+    background: "#222831",
+    text: "#F6B17A",
+    command: "#ED7D31",
+    cursor: "#73ABAD"
+  },
+  light: {
+    name: "Light Mode",
+    background: "#f8f9fa",
+    text: "#2c3e50",
+    command: "#e74c3c",
+    cursor: "#3498db"
+  },
+  cyberpunk: {
+    name: "Cyberpunk",
+    background: "#0a0a0a",
+    text: "#00ff41",
+    command: "#ff0080",
+    cursor: "#00ffff"
+  },
+  matrix: {
+    name: "Matrix",
+    background: "#000000",
+    text: "#00ff00",
+    command: "#ff0000",
+    cursor: "#00ffff"
+  },
+  retro: {
+    name: "Retro Terminal",
+    background: "#1a1a1a",
+    text: "#00ff00",
+    command: "#ffff00",
+    cursor: "#ff00ff"
+  }
+};
+
+
+// Animation speed settings
+animationSpeed = {
+  fast: 20,
+  normal: 80,
+  slow: 150,
+  none: 0
+};
+
+// Skills matrix data
+skillsMatrix = [
+  "<br>",
+  "<span class='command'>Security Skills Matrix:</span>",
+  "<br>",
+  "Web Penetration Testing   ██████████████ 98%",
+  "Mobile Security           █████████████ 94%", 
+  "Threat Modeling           ███████████   88%",
+  "Source Code Review        ███████████   90%",
+  "DevSecOps                 █████████████ 92%",
+  "Docker Security           █████████████ 95%",
+  "Red Teaming               ████████      75%",
+  "Scripting (Python/Bash)   ████████████ 90%",
+  "OS Hardening              ████████████ 85%",
+  "<br>"
+];
+
+// Experience timeline
+experienceTimeline = [
+  "<br>",
+  "<span class='command'>Professional Journey:</span>",
+  "<br>",
+  "2024 - Present    Product Security Engineer @ Splunk",
+  "2022 - 2024       Lead OWASP-Nightingale Project",
+  "2021 - 2022       Security Researcher & Blogger",
+  "2020 - 2021       Penetration Tester",
+  "2019 - 2020       Computer Science Graduate",
+  "<br>",
+  "<span class='command'>Key Achievements:</span>",
+  "• Blackhat Arsenal Asia 2022, 2023, 2024",
+  "• OWASP Global AppSec EU 2022 Speaker",
+  "• 9+ Security Publications on Medium",
+  "• 200+ GitHub Stars across projects",
+  "• Active OWASP Project Leader",
+  "<br>"
+];
+
 help = [
   "<br>",
   '<span class="command">Commands</span>       Description',
@@ -171,10 +256,26 @@ help = [
   '<span class="command">wiki</span>           Nightingale Wiki',
   '<span class="command">conference</span>     Conference list',
   '<span class="command">blog</span>           My Medium Blog',
-  '<span class="command">history</span>        You know what it is:p',
+  '<span class="command">history</span>        Command history with search',
   '<span class="command">email</span>          My Email address',
   '<span class="command">interview</span>      Interview',
   '<span class="command">clear</span>          Clear terminal',
+  "<br>",
+  '<span class="command">--- NEW FEATURES ---</span>',
+  "<br>",
+  '<span class="command">skills-matrix</span>  Interactive skills visualization',
+  '<span class="command">experience</span>     Professional journey timeline',
+  '<span class="command">set-theme</span>      Change terminal theme',
+  '<span class="command">set-animation</span>  Control typing speed',
+  '<span class="command">themes</span>         Available themes list',
+  '<span class="command">settings</span>       Current settings',
+  "<br>",
+  '<span class="command">--- KEYBOARD SHORTCUTS ---</span>',
+  "<br>",
+  '<span class="command">Tab</span>            Auto-complete commands',
+  '<span class="command">Ctrl+L</span>         Clear terminal',
+  '<span class="command">Ctrl+H</span>         Show help',
+  '<span class="command">Ctrl+T</span>         Toggle theme',
   "<br>",
 ];
 
@@ -184,6 +285,8 @@ banner = [
   "|R|A|J|A| |N|A|G|O|R|I|",
   "+-+-+-+-+ +-+-+-+-+-+-+",
   "<span class=\"color2\">For a list of available commands, type</span> <span class=\"command\">'help'</span><span class=\"color2\">.</span>",
+  "<span class=\"color2\">NEW: Try</span> <span class=\"command\">'set-theme cyberpunk'</span> <span class=\"color2\">or</span> <span class=\"command\">'skills-matrix'</span>",
+  "<span class=\"color2\">Keyboard shortcuts:</span> <span class=\"command\">Ctrl+T</span> <span class=\"color2\">(themes),</span> <span class=\"command\">Tab</span> <span class=\"color2\">(autocomplete)</span>",
   "<span class=\"color2\">Inspiration: ForrestKnight</span> <span class=\"command\">'type youtube'</span><span class=\"color2\">.</span>",
   "<span class=\"color2\">Slack - #project-nightingale</span> <span class=\"command\">'type slack'</span><span class=\"color2\">.</span>",
   "<span class=\"color2\">Note: Don't think about</span> <span class=\"command\">'SUDO'</span><span class=\"color2\">.</span>"
