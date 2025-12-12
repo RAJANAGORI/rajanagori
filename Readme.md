@@ -56,6 +56,7 @@
 
 - **Speaking Engagements:**
   - Blackhat Arsenal ASIA 2022, 2023, 2024
+  - Blackhat Arsenal EU 2025
   - OWASP Global AppSec EU 2022
   - Docker Community Hands-On #6
   - Blackhat Arsenal MEA 2022, 2023 (Shortlisted)
