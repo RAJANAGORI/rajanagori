@@ -202,6 +202,9 @@ function commander(cmd) {
       } else if (cmd.toLowerCase().startsWith('set-animation ')) {
         var speed = cmd.toLowerCase().substring(14);
         setAnimationSpeed(speed);
+      } else if (cmd.toLowerCase().startsWith('blog ')) {
+        var blogName = cmd.toLowerCase().substring(5).trim();
+        fetchBlogContent(blogName);
       } else {
         addLine("<span class=\"inherit\">Command not found. For a list of commands, type <span class=\"command\">'help'</span>.</span>", "error", 100);
       }
@@ -529,4 +532,264 @@ function removeVisualEffects() {
   if (matrix) matrix.remove();
   if (cyberpunk) cyberpunk.remove();
   if (hacker) hacker.remove();
+}
+
+function escapeHtml(text) {
+  var map = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#039;'
+  };
+  return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+}
+
+function fetchBlogContent(blogName) {
+  // Check if blog exists locally
+  if (localBlogMap && localBlogMap[blogName]) {
+    var blogPath = localBlogMap[blogName];
+    addLine("Loading blog content from local file...", "color2", 0);
+    
+    // Fetch the blog content
+    fetch(blogPath)
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Blog file not found');
+        }
+        return response.text();
+      })
+      .then(async content => {
+        // First, collect all gist URLs and fetch their content
+        var lines = content.split('\n');
+        var gistMap = {};
+        var gistUrls = [];
+        
+        // Find all gist URLs
+        for (var i = 0; i < lines.length; i++) {
+          var gistMatch = lines[i].match(/⟨(https:\/\/gist\.github\.com\/[^⟩]+)⟩/);
+          if (gistMatch) {
+            var gistUrl = gistMatch[1];
+            if (gistMap[gistUrl] === undefined) {
+              gistMap[gistUrl] = null; // Placeholder
+              gistUrls.push(gistUrl);
+            }
+          }
+        }
+        
+        // Fetch all gist contents in parallel with timeout
+        // Helper function to fetch with timeout
+        function fetchWithTimeout(url, options, timeout = 3000) {
+          return Promise.race([
+            fetch(url, options),
+            new Promise((_, reject) =>
+              setTimeout(() => reject(new Error('Timeout')), timeout)
+            )
+          ]);
+        }
+        
+        // Only try to fetch if there are gist URLs
+        if (gistUrls.length > 0) {
+          addLine("Loading blog content and fetching gist resources...", "color2", 0);
+          
+          var fetchPromises = gistUrls.map(async function(gistUrl) {
+            try {
+              // Try direct fetch first with short timeout
+              try {
+                var response = await fetchWithTimeout(gistUrl, {
+                  method: 'GET',
+                  mode: 'cors',
+                  cache: 'no-cache'
+                }, 2000);
+                
+                if (response.ok) {
+                  var gistContent = await response.text();
+                  gistMap[gistUrl] = gistContent;
+                  return;
+                }
+              } catch (error) {
+                // Direct fetch failed or timed out
+              }
+              
+              // Mark as failed - we'll show clickable links instead
+              gistMap[gistUrl] = null;
+            } catch (error) {
+              gistMap[gistUrl] = null;
+            }
+          });
+          
+          // Wait for all gists with a short overall timeout
+          try {
+            await Promise.race([
+              Promise.all(fetchPromises),
+              new Promise((resolve) =>
+                setTimeout(() => {
+                  resolve();
+                }, 5000)
+              )
+            ]);
+          } catch (timeoutError) {
+            // Continue anyway
+          }
+        } else {
+          addLine("Loading blog content...", "color2", 0);
+        }
+        
+        // Now display the content line by line
+        addLine("<br>", "", 0);
+        var delay = 0;
+        
+        for (var i = 0; i < lines.length; i++) {
+          var line = lines[i];
+          // Check for image references (format: ⟨./blogs/.../image.png⟩)
+          var imageMatch = line.match(/⟨(\.\/blogs\/[^⟩]+\.(png|jpg|jpeg|gif|svg))⟩/i);
+          
+          if (imageMatch) {
+            var imagePath = imageMatch[1];
+            var beforeLink = line.substring(0, line.indexOf('⟨'));
+            var afterLink = line.substring(line.indexOf('⟩') + 1);
+            
+            // Display text before the image
+            if (beforeLink.trim().length > 0) {
+              var formattedBefore = beforeLink.replace(/  /g, '&nbsp;&nbsp;');
+              addLine(formattedBefore, "color2", delay);
+              delay += 3;
+            }
+            
+            // Display the image
+            addLine("<br>", "", delay);
+            addLine("<img src='" + imagePath + "' alt='Blog Image' style='max-width: 100%; height: auto; border: 1px solid var(--command-color); margin: 10px 0; border-radius: 4px;' />", "color2", delay);
+            delay += 5;
+            addLine("<br>", "", delay);
+            
+            // Display text after the image if any
+            if (afterLink.trim().length > 0) {
+              var formattedAfter = afterLink.replace(/  /g, '&nbsp;&nbsp;');
+              addLine(formattedAfter, "color2", delay);
+              delay += 3;
+            }
+            continue;
+          }
+          
+          // Check for gist links (format: ⟨URL⟩)
+          var gistMatch = line.match(/⟨(https:\/\/gist\.github\.com\/[^⟩]+)⟩/);
+          
+          if (gistMatch) {
+            var gistUrl = gistMatch[1];
+            var beforeLink = line.substring(0, line.indexOf('⟨'));
+            var afterLink = line.substring(line.indexOf('⟩') + 1);
+            
+            // Display text before the link
+            if (beforeLink.trim().length > 0) {
+              var formattedBefore = beforeLink.replace(/  /g, '&nbsp;&nbsp;');
+              addLine(formattedBefore, "color2", delay);
+              delay += 3;
+            }
+            
+            // Check if there's embedded content in the next lines
+            var embeddedContent = null;
+            var embeddedLines = [];
+            var j = i + 1;
+            // Look ahead for embedded content block (between ```gist:URL and ```)
+            while (j < lines.length && j < i + 100) {
+              if (lines[j].trim().startsWith('```gist:' + gistUrl)) {
+                // Found start of embedded content
+                j++;
+                while (j < lines.length && !lines[j].trim().startsWith('```')) {
+                  embeddedLines.push(lines[j]);
+                  j++;
+                }
+                embeddedContent = embeddedLines.join('\n');
+                i = j; // Skip the embedded block
+                break;
+              }
+              j++;
+            }
+            
+            // Display gist content if available (embedded or fetched)
+            if (embeddedContent) {
+              // Display embedded content immediately
+              addLine("<br>", "", delay);
+              addLine("<span class='command'>--- Gist Content ---</span>", "command", delay);
+              delay += 5;
+              addLine("<pre style='background: rgba(0,0,0,0.2); padding: 10px; border-left: 3px solid var(--command-color); overflow-x: auto; font-family: monospace; white-space: pre-wrap; word-wrap: break-word; margin: 5px 0;'>" + 
+                      escapeHtml(embeddedContent) + "</pre>", "color2", delay);
+              delay += 5;
+              addLine("<span class='command'>--- End Gist ---</span>", "command", delay);
+              delay += 5;
+              addLine("<br>", "", delay);
+            } else if (gistMap[gistUrl] !== null && gistMap[gistUrl] !== undefined) {
+              // Display fetched content
+              var gistContent = gistMap[gistUrl];
+              addLine("<br>", "", delay);
+              addLine("<span class='command'>--- Gist Content ---</span>", "command", delay);
+              delay += 5;
+              addLine("<pre style='background: rgba(0,0,0,0.2); padding: 10px; border-left: 3px solid var(--command-color); overflow-x: auto; font-family: monospace; white-space: pre-wrap; word-wrap: break-word; margin: 5px 0;'>" + 
+                      escapeHtml(gistContent) + "</pre>", "color2", delay);
+              delay += 5;
+              addLine("<span class='command'>--- End Gist ---</span>", "command", delay);
+              delay += 5;
+              addLine("<br>", "", delay);
+            } else {
+              // If gist fetch failed, show clickable link
+              addLine("<br>", "", delay);
+              addLine("<span class='command'>Gist Content (click to view):</span> <a href='" + gistUrl + "' target='_blank' style='color: var(--command-color); text-decoration: underline;'>" + gistUrl + "</a>", "color2", delay);
+              delay += 3;
+              addLine("<br>", "", delay);
+            }
+            
+            // Display text after the link if any
+            if (afterLink.trim().length > 0) {
+              var formattedAfter = afterLink.replace(/  /g, '&nbsp;&nbsp;');
+              addLine(formattedAfter, "color2", delay);
+              delay += 3;
+            }
+          } else {
+            // Regular line processing
+            var formattedLine = line.replace(/  /g, '&nbsp;&nbsp;');
+            
+            // Style different types of lines
+            if (line.match(/^[A-Z_]+\([0-9]+\)/)) {
+              // Header line (e.g., WIREGUARD(7))
+              addLine(formattedLine, "command", delay);
+            } else if (line.match(/^[A-Z ]+$/)) {
+              // Section headers (all caps, no special chars)
+              addLine(formattedLine, "command", delay);
+            } else if (line.trim().startsWith('$')) {
+              // Command examples
+              addLine(formattedLine, "color2", delay);
+            } else if (line.trim().startsWith('**') && line.trim().endsWith('**')) {
+              // Bold text (markdown style)
+              addLine("<strong>" + formattedLine.replace(/\*\*/g, '') + "</strong>", "color2", delay);
+            } else if (line.trim().length > 0) {
+              // Regular content
+              addLine(formattedLine, "color2", delay);
+            } else {
+              // Empty lines
+              addLine("<br>", "", delay);
+            }
+            delay += 3;
+          }
+        }
+        
+        addLine("<br>", "", delay);
+      })
+      .catch(error => {
+        addLine("Error loading local blog: " + error.message, "error", 0);
+        addLine("Falling back to Medium link...", "color2", 100);
+        // Fall back to Medium link
+        if (blogMap && blogMap[blogName]) {
+          newTab(blogMap[blogName]);
+        } else {
+          addLine("Blog not found. Type 'blog' to see available blogs.", "error", 0);
+        }
+      });
+  } else if (blogMap && blogMap[blogName]) {
+    // Blog exists only on Medium
+    addLine("Opening Medium article...", "color2", 0);
+    newTab(blogMap[blogName]);
+  } else {
+    addLine("Blog not found. Type 'blog' to see available blogs.", "error", 0);
+    addLine("Available blogs: wireguard, xss, xxe, ios, androidp1, androidp2, ipbypass, xssautomation, burplocalhost", "color2", 0);
+  }
 }

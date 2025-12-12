@@ -1,0 +1,137 @@
+WIREGUARD(7)              Miscellaneous Information Manual             WIREGUARD(7)
+
+NAME
+       wireguard - overview of WireGuard VPN protocol and installation
+
+DESCRIPTION
+       WireGuard® is an extremely simple yet fast and modern VPN that utilizes
+       state-of-the-art cryptography.  It aims to be faster, simpler, leaner,
+       and more useful than IPsec, while avoiding the massive headache.  It
+       intends to be considerably more performant than OpenVPN.  WireGuard is
+       designed as a general purpose VPN for running on embedded interfaces and
+       super computers alike, fit for many different circumstances.  Initially
+       released for the Linux kernel, it is now cross-platform (Windows, macOS,
+       BSD, iOS, Android) and widely deployable.  It is currently under heavy
+       development, but already it might be regarded as the most secure, easiest
+       to use, and simplest VPN solution in the industry.
+
+       After doing research on the trending topic that is WireGuard and setting
+       up WireGuard tunneling on a home network, one can confidently say that
+       this is going to be a game changer.  The results of the WireGuard
+       tunneling protocol are quite impressive.
+
+   Key Points
+       The following list shows the key characteristics of WireGuard:
+
+       Simple and Easy to use
+              WireGuard provides a straightforward configuration and deployment
+              process, making it accessible to users of varying technical
+              expertise.
+
+       Cryptographically Sound
+              WireGuard utilizes state-of-the-art cryptography to ensure secure
+              communication channels.
+
+       Minimal attack surface
+              The protocol's design philosophy emphasizes simplicity, resulting
+              in a reduced attack surface compared to more complex VPN solutions.
+
+       High Performance
+              WireGuard is designed to deliver superior performance compared to
+              traditional VPN protocols like IPsec and OpenVPN.
+
+   Installation of WireGuard using Docker
+       WireGuard can be easily deployed using Docker, which simplifies the
+       installation and configuration process.  The following steps outline the
+       installation procedure:
+
+       1. Install Docker Engine
+              Install Docker Engine on your host machine.  Refer to the
+              official Docker documentation for platform-specific installation
+              instructions.
+
+       2. Configure Docker Compose
+              Follow the Docker Compose configuration steps to set up the
+              WireGuard container environment.
+
+       3. Start WireGuard Service
+              To start the WireGuard service, execute the following command:
+
+                  $ docker-compose up -d
+
+       4. Install WireGuard Client
+              Install the WireGuard client on your host machine.  For Linux
+              systems, use:
+
+                  $ sudo apt-get install wireguard
+
+       5. Configure Peer Connection
+              Place your peer.conf file in your host machine's WireGuard
+              installation directory.
+
+       6. Verify WireGuard Connection
+              To check if WireGuard is running with the client, execute:
+
+                  $ wg-quick up mg0 && sudo wg
+
+       7. Mobile Device Connection
+              WireGuard can also be connected on mobile phones using the
+              appropriate client application and configuration.
+
+   Advantages
+       The following advantages make WireGuard an attractive VPN solution:
+
+       High Performance
+              WireGuard delivers superior performance compared to traditional
+              VPN protocols.
+
+       Simplicity
+              The protocol is lighter and simpler than IPsec and OpenVPN,
+              resulting in easier maintenance and configuration.
+
+       Encryption
+              The tunnel is secured with end-to-end encryption, ensuring data
+              confidentiality and integrity.
+
+       Easy Docker Installation
+              Docker-based deployment simplifies the installation and
+              management process.
+
+   Disadvantages
+       The following limitations should be considered when evaluating WireGuard:
+
+       Limited Logging
+              WireGuard does not provide log information between connected
+              peers, which can make troubleshooting and monitoring more
+              challenging.
+
+       Connectionless Protocol
+              Since WireGuard works on UDP, it follows a connectionless
+              protocol.  As a result, there is no mechanism to receive
+              notifications if the tunnel is down or not functioning properly.
+
+       Development Status
+              WireGuard is currently under active development, which may limit
+              its suitability for production-level deployments in certain
+              environments.
+
+NOTES
+       WireGuard is easy to set up when installed with Docker.  It offers
+       excellent features compared to OpenVPN, making it a compelling alternative
+       for VPN deployments.
+
+       The protocol's design emphasizes security through end-to-end encryption
+       over public networks, helping users maintain privacy and data protection.
+
+SEE ALSO
+       wg(8), wg-quick(8), docker-compose(1), docker(1)
+
+       WireGuard official website: ⟨https://www.wireguard.com/⟩
+
+       Docker documentation: ⟨https://docs.docker.com/⟩
+
+COLOPHON
+       This page describes WireGuard VPN protocol and installation procedures.
+       For more information about WireGuard, visit the official website at
+       ⟨https://www.wireguard.com/⟩.
+

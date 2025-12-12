@@ -1,0 +1,187 @@
+ANDROID-VAPT-PART1(7)      Miscellaneous Information Manual    ANDROID-VAPT-PART1(7)
+
+NAME
+       android-vapt-part1 - overview of Android Application Vulnerability
+       Assessment and Penetration Testing - Part 1 (Static Analysis)
+
+DESCRIPTION
+       Android Vulnerability Assessment and Penetration Testing (VAPT) involves
+       performing security assessments on Android applications to identify
+       vulnerabilities and security weaknesses.  This document covers Part 1,
+       focusing on Static Analysis techniques.
+
+       Android applications are packaged as .apk files, which are equivalent to
+       .exe files in Windows or .deb files in Linux.  These .apk files are
+       installed on Android-based mobile phones.
+
+       In Android VAPT, we perform:
+
+       1. Static Analysis - Analyzing the application without executing it
+       2. Dynamic Analysis - Analyzing the application during runtime
+
+       This part focuses on Static Analysis techniques and tools.
+
+   Android Application Structure
+       Android applications (.apk files) contain a specific structure that can
+       be analyzed for security vulnerabilities.  Understanding this structure
+       is essential for effective static analysis.
+
+   Tools Required
+       The following tools are essential for Android VAPT static analysis:
+
+       •  apktool - For decompiling and analyzing APK files
+       •  dex2jar - For converting DEX files to JAR format
+       •  vscode - Code editor for analyzing decompiled code
+       •  Train your brain to develop an interest in Android VAPT
+
+   Static Analysis
+       Static analysis involves examining the application's code and structure
+       without executing it.  This is the first step in Android VAPT.
+
+       APK Structure
+              After extracting an APK file, you will get the following
+              structure:
+
+              1. AndroidManifest.xml
+              2. Classes.dex
+              3. resource.arsc
+              4. res
+              5. META-INF
+
+   AndroidManifest.xml
+       The AndroidManifest.xml file contains information about your package,
+       including components of the application such as activities, services,
+       broadcast receivers, content providers, and more.  It also protects the
+       application by defining access permissions for sensitive information or
+       functions.
+
+       Components of AndroidManifest.xml
+
+       Activities
+              Activities represent the UI experience of the application.  The
+              process of changing from starting the application to logging into
+              the application is managed through Activities.
+
+       Services
+              Services are similar to the task manager in Windows.  They
+              continuously run required services in the background, independent
+              of the user interface.
+
+       Broadcast Receivers
+              This component is responsible for registering events that are
+              going to occur.  It allows the application to respond to system-
+              wide broadcast announcements.
+
+       Content Providers
+              Content providers provide local or remote storage of data through
+              which the application interacts.  They manage access to
+              structured data and enable data sharing between applications.
+
+       Intent
+              Intent is a communication channel between two activities within
+              the application or between different applications.
+
+              Implicit Intent
+                     If a media file is requesting to open in a third-party
+                     application, it is considered an implicit intent.
+
+              Explicit Intent
+                     If the media file is opening within the application
+                     itself, it is considered an explicit intent.
+
+   Classes.dex
+       Classes.dex is commonly known as Dalvik Exchange (DEX).  This is a
+       compiled version of Java classes, optimized for the Android runtime
+       environment.
+
+       To analyze the DEX file, you need to convert it to a human-readable
+       format using the dex2jar tool.
+
+       Conversion Command
+              ⟨https://gist.github.com/RAJANAGORI/43cd7b4e6cdbff1bc52d4895483242a6/raw/7febb1bd78a59d89a98bd0063bd378d48089f08b/dextojar⟩
+              ```gist:https://gist.github.com/RAJANAGORI/43cd7b4e6cdbff1bc52d4895483242a6/raw/7febb1bd78a59d89a98bd0063bd378d48089f08b/dextojar
+              dextojar -f ~/<path to your .dex file>
+              ```
+
+   resources.arsc
+       The resources.arsc file contains binary format files and also includes
+       media data that may be required by the application.  This file stores
+       compiled resources such as strings, layouts, and other assets.
+
+   res Directory
+       The res folder contains device configuration and layouts.  It includes
+       resources like images, XML layouts, string values, and other assets used
+       by the application.
+
+   META-INF Directory
+       The META-INF folder contains manifest information such as:
+       •  Java Runtime Environment details when loading the JAR file
+       •  Version package information
+       •  Build number creation details
+       •  Security policies
+       •  Permissions
+
+   Practical Example
+       Let's perform some practical operations to understand these files and
+       folders better.
+
+       Using apktool to Extract APK
+              We use apktool to extract and decompile files from the APK.
+
+              ⟨https://gist.github.com/RAJANAGORI/0c899f7aca2fd67e5ba7b37c8fd3c376/raw/34ea60ce1b5b1eeef72b7b596785c78dbbc2a7c0/apktool⟩
+              ```gist:https://gist.github.com/RAJANAGORI/0c899f7aca2fd67e5ba7b37c8fd3c376/raw/34ea60ce1b5b1eeef72b7b596785c78dbbc2a7c0/apktool
+              git clone https://github.com/dineshshetty/Android-InsecureBankv2.git
+              cd Android-InsecureBankv2
+              mkdir static-analysis
+              cd statis-analysis
+              cp ../InsecureBankv2.apk .
+              unzip InsecureBankv2.apk
+              apktool d InsecureBankv2.apk -o <path directory>
+              ```
+
+       After performing the above operations, you'll get a list of files and
+       directories that we have mentioned at the top.
+
+       ⟨./blogs/android_part1/image.png⟩
+
+NOTES
+       This is Part 1 of the Android VAPT series, focusing on Static Analysis.
+       Part 2 will cover Dynamic Analysis techniques.
+
+       Important Points to Remember
+
+       •  Static analysis is performed without executing the application
+       •  Understanding the APK structure is crucial for effective analysis
+       •  Tools like apktool and dex2jar are essential for decompilation
+       •  AndroidManifest.xml contains critical security information
+       •  Always use dedicated test environments for security testing
+
+       Best Practices
+
+       •  Use a dedicated testing device or emulator
+       •  Keep analysis tools updated to the latest versions
+       •  Document findings systematically
+       •  Ensure proper authorization before testing any application
+       •  Follow responsible disclosure practices
+
+SEE ALSO
+       apktool(1), dex2jar(1), android-vapt-part2(7)
+
+       OWASP Mobile Security Testing Guide:
+       ⟨https://owasp.org/www-project-mobile-security-testing-guide/⟩
+
+       Android InsecureBankv2:
+       ⟨https://github.com/dineshshetty/Android-InsecureBankv2⟩
+
+       Nightingale Docker Environment:
+       ⟨https://github.com/RAJANAGORI/Nightingale⟩
+
+COLOPHON
+       This page describes Android Application Vulnerability Assessment and
+       Penetration Testing - Part 1 (Static Analysis).  For more information
+       about mobile application security, visit the OWASP Mobile Security
+       Testing Guide at ⟨https://owasp.org/www-project-mobile-security-testing-guide/⟩.
+
+       Contact Information:
+       •  LinkedIn: ⟨https://www.linkedin.com/in/raja-nagori/⟩
+       •  Twitter: ⟨https://twitter.com/RajaNagori7⟩

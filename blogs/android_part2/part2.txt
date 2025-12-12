@@ -1,0 +1,215 @@
+ANDROID-VAPT-PART2(7)      Miscellaneous Information Manual    ANDROID-VAPT-PART2(7)
+
+NAME
+       android-vapt-part2 - overview of Android Application Vulnerability
+       Assessment and Penetration Testing - Part 2 (Dynamic Analysis)
+
+DESCRIPTION
+       Android Vulnerability Assessment and Penetration Testing (VAPT) Part 2
+       focuses on Dynamic Analysis techniques.  Dynamic Analysis involves
+       performing VAPT on applications running at the production level that can
+       be used publicly.
+
+       This part covers the installation of Frida and techniques for bypassing
+       root detection in Android applications.
+
+   Tools Required
+       The following tools are essential for Android VAPT dynamic analysis:
+
+       •  Genymotion - Android emulator for testing
+       •  Frida - Dynamic instrumentation toolkit
+       •  VirtualBox - Virtualization platform (required for Genymotion)
+       •  Train your brain again
+
+   Dynamic Analysis Overview
+       Dynamic analysis involves testing applications while they are running,
+       allowing security researchers to observe runtime behavior, intercept
+       network traffic, and manipulate application execution in real-time.
+
+   Installing Frida
+       Frida is a dynamic instrumentation toolkit that allows you to inject
+       JavaScript into native applications.  Installing Frida requires several
+       steps, including setting up ADB drivers and Python dependencies.
+
+       Step 1: Install ADB Driver
+              The Android Debug Bridge (ADB) is required to communicate with
+              Android devices or emulators.
+
+              For Linux:
+              ⟨https://gist.github.com/RAJANAGORI/87d967e83a647acaa0c78ecca95d1f37/raw/2734ccea553843ffc1e93ebcb9dd51fc92d3f379/sudo%20apt-get%20install%20adb⟩
+              ```gist:https://gist.github.com/RAJANAGORI/87d967e83a647acaa0c78ecca95d1f37/raw/2734ccea553843ffc1e93ebcb9dd51fc92d3f379/sudo%20apt-get%20install%20adb
+              sudo apt-get install adb
+              ```
+
+              For Windows:
+              ⟨https://gist.github.com/RAJANAGORI/37a9c6819bc2871baee971e30258cdb5/raw/c4c545a2df6795d7ae908f70d3db406768c690dd/adb_for_windows⟩
+              ```gist:https://gist.github.com/RAJANAGORI/37a9c6819bc2871baee971e30258cdb5/raw/c4c545a2df6795d7ae908f70d3db406768c690dd/adb_for_windows
+              https://github.com/koush/adb.clockworkmod.com/releases/latest/download/UniversalAdbDriverSetup.msi
+              ```
+
+       Step 2: Download Frida Server
+              Download the Frida server binary for Android architecture (32-bit
+              or x86).  The server must match your Android device's architecture.
+
+              ⟨https://gist.github.com/RAJANAGORI/2c59eb0657f24676b4612808d9f2070a/raw/43bd4086e9482db70620c3d4b3b95349ca6df083/download_android_frida⟩
+              ```gist:https://gist.github.com/RAJANAGORI/2c59eb0657f24676b4612808d9f2070a/raw/43bd4086e9482db70620c3d4b3b95349ca6df083/download_android_frida
+              wget -L https://github.com/frida/frida/releases/download/14.2.18/frida-server-14.2.18-android-x86.xz -O frida-server-14.2.18-android-x86.xz
+              ```
+
+       Step 3: Install pip2 for Python 2
+              Some Frida dependencies require Python 2.  Install pip2 for
+              Python 2 to handle these dependencies.
+
+              Note: Follow the instructions in the mentioned gist link.
+
+              ⟨https://gist.github.com/RAJANAGORI/2f9933be49265ef539d583142ef4a861/raw/0d4c878e6dc41ef15743d37a6f1c35bdd9603f60/pip2%20install⟩
+              ```gist:https://gist.github.com/RAJANAGORI/2f9933be49265ef539d583142ef4a861/raw/0d4c878e6dc41ef15743d37a6f1c35bdd9603f60/pip2%20install
+              ### Install pip2
+              - wget -L https://bootstrap.pypa.io/pip/2.7/get-pip.py -O get-pip.py
+              - python get-pip.py
+
+              But sometimes installing modules with pip2 give some shit error like this:
+              ``` 
+              ERROR: Command errored out with exit status 1: python setup.py egg_info Check the logs for full command output. when you install python module using pip fot python2 version
+              ```
+              then you need to run
+              - python -m pip install --upgrade pip setuptools wheel
+
+              and after complete the above command install pip2 depended module by given format
+              - python -m pip install -r requirements.txt
+              ```
+
+       Step 4: Install Frida Tools
+              Install the Frida toolkit using pip.
+
+              ⟨https://gist.github.com/RAJANAGORI/be6f190479ee083977d3415538594103/raw/36b8365f750221b51c98f6d7a621c33188cef430/frida-tool⟩
+              ```gist:https://gist.github.com/RAJANAGORI/be6f190479ee083977d3415538594103/raw/36b8365f750221b51c98f6d7a621c33188cef430/frida-tool
+              sudo python -m pip install frida-tools
+              or
+              sudo pip install frida-tools
+              ```
+
+       Once Frida is installed, you're all set to begin dynamic analysis!
+
+   Root Detection Bypass
+       What is Root Detection Bypass?
+              Rooting is the process of enabling root access to an Android
+              device.  When you root your Android device and try to run an
+              application, it allows users to run code with root permissions,
+              meaning users have full control over what their phone is doing.
+
+              Most Android applications have checks to detect rooted devices at
+              the time of installation or when running the application.  We need
+              to bypass these checks to successfully perform root detection
+              bypass and continue with security testing.
+
+       Step-by-Step Root Detection Bypass
+
+       Step 1: Connect Android Device with ADB
+              First, connect your Android device using the ADB driver.
+
+              ⟨https://gist.github.com/RAJANAGORI/330baa35f07716118a3e5ad8d3853914/raw/63f7ede8aef2049c69189761142db709b8624af0/connect%20adb%20drive⟩
+              ```gist:https://gist.github.com/RAJANAGORI/330baa35f07716118a3e5ad8d3853914/raw/63f7ede8aef2049c69189761142db709b8624af0/connect%20adb%20drive
+              adb connect <ip-of-your-android-device-or-emulator>:5555
+              ```
+
+              ⟨./blogs/android_part2/image1.png⟩
+
+       Step 2: Push Frida Server to Android Device
+              Push the Frida server binary to the Android device's /tmp
+              folder using ADB.
+
+              ⟨https://gist.github.com/RAJANAGORI/e8f90090136650813abdd363b2e12530/raw/0c95e0a3bcff93ea599768206662c2100c3d442a/push_frida_server⟩
+              ```gist:https://gist.github.com/RAJANAGORI/e8f90090136650813abdd363b2e12530/raw/0c95e0a3bcff93ea599768206662c2100c3d442a/push_frida_server
+              chmod +x frida-server-14.2.18-android-x86_64 &&\
+              adb push frida-server-14.2.18-android-x86_64 /tmp/frida-server
+              ```
+
+       Step 3: Run Frida Server
+              After pushing the Frida server, run it to intercept running
+              services in the Android device.
+
+              ⟨https://gist.github.com/RAJANAGORI/a0ca0093a90a8f1294026226acd9108d/raw/edfb179452d09ac7bd918449df2e29697b792c7e/run%20shell⟩
+              ```gist:https://gist.github.com/RAJANAGORI/a0ca0093a90a8f1294026226acd9108d/raw/edfb179452d09ac7bd918449df2e29697b792c7e/run%20shell
+              adb shell "/tmp/frida-server &"
+              ```
+
+       Step 4: Display Running Services
+              When you start the server, intercept and display the services
+              running inside the Android device.
+
+              ⟨https://gist.github.com/RAJANAGORI/383412edb8a591fc9a2a0388e3f43a9d/raw/85ffca9654801cb47f9d87eee08e6de59110ed1b/diplay%20services⟩
+              ```gist:https://gist.github.com/RAJANAGORI/383412edb8a591fc9a2a0388e3f43a9d/raw/85ffca9654801cb47f9d87eee08e6de59110ed1b/diplay%20services
+              frida-ps -U
+              ```
+
+              This will display a detailed list of services running on the
+              device.
+
+              ⟨./blogs/android_part2/image2.png⟩
+
+       Step 5: Execute Root Detection Bypass Script
+              For root detection bypass, you can use scripts from Frida
+              CodeShare: ⟨https://codeshare.frida.re/browse⟩
+
+              ⟨https://gist.github.com/RAJANAGORI/fd602c51def40dcde9c70e154d18a576/raw/d7179d52592fa390ee0b391ebbbb9ad045d57cc0/root_tection⟩
+              ```gist:https://gist.github.com/RAJANAGORI/fd602c51def40dcde9c70e154d18a576/raw/d7179d52592fa390ee0b391ebbbb9ad045d57cc0/root_tection
+              frida -U --codeshare dzonerzy/fridantiroot -f com.android.<your-application>
+              ```
+
+              ⟨./blogs/android_part2/image3.png⟩
+
+       Step 6: Resume Application
+              Type %resume and wait for the application to restart.  If the
+              root detection alert is gone after restart, you have successfully
+              bypassed root detection.
+
+NOTES
+       This is Part 2 of the Android VAPT series, focusing on Dynamic Analysis
+       and Root Detection Bypass.
+
+       Important Points to Remember
+
+       •  Dynamic analysis requires the application to be running
+       •  Frida is a powerful tool for runtime manipulation
+       •  Root detection bypass is essential for testing on rooted devices
+       •  Always use dedicated test devices or emulators
+       •  Ensure proper authorization before testing any application
+
+       Best Practices
+
+       •  Use Genymotion or other Android emulators for safe testing
+       •  Keep Frida and tools updated to the latest versions
+       •  Document all findings systematically
+       •  Test in isolated environments
+       •  Follow responsible disclosure practices
+
+       Troubleshooting
+
+       •  If ADB connection fails, check USB debugging is enabled
+       •  Ensure Frida server architecture matches device architecture
+       •  Python 2 dependencies may require additional setup
+       •  Check device permissions for Frida server execution
+
+SEE ALSO
+       frida(1), adb(1), android-vapt-part1(7), genymotion(1)
+
+       OWASP Mobile Security Testing Guide:
+       ⟨https://owasp.org/www-project-mobile-security-testing-guide/⟩
+
+       Frida Documentation: ⟨https://frida.re/docs/⟩
+
+       Frida CodeShare: ⟨https://codeshare.frida.re/browse⟩
+
+       Nightingale Docker Environment:
+       ⟨https://github.com/RAJANAGORI/Nightingale⟩
+
+COLOPHON
+       This page describes Android Application Vulnerability Assessment and
+       Penetration Testing - Part 2 (Dynamic Analysis).  For more information
+       about mobile application security, visit the OWASP Mobile Security
+       Testing Guide at ⟨https://owasp.org/www-project-mobile-security-testing-guide/⟩.
+
+       Contact Information:
+       •  LinkedIn: ⟨https://www.linkedin.com/in/raja-nagori/⟩
+       •  Twitter: ⟨https://twitter.com/RajaNagori7⟩

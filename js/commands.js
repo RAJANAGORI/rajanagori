@@ -140,17 +140,63 @@ game = [
   "<br>"
 ];
 
+// Local blog mapping: name -> file path (for local content)
+localBlogMap = {
+  'wireguard': 'blogs/wireguard/wireguard.txt',
+  'wiregaurd': 'blogs/wireguard/wireguard.txt', // Support typo variant
+  '1': 'blogs/wireguard/wireguard.txt',
+  'xss': 'blogs/xss/xss.txt',
+  'xxs': 'blogs/xss/xss.txt', // Support typo variant
+  '2': 'blogs/xss/xss.txt',
+  'xxe': 'blogs/xxe/xxe.txt',
+  '3': 'blogs/xxe/xxe.txt',
+  'ios': 'blogs/ios/ios.txt',
+  '4': 'blogs/ios/ios.txt',
+  'androidp1': 'blogs/android_part1/part1.txt',
+  'android-part1': 'blogs/android_part1/part1.txt',
+  'android-1': 'blogs/android_part1/part1.txt',
+  '5': 'blogs/android_part1/part1.txt',
+  'androidp2': 'blogs/android_part2/part2.txt',
+  'android-part2': 'blogs/android_part2/part2.txt',
+  'android-2': 'blogs/android_part2/part2.txt',
+  '6': 'blogs/android_part2/part2.txt'
+};
+
+// Blog mapping: name -> URL (for Medium links)
+blogMap = {
+  'wireguard': wiregaurd,
+  'wiregaurd': wiregaurd, // Support typo variant
+  '1': wiregaurd,
+  'xss': xss,
+  '2': xss,
+  'xxe': xxe,
+  '3': xxe,
+  'ios': ios,
+  '4': ios,
+  'androidp1': androidp1,
+  'android-part1': androidp1,
+  'android-1': androidp1,
+  '5': androidp1,
+  'androidp2': androidp2,
+  'android-part2': androidp2,
+  'android-2': androidp2,
+  '6': androidp2
+};
+
 blogs = [
-  "<br",
-  '1. Wireguard : A new tunneling protocol <a href="' + wiregaurd + '" target="_blank">medium' + "</a>", 
-  '2. Tales of XSS: Navigating Web Vulnerabilities <a href="' + xss + '" target="_blank">medium' + "</a>", 
-  '3. A Long Story of XXE Vulnerability!! <a href="' + xxe + '" target="_blank">medium' + "</a>", 
-  '4. iOS Application Vulnerability Assessment and Penetration Testing. <a href="' + ios + '" target="_blank">medium' + "</a>", 
-  '5. Android Vulnerability Assessment and Penetration Testing Part 1 <a href="' + androidp1 + '" target="_blank">medium' + "</a>", 
-  '6. Android Vulnerability Assessment and Penetration Testing Part 2 <a href="' + androidp2 + '" target="_blank">medium' + "</a>", 
-  '7. Bypass Blocked IP with the X-Forwarded For Header <a href="' + ipbypass + '" target="_blank">medium' + "</a>", 
-  '8. XSS Automation using Waybackurl And gf (Grep-Finding) <a href="' + xssautomation + '" target="_blank">medium' + "</a>", 
-  '9. Why localhost and BurpSuite are not best friends. <a href="' + burplocalhost + '" target="_blank">medium' + "</a>"
+  "<br>",
+  '1. Wireguard : A new tunneling protocol <span class="command">[LOCAL]</span>', 
+  '2. Tales of XSS: Navigating Web Vulnerabilities <span class="command">[LOCAL]</span>', 
+  '3. A Long Story of XXE Vulnerability!! <span class="command">[LOCAL]</span>', 
+  '4. iOS Application Vulnerability Assessment and Penetration Testing. <span class="command">[LOCAL]</span>', 
+  '5. Android Vulnerability Assessment and Penetration Testing Part 1 <span class="command">[LOCAL]</span>', 
+  '6. Android Vulnerability Assessment and Penetration Testing Part 2 <span class="command">[LOCAL]</span>',
+  "<br>",
+  '<span class="command">Usage:</span> Type "blog [blog-name]" to read the full article',
+  '<span class="command">Note:</span> All blogs are available locally',
+  "<br>",
+  '<span class="command">Examples:</span> blog wireguard, blog 1, blog xss',
+  "<br>"
 ];
 
 secret = [

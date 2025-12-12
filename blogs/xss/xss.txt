@@ -1,0 +1,163 @@
+XSS(7)                    Miscellaneous Information Manual                    XSS(7)
+
+NAME
+       xss - overview of Cross Site Scripting vulnerabilities and types
+
+DESCRIPTION
+       Cross Site Scripting (XSS) is a formidable security vulnerability that has
+       made a significant impact since the late 1990s and early 2000s.  As web
+       applications gained popularity, security risks grew as developers started
+       incorporating user-generated content into websites.  XSS exploits the
+       loopholes of Input Validation and Output Encoding, emerging as one of the
+       most common web application vulnerabilities.
+
+       The story of XSS begins in the era of the internet and web browsers, a
+       time when social media, banking sectors, healthcare sectors, and almost
+       every other sector relied heavily on the internet, making Confidentiality,
+       Integrity, and Availability (C.I.A) crucial aspects of security.
+
+       Initially, XSS attacks were relatively simple, often involving the
+       injection of scripts through user input fields like search boxes or
+       comment sections.  As awareness of this vulnerability grew, both security
+       researchers and attackers developed more sophisticated techniques to
+       exploit XSS.
+
+       In response to the overwhelming number of vulnerabilities and attacks,
+       security professionals and browser vendors started developing mitigations
+       to minimize the impact of these vulnerabilities.  The fundamental concept
+       is simple: user input should be validated, and output data should be
+       encoded.
+
+       XSS manifests in three different types, each with distinct
+       characteristics and attack vectors.
+
+   Reflected XSS
+       Reflected XSS, also known as non-persistent XSS, occurs when an attacker
+       exploits how a website handles and displays user-entered data.  The
+       attacker manipulates the input in a way that the injected malicious code
+       remains hidden within the website's response.
+
+       When a user interacts with the website by submitting input, the website
+       includes that input in its response and displays it back to the user.
+       However, if the website fails to properly validate or sanitize the user
+       input, it may inadvertently execute the injected malicious code.
+
+       The attacker hides the malicious code within seemingly harmless user input,
+       similar to a magician concealing an object within the folds of a paper
+       bag.  This can deceive the website into displaying the injected code as
+       part of the webpage, potentially leading to unauthorized actions or
+       malicious activities.
+
+       Prevention
+              To prevent reflected XSS attacks, website developers must ensure
+              proper validation and sanitization of user input before displaying
+              it on the webpage.  By carefully examining and filtering the user
+              input, developers can prevent the execution of any malicious code and
+              protect users from potential harm.
+
+   Stored XSS
+       Stored XSS, also known as persistent XSS, occurs when an attacker takes
+       advantage of a website's storage mechanism, such as a database, to inject
+       malicious code that remains stored within the website.  This code can be
+       triggered and executed when other users access the compromised web page
+       or when specific events occur.
+
+       For instance, consider a social media platform that allows users to post
+       messages that are then displayed on their profiles.  An attacker cleverly
+       crafts a message containing malicious JavaScript code, which gets stored
+       in the platform's database.  Whenever another user visits the attacker's
+       profile and views the posted message, the injected code executes,
+       potentially compromising their account or performing unauthorized actions.
+
+       The persistence of stored XSS makes it particularly dangerous, as the
+       malicious code remains active until the stored data is removed or
+       sanitized, affecting multiple users over time.
+
+       Prevention
+              To prevent stored XSS attacks, website developers must implement
+              strict input validation and ensure that any user-generated content
+              is properly sanitized before being stored.  This includes
+              sanitizing data at the point of input and again at the point of
+              output to provide defense in depth.
+
+   DOM XSS
+       DOM XSS (Document Object Model Cross Site Scripting) involves an attacker
+       manipulating the Document Object Model, which represents the structure of
+       a webpage, to inject and execute malicious code.  This type of XSS does
+       not require server-side vulnerabilities and directly affects the
+       client-side code of a web page.
+
+       Unlike reflected and stored XSS, DOM XSS vulnerabilities exist entirely
+       in the client-side code.  The attack occurs when JavaScript code accesses
+       user-controllable data and uses it to modify the DOM in an unsafe manner.
+
+       For example, consider an online forum where users can post messages
+       containing HTML content.  An attacker exploits a vulnerability in the
+       website's JavaScript code by injecting malicious code that modifies the
+       DOM when other users view the compromised page.  This manipulated code
+       can lead to unauthorized actions, data theft, or the redirection of
+       users to malicious websites.
+
+       Prevention
+              To prevent DOM XSS attacks, website developers need to implement
+              strict input validation and properly sanitize any user-generated
+              HTML content before it is rendered on the page.  Additionally,
+              developers should avoid using dangerous DOM manipulation methods
+              like innerHTML and instead use safer alternatives like textContent
+              or proper DOM manipulation APIs.
+
+   Common Attack Vectors
+       XSS attacks commonly exploit the following areas:
+
+       User Input Fields
+              Search boxes, comment sections, contact forms, and any field that
+              accepts user input and displays it back to users.
+
+       URL Parameters
+              Query strings and URL fragments that are reflected in the page
+              content without proper sanitization.
+
+       HTTP Headers
+              User-controllable headers like User-Agent or Referer that are
+              displayed in the application.
+
+       Stored Content
+              User profiles, posts, messages, and any persistent data that is
+              displayed to other users.
+
+NOTES
+       It is crucial to remain vigilant and implement security measures to
+       defend against XSS vulnerabilities across different attack vectors.  The
+       key principles for preventing XSS are:
+
+       •  Input Validation: Validate and sanitize all user input at the point of
+          entry.
+
+       •  Output Encoding: Encode all output data appropriately based on the
+          context (HTML, JavaScript, CSS, URL, etc.).
+
+       •  Content Security Policy (CSP): Implement CSP headers to restrict the
+          sources from which scripts can be loaded and executed.
+
+       •  Use Framework Protection: Leverage built-in protection mechanisms
+          provided by modern web frameworks.
+
+       •  Regular Security Testing: Conduct regular security assessments and
+          penetration testing to identify and remediate XSS vulnerabilities.
+
+       This document covers Part 1 of the XSS vulnerability series, focusing on
+       the fundamental types and characteristics of Cross Site Scripting
+       vulnerabilities.
+
+SEE ALSO
+       owasp-xss(7), csp(7), html-security(7)
+
+       OWASP XSS Prevention Cheat Sheet:
+       ⟨https://cheatsheetseries.owasp.org/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.html⟩
+
+       OWASP Top 10: ⟨https://owasp.org/www-project-top-ten/⟩
+
+COLOPHON
+       This page describes Cross Site Scripting (XSS) vulnerabilities and their
+       types.  For more information about web application security, visit the
+       OWASP website at ⟨https://owasp.org/⟩.

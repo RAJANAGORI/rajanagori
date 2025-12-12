@@ -1,0 +1,255 @@
+IOS-VAPT(7)              Miscellaneous Information Manual            IOS-VAPT(7)
+
+NAME
+       ios-vapt - overview of iOS Application Vulnerability Assessment and
+       Penetration Testing
+
+DESCRIPTION
+       iOS Application Vulnerability Assessment and Penetration Testing (VAPT)
+       involves performing security assessments on iOS applications to identify
+       vulnerabilities and security weaknesses.  Similar to Android, iOS is a
+       modified version of the UNIX platform provided by Apple, just as Android
+       is a modified version of the Linux kernel.
+
+       In iOS Vulnerability Assessment and Penetration Testing, we perform:
+
+       1. Static Application Testing
+       2. Dynamic Application Testing
+
+       However, unlike standard testing, iOS VAPT requires jailbreaking the
+       iPhone device to proceed with comprehensive security testing, similar to
+       how Android VAPT requires rooting the device.
+
+   iOS Overview
+       iOS is Apple's mobile operating system, built on a modified version of
+       the UNIX platform.  This foundation provides a different security model
+       compared to Android, requiring specialized tools and techniques for
+       penetration testing.
+
+   Jailbreaking Requirements
+       Jailbreaking is essential for iOS VAPT, as it provides the necessary
+       access and permissions to perform comprehensive security testing.  Just
+       as Android requires root access, iOS requires a jailbroken device to
+       bypass security restrictions and perform in-depth analysis.
+
+       There are several tools available for jailbreaking iOS devices:
+
+       1. 3uTools - Recommended for ease of use and straightforward process
+       2. AltStore - Alternative jailbreaking solution
+       3. checkra1n - Available for Linux users
+
+       The 3uTools method is preferred due to its simplicity and
+       straightforward approach.
+
+   Jailbreaking Process using 3uTools
+       Prerequisites
+              For 3uTools, you need:
+              •  USB cable
+              •  iPhone device
+              •  Good internet connection
+              •  3uTools software installed on Windows or Mac
+
+       Note: 3uTools is not available on Linux platforms, but Linux users can
+       use checkra1n as an alternative.
+
+       Steps to Jailbreak
+
+       1. Install 3uTools
+              Download and install 3uTools on your computer:
+              •  Windows: Download from the official 3uTools website
+              •  Mac: Download from the official 3uTools website
+
+       2. Connect iPhone
+              Connect your iPhone to your laptop using a USB cable.  When
+              prompted, tap the "Trust" button on your phone to establish the
+              connection.
+
+              ⟨./blogs/ios/image1.png⟩
+
+       3. Flash Process
+              After connecting, you will see the mobile display in 3uTools.
+              Click the "Flash" button under the Smart Flash section.
+
+              ⟨./blogs/ios/image2.png⟩
+
+       4. Wait for Completion
+              Wait for the flashing process to complete.  This may take several
+              minutes.
+
+       5. Install unc0ver
+              After the flashing process, download and install the unc0ver
+              application on your device.
+
+       6. Execute Jailbreak
+              Open the installed unc0ver application and click on the
+              "Jailbreak" button.
+
+              ⟨./blogs/ios/image3.png⟩
+
+       7. Complete Process
+              Wait for the jailbreak process to complete.  Once finished, your
+              device is ready for penetration testing.
+
+   Installing Cydia and Required Packages
+       After jailbreaking, you need to install Cydia, which is the package
+       manager for jailbroken iOS devices.  Cydia allows you to install
+       packages and tools necessary for bypassing security restrictions.
+
+       Why Cydia is Required
+              Similar to Android, where we need to bypass root detection and
+              SSL pinning on rooted devices, iOS applications require bypassing
+              jailbreak detection and SSL pinning to run applications with
+              complete user-level permissions.
+
+       Cydia Repository Sources
+              Add the following repository sources to Cydia for accessing
+              necessary packages:
+
+              •  https://apt.bingner.com
+              •  http://apt.thebigboss.org/repofiles/cydia/
+              •  https://build.frida.re/
+              •  https://repo.chariz.com/
+              •  https://repo.dynastic.co/
+              •  https://repo.hackyouriphone.org/
+              •  https://cydia.angelxwind.net/
+              •  http://apt.modmyi.com/
+              •  https://rpetri.ch/repo/
+              •  http://cydia.zodttd.com/repo/cydia/
+              •  com.ryleyangus.libertylite.beta
+
+       Using Liberty Lite
+              After adding the repositories, install Liberty Lite to bypass
+              jailbreak detection and SSL pinning:
+            ⟨./blogs/ios/image4.png⟩
+            ⟨./blogs/ios/image5.png⟩
+            ⟨./blogs/ios/image6.png⟩
+              1. Click on Liberty Lite in Cydia
+              2. Enable the module and click the "Ankle" button
+              3. Swipe right the toggle for the specific application you want
+                 to test
+
+   Using Frida and Objection Framework
+       An alternative to Liberty Lite is using the Frida and Objection
+       framework, which provides more advanced capabilities for dynamic
+       analysis.
+
+       Prerequisites
+              For installation, you only need Python installed on your system.
+
+       Required Modules
+              Install the following modules:
+
+              1. Python Virtual Environment
+              2. Objection using pip
+              3. Your highly focused and trained brain
+
+       Installation Steps
+              ⟨https://gist.github.com/RAJANAGORI/66d05d339b3b5282cc50ff92ef1b43e2/raw/166dde3517d07e3a8f0bc4afc24e1dda1590e79e/step.md⟩
+              ```gist:https://gist.github.com/RAJANAGORI/66d05d339b3b5282cc50ff92ef1b43e2/raw/166dde3517d07e3a8f0bc4afc24e1dda1590e79e/step.md
+              ### Install python virtual environment
+              ```
+              sudo apt-get install python3-venv
+              ```
+              ### Install python3 pip module
+              ```
+              sudo apt-get install python3-pip
+              ```
+              ### Install objection which can also install frida frameowrk too..
+              ```
+              pip3 install objection
+              ```
+              ```
+
+       Starting Testing Session
+              ⟨https://gist.github.com/RAJANAGORI/024d970c20134c7ea572e81179a1ae6c/raw/c58be9092665d17e14fabac5d851a44e3a0af731/start.md⟩
+              ```gist:https://gist.github.com/RAJANAGORI/024d970c20134c7ea572e81179a1ae6c/raw/c58be9092665d17e14fabac5d851a44e3a0af731/start.md
+              ### In order to start the testing
+              - Add openssh module in cydia and connect your iphone shell
+              ```
+              ssh root@<your-ip>
+              password : alpine
+              ```
+              - after getting access to shell go the application file location and try to look for the sensitive information.
+
+              ### if you done with the static information, play with frida and objection
+              - Fire the first command
+              ```
+              firda-ps -Uai 
+              ```
+              - try to search the PID and bundle name of your application
+              - after getting the required details, run objection
+              ```
+              objection -g <bundle_name>or<bundle_ID> explore
+              ```
+              4.It will restart your application and then you are good to go.....
+              ```
+
+   Objection Framework Commands
+       After starting a session in the Objection framework, you need to perform
+       some preset commands to gather information from the running dynamic
+       application.
+
+       Essential Commands
+
+       Disable Jailbreak Detection
+              $ ios jailbreak disable
+
+       Disable SSL Pinning Detection
+              $ ios sslpinning disable --quiet
+
+       Inspect Binary Information
+              $ ios info binary
+
+       Dump Keychain
+              $ ios keychain dump
+
+       Explore Application Structure
+              $ ls
+              $ env
+
+       Get Information from Info.plist
+              $ ios plist cat Info.plist
+
+       Check Data Stores for Sensitive Information
+              $ ios nsurlcredentialstorage dump
+              $ ios nsuserdefaults get
+              $ ios cookies get
+
+NOTES
+       This guide covers the essential steps to start performing Vulnerability
+       Assessment and Penetration Testing on iOS applications.  The process
+       involves:
+
+       •  Jailbreaking the device using tools like 3uTools or checkra1n
+       •  Installing Cydia and necessary packages
+       •  Bypassing jailbreak detection and SSL pinning
+       •  Using frameworks like Frida and Objection for dynamic analysis
+       •  Extracting sensitive information from the application
+
+       Important Considerations
+
+       •  Jailbreaking voids the device warranty and may introduce security
+          risks
+       •  Always use dedicated test devices for penetration testing
+       •  Ensure proper authorization before testing any application
+       •  Keep tools and frameworks updated to the latest versions
+       •  Linux users can use checkra1n as an alternative to 3uTools
+
+SEE ALSO
+       frida(1), objection(1), cydia(1), checkra1n(1)
+
+       OWASP Mobile Security Testing Guide:
+       ⟨https://owasp.org/www-project-mobile-security-testing-guide/⟩
+
+       Frida Documentation: ⟨https://frida.re/docs/⟩
+
+       Objection Framework: ⟨https://github.com/sensepost/objection⟩
+
+       Nightingale Docker Environment:
+       ⟨https://github.com/RAJANAGORI/Nightingale⟩
+
+COLOPHON
+       This page describes iOS Application Vulnerability Assessment and
+       Penetration Testing procedures.  For more information about mobile
+       application security, visit the OWASP Mobile Security Testing Guide at
+       ⟨https://owasp.org/www-project-mobile-security-testing-guide/⟩.
