@@ -52,24 +52,6 @@
 
 ---
 
-## 📊 GitHub Stats
-
-<p align="center">
-  <a href="https://github.com/RAJANAGORI">
-    <img src="https://github-readme-stats.vercel.app/api?username=RAJANAGORI&show_icons=true&theme=dark" alt="GitHub Stats">
-    <img src="https://github-readme-streak-stats.herokuapp.com/?user=RAJANAGORI&theme=dark" alt="GitHub Streak">
-    <img src="https://github-profile-trophy.vercel.app/?username=RAJANAGORI&theme=darkhub" alt="GitHub Trophies">
-  </a>
-</p>
-
-<p align="center">
-  <a href="https://github.com/RAJANAGORI">
-    <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=RAJANAGORI&layout=compact&theme=dark" alt="Top Languages">
-  </a>
-</p>
-
----
-
 ## 🌟 Community Involvement
 
 - **Speaking Engagements:**
