@@ -14,7 +14,6 @@
 - 🐳 Expert in Docker security and creating tools for pentesters
 - 🌟 Developed **Nightingale: Docker for Pentester**, listed under the OWASP Open Source project list
 - 🎮 Active in **Hack the Box**, solving security challenges
-- ✍️ Author of Medium articles on security methodologies and vulnerability research
 - 🤝 Passionate about community collaboration and mentorship
 
 ---
