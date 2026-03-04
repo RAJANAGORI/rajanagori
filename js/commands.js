@@ -6,6 +6,7 @@ var instagram = "https://www.instagram.com/insiderlearners";
 var github = "https://github.com/RAJANAGORI";
 var email = 'mailto:raja.nagori@owasp.org';
 var nightingale = 'https://github.com/RAJANAGORI/Nightingale';
+var nightingaleSite = 'https://nightingale-security.com/';
 var secucode = 'https://secucode.gitbook.io';
 var wiki = 'https://github.com/RAJANAGORI/Nightingale/wiki/1-%F0%9F%9A%80-Nightingale-Docker-for-Pentesters';
 var resume = 'https://github.com/RAJANAGORI/rajanagori/blob/master/Raja_Nagori.pdf';
@@ -336,5 +337,6 @@ banner = [
   "<span class=\"color2\">Keyboard shortcuts:</span> <span class=\"command\">Ctrl+T</span> <span class=\"color2\">(themes),</span> <span class=\"command\">Tab</span> <span class=\"color2\">(autocomplete)</span>",
   "<span class=\"color2\">Inspiration: ForrestKnight</span> <span class=\"command\">'type youtube'</span><span class=\"color2\">.</span>",
   "<span class=\"color2\">Slack - #project-nightingale</span> <span class=\"command\">'type slack'</span><span class=\"color2\">.</span>",
+  "<span class=\"nightingale-highlight\">Nightingale v2.0 – Docker for Pentesters → <a href=\"" + nightingaleSite + "\" target=\"_blank\">nightingale-security.com</a></span>",
   "<span class=\"color2\">Note: Don't think about</span> <span class=\"command\">'SUDO'</span><span class=\"color2\">.</span>"
 ];
