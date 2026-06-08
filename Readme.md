@@ -44,7 +44,13 @@
   - A comprehensive Docker toolkit for penetration testing, listed under OWASP Open Source projects.
   - Includes tools for web, network, API, OSINT, and forensic testing.
   - **Tech:** Docker, Python, Bash
+ 
+- **[supply-chain-attack-simulator](https://github.com/RAJANAGORI/supply-chain-attack-simulator):**
+  - A comprehensive cybersecurity learning platform for understanding, practicing, and defending against supply chain attacks.
 
+- **[chakravyuh](https://github.com/RAJANAGORI/chakravyuh):**
+  - AI-assisted security threat modeling from uploaded ERD and supporting documents plus architecture diagrams
+ 
 - **[SecuCode GitBook](https://secucode.gitbook.io/):**
   - A curated resource for understanding and mitigating security vulnerabilities based on CWE reports.
   - **Tech:** Markdown
