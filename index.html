@@ -2,37 +2,79 @@
 <html lang="en">
 
 <head>
-  <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-07YD4QT9YH"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
+    function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
     gtag('config', 'G-07YD4QT9YH');
   </script>
   <meta charset="utf-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Raja Nagori</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
+  <title>Raja Nagori — Product Security Engineer</title>
+  <meta name="description" content="Interactive terminal portfolio of Raja Nagori — Product Security Engineer, OWASP-Nightingale lead, pentester, and open source builder.">
+  <meta name="theme-color" content="#0d1117">
+  <meta property="og:title" content="Raja Nagori — Security Engineer Portfolio">
+  <meta property="og:description" content="Type commands to explore projects, blogs, skills, and Nightingale v2.0.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://rajanagori.in">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" type="text/css" media="screen" href="css/style.css">
   <link rel="icon" type="image/x-icon" href="img/fav-icon.png">
 </head>
 
 <body>
-  <div id="terminal">
-    <a id="before"></a>
-  </div>
-  <div id="command" onclick="document.getElementById('texter').focus();">
-    <textarea id="texter" onkeyup="typeIt(this, event)" onkeydown="typeIt(this, event); moveIt(this.value.length, event)" onkeypress="typeIt(this, event);" autofocus></textarea>
-    <div id="liner">
-      <span id="typer"></span><b class="cursor" id="cursor">█</b>
+  <canvas id="bg-canvas" aria-hidden="true"></canvas>
+  <div class="crt-overlay" aria-hidden="true"></div>
+
+  <div class="terminal-shell">
+    <header class="terminal-titlebar">
+      <div class="titlebar-dots">
+        <span class="dot dot-red"></span>
+        <span class="dot dot-yellow"></span>
+        <span class="dot dot-green"></span>
+      </div>
+      <span class="titlebar-title">rajanagori@portfolio — bash</span>
+      <div class="titlebar-status">
+        <span id="status-theme">default</span>
+        <span class="status-sep">·</span>
+        <span id="status-clock">--:--</span>
+      </div>
+    </header>
+
+    <main id="terminal" class="terminal-body">
+      <a id="before"></a>
+    </main>
+
+    <div class="quick-actions" id="quick-actions">
+      <button type="button" class="chip" data-cmd="help">help</button>
+      <button type="button" class="chip" data-cmd="whois">whois</button>
+      <button type="button" class="chip" data-cmd="projects">projects</button>
+      <button type="button" class="chip" data-cmd="nightingale">nightingale</button>
+      <button type="button" class="chip" data-cmd="skills-matrix">skills</button>
+      <button type="button" class="chip chip-accent" data-cmd="neofetch">neofetch</button>
+      <button type="button" class="chip" data-cmd="cowsay">cowsay</button>
     </div>
+
+    <footer id="command" class="terminal-input" onclick="document.getElementById('texter').focus();">
+      <textarea id="texter" rows="1" aria-label="Terminal command input"
+        onkeyup="typeIt(this, event)"
+        onkeydown="typeIt(this, event); moveIt(this.value.length, event)"
+        onkeypress="typeIt(this, event);"
+        autofocus></textarea>
+      <div id="liner">
+        <span id="ghost" class="ghost-text" aria-hidden="true"></span>
+        <span id="typer"></span><b class="cursor" id="cursor">█</b>
+      </div>
+    </footer>
   </div>
 
   <script src="js/caret.js"></script>
   <script src="js/commands.js"></script>
+  <script src="js/effects.js"></script>
   <script src="js/main.js"></script>
 </body>
 

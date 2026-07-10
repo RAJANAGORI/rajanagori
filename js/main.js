@@ -15,10 +15,15 @@ var historyIndex = -1;
 var autoCompleteIndex = -1;
 var autoCompleteOptions = [];
 
-setTimeout(function () {
-  loopLines(banner, "", 80);
-  textarea.focus();
-}, 100);
+document.addEventListener('DOMContentLoaded', function () {
+  loadSavedTheme();
+  if (typeof startPortfolio === 'function') {
+    startPortfolio();
+  } else {
+    loopLines(banner, "", 80);
+    textarea.focus();
+  }
+});
 
 window.addEventListener("keyup", enterKey);
 window.addEventListener("keydown", handleKeyDown);
@@ -61,6 +66,7 @@ function enterKey(e) {
       commander(command.innerHTML.toLowerCase());
       command.innerHTML = "";
       textarea.value = "";
+      scrollTerminalToBottom(true);
     }
     if (e.keyCode == 38 && git != 0) {
       git -= 1;
@@ -89,7 +95,7 @@ function commander(cmd) {
       loopLines(help, "color2 margin", animationSpeed[currentAnimationSpeed]);
       break;
     case "whois":
-      loopLines(whois, "color2 margin whois", 0);
+      showWhois();
       break;
     case "conference":
       loopLines(conference, "color2 margin", animationSpeed[currentAnimationSpeed]);
@@ -129,7 +135,7 @@ function commander(cmd) {
       loopLines(social, "color2 margin", animationSpeed[currentAnimationSpeed]);
       break;
     case "projects":
-      loopLines(projects, "color2 margin", animationSpeed[currentAnimationSpeed]);
+      showProjectCards();
       break;
     case "nightingale":
       loopLines(nightingaleInfo, "color2 margin", animationSpeed[currentAnimationSpeed]);
@@ -158,9 +164,20 @@ function commander(cmd) {
     case "clear":
       clearTerminal();
       break;
-    // New features
+    case "neofetch":
+      loopLines(neofetch, "color2 margin neofetch-wrap", 0);
+      break;
+    case "cowsay":
+      var cowsayMsg = 'Nightingale v2.0 — Docker for Pentesters';
+      loopLines(buildCowsay(cowsayMsg), 'color2 margin cowsay-wrap', 0);
+      break;
+    case "sound":
+      if (typeof toggleSound === 'function') {
+        toggleSound();
+      }
+      break;
     case "skills-matrix":
-      loopLines(skillsMatrix, "color2 margin", animationSpeed[currentAnimationSpeed]);
+      showSkillsMatrix();
       break;
     case "experience":
       loopLines(experienceTimeline, "color2 margin", animationSpeed[currentAnimationSpeed]);
@@ -174,7 +191,7 @@ function commander(cmd) {
     // Theme commands
     case "set-theme":
       addLine("Usage: set-theme [theme-name]", "color2", 0);
-      addLine("Available themes: default, light, cyberpunk, matrix, retro, hacker", "color2", 0);
+      addLine("Available themes: default, light, cyberpunk, matrix, retro, hacker, golden", "color2", 0);
       break;
     case "set-animation":
       addLine("Usage: set-animation [speed]", "color2", 0);
@@ -221,6 +238,28 @@ function newTab(link) {
   }, 500);
 }
 
+function scrollTerminalToBottom(smooth) {
+  var terminalEl = document.getElementById('terminal');
+  if (!terminalEl) return;
+  requestAnimationFrame(function () {
+    if (smooth && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      terminalEl.scrollTo({ top: terminalEl.scrollHeight, behavior: 'smooth' });
+    } else {
+      terminalEl.scrollTop = terminalEl.scrollHeight;
+    }
+  });
+}
+
+function addHtmlBlock(html, className, time) {
+  setTimeout(function () {
+    var block = document.createElement('div');
+    block.className = className || 'terminal-block';
+    block.innerHTML = html;
+    before.parentNode.insertBefore(block, before);
+    scrollTerminalToBottom(true);
+  }, time || 0);
+}
+
 function addLine(text, style, time) {
   var t = "";
   for (let i = 0; i < text.length; i++) {
@@ -238,7 +277,7 @@ function addLine(text, style, time) {
 
     before.parentNode.insertBefore(next, before);
 
-    window.scrollTo(0, document.body.offsetHeight);
+    scrollTerminalToBottom(time > 0);
   }, time);
 }
 
@@ -246,6 +285,11 @@ function loopLines(name, style, time) {
   name.forEach(function (item, index) {
     addLine(item, style, index * time);
   });
+  if (name.length > 0) {
+    setTimeout(function () {
+      scrollTerminalToBottom(true);
+    }, name.length * time + 50);
+  }
 }
 
 // New utility functions
@@ -271,7 +315,16 @@ function handleKeyDown(e) {
   // Tab completion
   if (e.key === 'Tab') {
     e.preventDefault();
-    handleTabCompletion();
+    handleTabCompletion(e);
+  }
+
+  if (e.key.length === 1 || e.key === 'Backspace' || e.key === 'Delete') {
+    var ghost = document.getElementById('ghost');
+    if (ghost && !e.ctrlKey) {
+      setTimeout(function () {
+        handleTabCompletion(null);
+      }, 0);
+    }
   }
   
   // Enhanced history navigation
@@ -285,22 +338,34 @@ function handleKeyDown(e) {
   
 }
 
-function handleTabCompletion() {
+function handleTabCompletion(e) {
   var currentInput = textarea.value.toLowerCase();
   var availableCommands = [
-    'help', 'whois', 'conference', 'video', 'sudo', 'interview', 'youtube', 
+    'help', 'whois', 'conference', 'video', 'sudo', 'interview', 'youtube',
     'discuss', 'slack', 'social', 'projects', 'nightingale', 'wiki', 'blog', 'resume',
-    'password', 'history', 'email', 'clear', 'skills-matrix', 'experience', 
-    'themes', 'settings', 'set-theme', 'set-animation', 
+    'password', 'history', 'email', 'clear', 'neofetch', 'cowsay', 'sound', 'skills-matrix', 'experience',
+    'themes', 'settings', 'set-theme', 'set-animation',
     'twitter', 'linkedin', 'instagram', 'github'
   ];
-  
-  var matches = availableCommands.filter(cmd => cmd.startsWith(currentInput));
-  
-  if (matches.length > 0) {
+
+  var matches = availableCommands.filter(function (cmd) {
+    return cmd.startsWith(currentInput);
+  });
+
+  var ghost = document.getElementById('ghost');
+
+  if (matches.length === 1 && matches[0].startsWith(currentInput) && currentInput.length > 0) {
+    var suffix = matches[0].slice(currentInput.length);
+    if (ghost) ghost.textContent = suffix;
+  } else if (ghost) {
+    ghost.textContent = '';
+  }
+
+  if (matches.length > 0 && e && e.key === 'Tab') {
     autoCompleteIndex = (autoCompleteIndex + 1) % matches.length;
     textarea.value = matches[autoCompleteIndex];
     command.innerHTML = textarea.value;
+    if (ghost) ghost.textContent = '';
   }
 }
 
@@ -343,15 +408,32 @@ function setTheme(themeName) {
   if (themes[themeName]) {
     currentTheme = themeName;
     var theme = themes[themeName];
-    
+
     document.documentElement.style.setProperty('--background-color', theme.background);
     document.documentElement.style.setProperty('--main-text-color', theme.text);
     document.documentElement.style.setProperty('--command-color', theme.command);
     document.documentElement.style.setProperty('--cursor-color', theme.cursor);
-    
-    addLine(`Theme changed to: ${theme.name}`, "color2", 0);
-    
-    // Add visual effects based on theme
+    document.documentElement.style.setProperty('--cursor-background-color', theme.cursor);
+
+    document.body.className = themeName !== 'default' && themeName !== 'light'
+      ? 'theme-' + themeName
+      : '';
+
+    if (themeName === 'golden') {
+      document.body.classList.add('theme-golden');
+    }
+
+    try {
+      localStorage.setItem('portfolio-theme', themeName);
+      localStorage.setItem('portfolio-theme-manual', 'true');
+    } catch (err) {}
+
+    if (typeof updateStatusTheme === 'function') {
+      updateStatusTheme(themeName);
+    }
+
+    addLine('Theme changed to: ' + theme.name, 'color2', 0);
+
     if (themeName === 'matrix') {
       addMatrixEffect();
     } else if (themeName === 'cyberpunk') {
@@ -362,8 +444,66 @@ function setTheme(themeName) {
       removeVisualEffects();
     }
   } else {
-    addLine("Theme not found. Available themes: default, light, cyberpunk, matrix, retro, hacker", "error", 0);
+    addLine('Theme not found. Available themes: default, light, cyberpunk, matrix, retro, hacker, golden', 'error', 0);
   }
+}
+
+function loadSavedTheme() {
+  try {
+    var saved = localStorage.getItem('portfolio-theme');
+    var manual = localStorage.getItem('portfolio-theme-manual') === 'true';
+    if (!saved && typeof applySystemTheme === 'function') {
+      applySystemTheme(false);
+      return;
+    }
+    if (saved && themes[saved]) {
+      currentTheme = saved;
+      var theme = themes[saved];
+      document.documentElement.style.setProperty('--background-color', theme.background);
+      document.documentElement.style.setProperty('--main-text-color', theme.text);
+      document.documentElement.style.setProperty('--command-color', theme.command);
+      document.documentElement.style.setProperty('--cursor-color', theme.cursor);
+      document.documentElement.style.setProperty('--cursor-background-color', theme.cursor);
+      document.body.className = saved !== 'default' && saved !== 'light' ? 'theme-' + saved : '';
+      if (saved === 'golden') document.body.classList.add('theme-golden');
+      if (typeof updateStatusTheme === 'function') updateStatusTheme(saved);
+    }
+  } catch (err) {}
+}
+
+function showSkillsMatrix() {
+  addLine('<br>', '', 0);
+  addLine('<span class="command">Security Skills Matrix:</span>', 'color2', 0);
+
+  var skills = [
+    { name: 'Web Penetration Testing', pct: 98 },
+    { name: 'Mobile Security', pct: 94 },
+    { name: 'Threat Modeling', pct: 88 },
+    { name: 'Source Code Review', pct: 90 },
+    { name: 'DevSecOps', pct: 92 },
+    { name: 'Docker Security', pct: 95 },
+    { name: 'Supply Chain Security', pct: 88 },
+    { name: 'SBOM Analysis', pct: 82 },
+    { name: 'Red Teaming', pct: 75 },
+    { name: 'Scripting (Python/Bash)', pct: 90 },
+    { name: 'OS Hardening', pct: 85 }
+  ];
+
+  skills.forEach(function (skill, index) {
+    var label = skill.name.padEnd(26, ' ');
+    var barWidth = Math.round(skill.pct * 1.2);
+    setTimeout(function () {
+      addLine(
+        label + ' <span class="skill-bar" style="width:' + barWidth + 'px"></span> ' + skill.pct + '%',
+        'skill-bar-row color2 no-animation',
+        0
+      );
+    }, index * 80);
+  });
+
+  setTimeout(function () {
+    addLine('<br>', 'command', 0);
+  }, skills.length * 80 + 100);
 }
 
 function cycleTheme() {
@@ -398,10 +538,66 @@ function setAnimationSpeed(speed) {
 function showCurrentSettings() {
   addLine("<br>", "", 0);
   addLine("<span class='command'>Current Settings:</span>", "color2", 0);
-  addLine(`Theme: ${currentTheme}`, "color2", 0);
-  addLine(`Animation Speed: ${currentAnimationSpeed}`, "color2", 0);
-  addLine(`Commands in History: ${commandHistory.length}`, "color2", 0);
+  addLine("Theme: " + currentTheme, "color2", 0);
+  addLine("Animation Speed: " + currentAnimationSpeed, "color2", 0);
+  addLine("Commands in History: " + commandHistory.length, "color2", 0);
+  addLine("Sound: " + (typeof isSoundEnabled === 'function' && isSoundEnabled() ? 'on' : 'off'), "color2", 0);
+  addLine("System theme sync: " + (typeof isSystemThemeEnabled === 'function' && isSystemThemeEnabled() ? 'on' : 'off'), "color2", 0);
+  addLine("<span class='color2'>Toggle sound with</span> <span class='command'>sound</span>", "color2", 0);
   addLine("<br>", "command", 50);
+}
+
+function showWhois() {
+  addLine('<br>', '', 0);
+  if (typeof getWhoisPanelHtml === 'function') {
+    addHtmlBlock(getWhoisPanelHtml(), 'whois-panel-wrap', 0);
+  } else {
+    loopLines(whois, 'color2 margin whois', 0);
+  }
+  addLine('<br>', 'no-animation', 50);
+}
+
+function showProjectCards() {
+  addLine('<br>', '', 0);
+  addLine('<span class="command">Open Source Projects — hover for preview</span>', 'color2 no-animation', 0);
+
+  var cardsHtml = projectCardsData.map(function (project) {
+    return (
+      '<a class="project-card" href="' + project.site + '" target="_blank" rel="noopener">' +
+        '<div class="project-card-header">' +
+          '<span class="project-card-name">' + project.name + '</span>' +
+          '<span class="project-card-tag">' + project.tag + '</span>' +
+        '</div>' +
+        '<p class="project-card-desc">' + project.desc + '</p>' +
+        '<div class="project-card-meta">' +
+          '<span>★ ' + project.stars + '</span>' +
+          '<span>' + project.tech + '</span>' +
+        '</div>' +
+        '<div class="project-card-preview">' + project.preview + '</div>' +
+      '</a>'
+    );
+  }).join('');
+
+  addHtmlBlock('<div class="project-grid">' + cardsHtml + '</div>', 'project-cards-wrap', 0);
+  addLine('<br>', 'no-animation', 50);
+}
+
+function buildCowsay(message) {
+  var top = '_'.repeat(message.length + 2);
+  var bubble = '( ' + message + ' )';
+  return [
+    '<br>',
+    ' <span class="cowsay-line">' + top + '</span>',
+    ' <span class="cowsay-line">' + bubble + '</span>',
+    ' <span class="cowsay-line">' + '-'.repeat(top.length) + '</span>',
+    ' <span class="cowsay-art neofetch-art">        \\   ^__^</span>',
+    ' <span class="cowsay-art neofetch-art">         \\  (oo)\\_______</span>',
+    ' <span class="cowsay-art neofetch-art">            (__)\\       )\\/\\</span>',
+    ' <span class="cowsay-art neofetch-art">                ||----w |</span>',
+    ' <span class="cowsay-art neofetch-art">                ||     ||</span>',
+    ' <span class="cowsay-line color2">   Nightingale says: Try `projects` or `nightingale`</span>',
+    '<br>'
+  ];
 }
 
 function clearTerminal() {

@@ -31,82 +31,80 @@ var threatmodeling = 'https://interview.rajanagori.in/threatmodel/';
 var zerotohero = 'https://interview.rajanagori.in/zerotohero/';
 var sourcecodereview = 'https://interview.rajanagori.in/source-code-review/';
 
-// This content is about the "WHOIS"
+// Structured whois panel (rendered via showWhois in main.js)
+function getWhoisPanelHtml() {
+  return (
+    '<div class="whois-panel">' +
+      '<div class="whois-hero">' +
+        '<div class="whois-avatar" aria-hidden="true">RN</div>' +
+        '<div class="whois-hero-text">' +
+          '<h2 class="whois-name">Raja Nagori</h2>' +
+          '<p class="whois-role">Product Security Engineer <span class="whois-at">@</span> Splunk</p>' +
+          '<p class="whois-tagline">OWASP-Nightingale Lead · Pentester · Open Source Builder</p>' +
+          '<div class="whois-badges">' +
+            '<span class="whois-badge">🇮🇳 India</span>' +
+            '<span class="whois-badge">🛡️ AppSec</span>' +
+            '<span class="whois-badge">🐳 Docker</span>' +
+            '<span class="whois-badge">📦 Supply Chain</span>' +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+      '<div class="whois-stats">' +
+        '<div class="whois-stat"><span class="whois-stat-value">300+</span><span class="whois-stat-label">GitHub Stars</span></div>' +
+        '<div class="whois-stat"><span class="whois-stat-value">5×</span><span class="whois-stat-label">Blackhat Arsenal</span></div>' +
+        '<div class="whois-stat"><span class="whois-stat-value">9+</span><span class="whois-stat-label">Publications</span></div>' +
+        '<div class="whois-stat"><span class="whois-stat-value">200+</span><span class="whois-stat-label">Pentest Tools</span></div>' +
+      '</div>' +
+      '<p class="whois-intro">Product Security Engineer passionate about penetration testing, threat modeling, DevSecOps, and building open-source security tools for the community.</p>' +
+      '<div class="whois-grid">' +
+        '<section class="whois-section">' +
+          '<h3 class="whois-section-title">Speaking &amp; Events</h3>' +
+          '<ul class="whois-list">' +
+            '<li>Blackhat Arsenal ASIA 2022, 2023, 2024</li>' +
+            '<li>Blackhat Arsenal EU London 2025</li>' +
+            '<li>OWASP Global AppSec EU 2022</li>' +
+            '<li>Docker Community Hands-On Event</li>' +
+            '<li>Blackhat Arsenal MEA 2022, 2023 <span class="whois-muted">(Shortlisted)</span></li>' +
+            '<li>IWCON 2024 · c0c0n 2024</li>' +
+          '</ul>' +
+        '</section>' +
+        '<section class="whois-section">' +
+          '<h3 class="whois-section-title">Flagship Projects</h3>' +
+          '<ul class="whois-list whois-links">' +
+            '<li><a href="' + nightingaleSite + '" target="_blank">Nightingale v2.0</a> — OWASP pentest framework</li>' +
+            '<li><a href="' + sbomSite + '" target="_blank">SBOM Parser</a> — CycloneDX vulnerability explorer</li>' +
+            '<li><a href="' + scasSite + '" target="_blank">SCAS Labs</a> — 22 supply chain attack labs</li>' +
+            '<li><a href="' + interviewSite + '" target="_blank">Interview Prep</a> — Security interview guides</li>' +
+          '</ul>' +
+        '</section>' +
+        '<section class="whois-section">' +
+          '<h3 class="whois-section-title">Core Expertise</h3>' +
+          '<div class="whois-tags">' +
+            '<span>Web &amp; Network Pentest</span><span>Mobile Security</span><span>Threat Modeling</span>' +
+            '<span>SAST / DAST</span><span>DevSecOps</span><span>Docker Security</span>' +
+            '<span>SBOM Analysis</span><span>Python / Bash</span><span>OS Hardening</span>' +
+          '</div>' +
+        '</section>' +
+        '<section class="whois-section">' +
+          '<h3 class="whois-section-title">Community &amp; Writing</h3>' +
+          '<ul class="whois-list">' +
+            '<li>Leads <a href="' + nightingale + '" target="_blank">OWASP-Nightingale</a> (Incubator project)</li>' +
+            '<li>Active on <strong>Hack The Box</strong> — continuous learning</li>' +
+            '<li>9+ security articles on <a href="https://rajanagori.medium.com/" target="_blank">Medium</a></li>' +
+            '<li>OWASP chapter talks &amp; security community mentorship</li>' +
+          '</ul>' +
+        '</section>' +
+      '</div>' +
+      '<p class="whois-footer">Beyond security: guitar, indie music, and long bike trips 🎸🚴</p>' +
+      '<p class="whois-cta"><span class="color2">Explore more →</span> <span class="command">projects</span> · <span class="command">nightingale</span> · <span class="command">blog</span> · <span class="command">social</span></p>' +
+    '</div>'
+  );
+}
+
+// Legacy fallback (unused — kept for reference)
 whois = [
   "<br>",
   "Raja Nagori",
-  "<br><br>",
-  "Raja Nagori is a dedicated and accomplished Product Security Engineer at Splunk, with a strong passion for information security and a relentless drive to enhance his technical skills. With a Bachelor's degree in Computer Science and Engineering, Raja has developed a deep expertise in various facets of security, including penetration testing, threat modeling, and DevSecOps.",
-  "<br><br>",
-  "<strong>Professional Contributions and Leadership:</strong>",
-  "<br><br>",
-  "Raja's commitment to the security community is evident through his active contributions to the OWASP community, where he leads the OWASP-Nightingale project. Nightingale v2.0 is a comprehensive penetration testing framework with a web-based GUI, 200+ security tools, embedded VS Code, and AI-assisted analysis — garnering 300+ GitHub stars and featured at numerous prestigious events:",
-  "<br><br>",
-  "- Blackhat Arsenal ASIA 2022, 2023, 2024",
-  "<br>",
-  "- Blackhat Arsenal EU London 2025",
-  "<br>",
-  "- OWASP Global AppSec EU 2022",
-  "<br>",
-  "- Docker community hands-on event",
-  "<br>",
-  "- Blackhat Arsenal MEA 2022, 2023 (Shortlisted)",
-  "<br>",
-  "- IWCON - 2024",
-  "<br>",
-  "- c0c0n - 2024",
-  "<br><br>",
-  "<strong>Recent Open Source Projects:</strong>",
-  "<br><br>",
-  "- Nightingale v2.0: OWASP Incubator pentest framework with web GUI and hosted dashboard",
-  "<br>",
-  "- SBOM Parser: CycloneDX SBOM explorer with interactive vulnerability dashboard",
-  "<br>",
-  "- Supply Chain Attack Simulator: 22 hands-on labs for supply chain security education",
-  "<br>",
-  "- Interview Prep Platform: Structured security interview and threat modeling guides",
-  "<br><br>",
-  "<strong>Expertise and Skills:</strong>",
-  "<br><br>",
-  "Raja's areas of expertise are vast and encompass several critical aspects of security:",
-  "<br><br>",
-  "- Web and Network Penetration Testing: Raja specializes in identifying vulnerabilities in web applications and network infrastructures.",
-  "<br>",
-  "- Mobile Application Penetration Testing: His proficiency extends to Android and iOS applications, ensuring comprehensive security assessments.",
-  "<br>",
-  "- Threat Modeling: Raja excels in identifying potential threats and developing strategies to mitigate them.",
-  "<br>",
-  "- Source Code Review (SAST): Skilled in static application security testing using tools like Checkmarx, Veracode, and Sonarqube.",
-  "<br>",
-  "- Authenticated DAST: Conducting dynamic application security testing with tools like Burp Suite.",
-  "<br>",
-  "- DevOps and Docker Security: Raja is adept at Docker containerization, creating secure Docker images, and integrating security within DevOps practices.",
-  "<br>",
-  "- DevSecOps: Expertise in CI/CD integration with various security tools to ensure continuous security throughout the development lifecycle.",
-  "<br>",
-  "- Scripting and Automation: Proficient in Shell Scripting and Python, Raja automates tasks to streamline workflows.",
-  "<br>",
-  "- Operating System Hardening: Enhancing the security of both Linux and Windows operating systems.",
-  "<br>",
-  "- Red Teaming: Although a beginner, Raja is enthusiastic about expanding his skills in red teaming.",
-  "<br><br>",
-  "<strong>Community Engagement and Knowledge Sharing:</strong>",
-  "<br><br>",
-  "Raja believes in the power of knowledge sharing and actively contributes to the security community through various platforms:",
-  "<br><br>",
-  "- OWASP and Beyond: He has delivered talks at OWASP and other security chapters, sharing his insights and experiences.",
-  "<br>",
-  "- Hack the Box: As an active member, Raja participates in solving new security patches and challenges, continuously honing his skills.",
-  "<br>",
-  "- Publications: Raja shares his discoveries and methodologies through publications on Medium, focusing on security findings and vulnerability identification techniques.",
-  "<br><br>",
-  "<strong>Passion and Hobbies:</strong>",
-  "<br><br>",
-  "Beyond his professional endeavors, Raja has a passion for music and biking. He enjoys playing the guitar, learning new chords, and exploring indie music albums. Additionally, he loves going on bike trips, finding solace and inspiration in his journeys.",
-  "<br><br>",
-  "<strong>Conclusion:</strong>",
-  "<br><br>",
-  "Raja Nagori's dedication to information security, coupled with his extensive technical expertise and commitment to community engagement, make him a distinguished figure in the security domain. His work with OWASP-Nightingale and contributions to various security events highlight his innovative approach to solving complex security challenges. Raja's continuous efforts to learn, share, and grow in the field of security exemplify his passion and commitment to making the digital world a safer place.",
   "<br>"
 ];
 
@@ -136,17 +134,56 @@ projects = [
   "<br>",
   '<span class="command">Open Source Projects (by activity):</span>',
   "<br>",
-  '1. Nightingale v2.0 <a href="' + nightingaleSite + '" target="_blank">nightingale-security.com</a> | <a href="' + nightingale + '" target="_blank">github</a>',
-  '   OWASP Incubator pentest framework — web GUI, 200+ tools, 300+ stars',
-  '2. SBOM Parser <a href="' + sbomSite + '" target="_blank">sbom.nightingale-security.com</a> | <a href="' + sbomParser + '" target="_blank">github</a>',
-  '   CycloneDX SBOM explorer with interactive vulnerability dashboard',
-  '3. Supply Chain Attack Simulator <a href="' + scasSite + '" target="_blank">simulator.rajanagori.in</a> | <a href="' + scas + '" target="_blank">github</a>',
-  '   22 hands-on labs for supply chain attack education and defense',
-  '4. Interview Prep Platform <a href="' + interviewSite + '" target="_blank">interview.rajanagori.in</a> | <a href="' + interviewRepo + '" target="_blank">github</a>',
-  '   Security interview guides, threat modeling, and source code review',
-  '5. SecuCode <a href="' + secucode + '" target="_blank">gitbook/secucode</a>',
-  '   CWE-based vulnerability reference (archived)',
+  'Type <span class="command">projects</span> to see interactive project cards with hover previews.',
   "<br>"
+];
+
+projectCardsData = [
+  {
+    name: 'Nightingale v2.0',
+    tag: 'OWASP Incubator',
+    stars: '300+',
+    tech: 'Docker · Python · JS',
+    desc: 'Pentest framework with web GUI, 200+ tools, embedded VS Code, and AI-assisted analysis.',
+    preview: 'Web console · Multi-terminal · OpenSSF certified · Multi-arch AMD64/ARM64',
+    site: nightingaleSite
+  },
+  {
+    name: 'SBOM Parser',
+    tag: 'Supply Chain',
+    stars: 'New',
+    tech: 'Node.js · Alpine.js',
+    desc: 'CycloneDX SBOM explorer with interactive vulnerability dashboard and export.',
+    preview: 'Parse SBOMs · Filter CVEs · Visual dependency graph · Export reports',
+    site: sbomSite
+  },
+  {
+    name: 'SCAS Labs',
+    tag: 'Education',
+    stars: '22 labs',
+    tech: 'Python · Node.js',
+    desc: 'Hands-on supply chain attack simulator for learning attack and defense patterns.',
+    preview: 'Dependency confusion · Typosquatting · CI/CD poisoning · Mitigation playbooks',
+    site: scasSite
+  },
+  {
+    name: 'Interview Prep',
+    tag: 'Community',
+    stars: '4 tracks',
+    tech: 'HTML · Markdown',
+    desc: 'Structured security interview guides, threat modeling, and source code review prep.',
+    preview: 'Interview Q&A · Threat modeling · Zero-to-hero · Secure code review',
+    site: interviewSite
+  },
+  {
+    name: 'SecuCode',
+    tag: 'Reference',
+    stars: 'CWE',
+    tech: 'GitBook',
+    desc: 'CWE-based vulnerability reference and mitigation guide for developers.',
+    preview: 'CWE catalog · Mitigations · Developer-friendly security patterns',
+    site: secucode
+  }
 ];
 
 interview = [
@@ -304,6 +341,13 @@ themes = {
     text: "#00ff41",
     command: "#ff6b6b",
     cursor: "#00d4ff"
+  },
+  golden: {
+    name: "Golden Nightingale (Secret)",
+    background: "#1a1208",
+    text: "#fde68a",
+    command: "#fbbf24",
+    cursor: "#f59e0b"
   }
 };
 
@@ -316,22 +360,30 @@ animationSpeed = {
   none: 0
 };
 
-// Skills matrix data
+// Skills matrix data (fallback text version)
 skillsMatrix = [
   "<br>",
   "<span class='command'>Security Skills Matrix:</span>",
   "<br>",
-  "Web Penetration Testing   ██████████████ 98%",
-  "Mobile Security           █████████████ 94%", 
-  "Threat Modeling           ███████████   88%",
-  "Source Code Review        ███████████   90%",
-  "DevSecOps                 █████████████ 92%",
-  "Docker Security           █████████████ 95%",
-  "Supply Chain Security     ███████████   88%",
-  "SBOM Analysis             ██████████    82%",
-  "Red Teaming               ████████      75%",
-  "Scripting (Python/Bash)   ████████████ 90%",
-  "OS Hardening              ████████████ 85%",
+  "Use this command to see animated skill bars.",
+  "<br>"
+];
+
+neofetch = [
+  "<br>",
+  '<span class="neofetch-art">        .---.   </span>  <span class="neofetch-label">rajanagori@portfolio</span>',
+  '<span class="neofetch-art">       /     \\  </span>  ──────────────────────────',
+  '<span class="neofetch-art">      |  R N  | </span>  <span class="neofetch-label">Role:</span>     Product Security Engineer',
+  '<span class="neofetch-art">      |  🛡️   | </span>  <span class="neofetch-label">Company:</span>  Splunk',
+  '<span class="neofetch-art">       \\   /   </span>  <span class="neofetch-label">Project:</span>  OWASP-Nightingale v2.0',
+  '<span class="neofetch-art">        \'-\'    </span>  <span class="neofetch-label">Stars:</span>    300+ on Nightingale',
+  '                          <span class="neofetch-label">Talks:</span>    Blackhat Arsenal ×5',
+  '                          <span class="neofetch-label">Blog:</span>     9+ Medium articles',
+  '                          <span class="neofetch-label">Shell:</span>    portfolio-bash v2.0',
+  '                          <span class="neofetch-label">Theme:</span>    try set-theme hacker',
+  "<br>",
+  '                          <span class="neofetch-label">Links:</span>    <a href="' + nightingaleSite + '" target="_blank">nightingale-security.com</a>',
+  '                                      <a href="' + github + '" target="_blank">github/RAJANAGORI</a>',
   "<br>"
 ];
 
@@ -377,7 +429,10 @@ help = [
   "<br>",
   '<span class="command">--- NEW FEATURES ---</span>',
   "<br>",
-  '<span class="command">skills-matrix</span>  Interactive skills visualization',
+  '<span class="command">neofetch</span>       System-style profile card',
+  '<span class="command">cowsay</span>         Nightingale ASCII easter egg',
+  '<span class="command">sound</span>          Toggle typing sound on/off',
+  '<span class="command">skills-matrix</span>  Animated skills visualization',
   '<span class="command">experience</span>     Professional journey timeline',
   '<span class="command">set-theme</span>      Change terminal theme',
   '<span class="command">set-animation</span>  Control typing speed',
@@ -395,14 +450,13 @@ help = [
 
 banner = [
   "<br>",
-  "+-+-+-+-+ +-+-+-+-+-+-+",
-  "|R|A|J|A| |N|A|G|O|R|I|",
-  "+-+-+-+-+ +-+-+-+-+-+-+",
+  '<span class="banner-art holographic">+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+</span>',
+  '<span class="banner-art holographic">|R|A|J|A| |N|A|G|O|R|I|</span>',
+  '<span class="banner-art holographic">+-+-+-+-+-+-+-+-+ +-+-+-+-+-+-+</span>',
   "<span class=\"color2\">For a list of available commands, type</span> <span class=\"command\">'help'</span><span class=\"color2\">.</span>",
-  "<span class=\"color2\">NEW: Try</span> <span class=\"command\">'nightingale'</span> <span class=\"color2\">or</span> <span class=\"command\">'projects'</span> <span class=\"color2\">to see latest work</span>",
-  "<span class=\"color2\">Keyboard shortcuts:</span> <span class=\"command\">Ctrl+T</span> <span class=\"color2\">(themes),</span> <span class=\"command\">Tab</span> <span class=\"color2\">(autocomplete)</span>",
-  "<span class=\"color2\">Inspiration: ForrestKnight</span> <span class=\"command\">'type youtube'</span><span class=\"color2\">.</span>",
-  "<span class=\"color2\">Slack - #project-nightingale</span> <span class=\"command\">'type slack'</span><span class=\"color2\">.</span>",
+  "<span class=\"color2\">Try</span> <span class=\"command\">'neofetch'</span> <span class=\"color2\">or</span> <span class=\"command\">'cowsay'</span> <span class=\"color2\">for fun</span>",
+  "<span class=\"color2\">Quick picks:</span> <span class=\"command\">nightingale</span> <span class=\"color2\">·</span> <span class=\"command\">projects</span> <span class=\"color2\">·</span> <span class=\"command\">skills-matrix</span>",
+  "<span class=\"color2\">Keyboard:</span> <span class=\"command\">Ctrl+T</span> <span class=\"color2\">themes ·</span> <span class=\"command\">Tab</span> <span class=\"color2\">autocomplete · chips below</span>",
   "<span class=\"nightingale-highlight\">Nightingale v2.0 – Docker for Pentesters → <a href=\"" + nightingaleSite + "\" target=\"_blank\">nightingale-security.com</a></span>",
   "<span class=\"color2\">Note: Don't think about</span> <span class=\"command\">'SUDO'</span><span class=\"color2\">.</span>"
 ];
