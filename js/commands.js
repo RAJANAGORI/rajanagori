@@ -7,10 +7,16 @@ var github = "https://github.com/RAJANAGORI";
 var email = 'mailto:raja.nagori@owasp.org';
 var nightingale = 'https://github.com/RAJANAGORI/Nightingale';
 var nightingaleSite = 'https://nightingale-security.com/';
+var nightingaleDashboard = 'https://dashboard.nightingale-security.com/';
+var sbomParser = 'https://github.com/RAJANAGORI/sbom-parser';
+var sbomSite = 'https://sbom.nightingale-security.com/';
+var scas = 'https://github.com/RAJANAGORI/supply-chain-attack-simulator';
+var scasSite = 'https://simulator.rajanagori.in/';
+var interviewRepo = 'https://github.com/RAJANAGORI/interview';
+var interviewSite = 'https://interview.rajanagori.in/';
 var secucode = 'https://secucode.gitbook.io';
-var wiki = 'https://github.com/RAJANAGORI/Nightingale/wiki/1-%F0%9F%9A%80-Nightingale-Docker-for-Pentesters';
+var wiki = 'https://github.com/RAJANAGORI/Nightingale/wiki/1.-Nightingale-Docker-for-Pentesters';
 var resume = 'https://github.com/RAJANAGORI/rajanagori/blob/master/Raja_Nagori.pdf';
-var AndroidSpyware = 'https://github.com/RAJANAGORI/Android-spyware';
 var wiregaurd = 'https://medium.com/@rajanagori/wireguard-a-new-tunneling-protocol-207d4aa893d0';
 var xss = 'https://medium.com/@rajanagori/tales-of-xss-navigating-web-vulnerabilities-71f2ef61af9b';
 var xxe = 'https://medium.com/@rajanagori/a-long-story-of-xxe-vulnerability-6a9a33276602';
@@ -22,6 +28,8 @@ var burplocalhost = 'https://medium.com/@rajanagori/why-localhost-and-burpsuite-
 var xssautomation = 'https://medium.com/@rajanagori/xss-automation-using-waybackurl-and-gf-grep-finding-4f6745f70a22';
 var interviewprep = 'https://interview.rajanagori.in/interview/';
 var threatmodeling = 'https://interview.rajanagori.in/threatmodel/';
+var zerotohero = 'https://interview.rajanagori.in/zerotohero/';
+var sourcecodereview = 'https://interview.rajanagori.in/source-code-review/';
 
 // This content is about the "WHOIS"
 whois = [
@@ -32,7 +40,7 @@ whois = [
   "<br><br>",
   "<strong>Professional Contributions and Leadership:</strong>",
   "<br><br>",
-  "Raja's commitment to the security community is evident through his active contributions to the OWASP community, where he currently leads the OWASP-Nightingale project. Nightingale, a Docker-based environment for penetration testers, has garnered significant attention and has been selected for numerous prestigious events:",
+  "Raja's commitment to the security community is evident through his active contributions to the OWASP community, where he leads the OWASP-Nightingale project. Nightingale v2.0 is a comprehensive penetration testing framework with a web-based GUI, 200+ security tools, embedded VS Code, and AI-assisted analysis — garnering 300+ GitHub stars and featured at numerous prestigious events:",
   "<br><br>",
   "- Blackhat Arsenal ASIA 2022, 2023, 2024",
   "<br>",
@@ -44,9 +52,19 @@ whois = [
   "<br>",
   "- Blackhat Arsenal MEA 2022, 2023 (Shortlisted)",
   "<br>",
-  "- IWCON - 2023",
+  "- IWCON - 2024",
   "<br>",
   "- c0c0n - 2024",
+  "<br><br>",
+  "<strong>Recent Open Source Projects:</strong>",
+  "<br><br>",
+  "- Nightingale v2.0: OWASP Incubator pentest framework with web GUI and hosted dashboard",
+  "<br>",
+  "- SBOM Parser: CycloneDX SBOM explorer with interactive vulnerability dashboard",
+  "<br>",
+  "- Supply Chain Attack Simulator: 22 hands-on labs for supply chain security education",
+  "<br>",
+  "- Interview Prep Platform: Structured security interview and threat modeling guides",
   "<br><br>",
   "<strong>Expertise and Skills:</strong>",
   "<br><br>",
@@ -99,7 +117,7 @@ conference = [
   "3. OWASP Global Appsec EU 2022",
   "4. Docker Community Hands-On Event",
   "5. Blackhat Arsenal MEA 2022, 2023 (Shortlisted)",
-  "6. IWCON - 2023",
+  "6. IWCON - 2024",
   "7. c0c0n - 2024",
   "<br>"
 ];
@@ -116,16 +134,50 @@ social = [
 
 projects = [
   "<br>",
-  '1. Nightingale <a href="' + nightingale + '" target="_blank">github/nightingale' + "</a>",
-  '2. SecuCode <a href="' + secucode + '" target="_blank">gitbook/secucode' + "</a>",
-  '3. Android Spyware <a href="' + AndroidSpyware + '" target="_blank">github/Android_spyware' + "</a>",
+  '<span class="command">Open Source Projects (by activity):</span>',
+  "<br>",
+  '1. Nightingale v2.0 <a href="' + nightingaleSite + '" target="_blank">nightingale-security.com</a> | <a href="' + nightingale + '" target="_blank">github</a>',
+  '   OWASP Incubator pentest framework — web GUI, 200+ tools, 300+ stars',
+  '2. SBOM Parser <a href="' + sbomSite + '" target="_blank">sbom.nightingale-security.com</a> | <a href="' + sbomParser + '" target="_blank">github</a>',
+  '   CycloneDX SBOM explorer with interactive vulnerability dashboard',
+  '3. Supply Chain Attack Simulator <a href="' + scasSite + '" target="_blank">simulator.rajanagori.in</a> | <a href="' + scas + '" target="_blank">github</a>',
+  '   22 hands-on labs for supply chain attack education and defense',
+  '4. Interview Prep Platform <a href="' + interviewSite + '" target="_blank">interview.rajanagori.in</a> | <a href="' + interviewRepo + '" target="_blank">github</a>',
+  '   Security interview guides, threat modeling, and source code review',
+  '5. SecuCode <a href="' + secucode + '" target="_blank">gitbook/secucode</a>',
+  '   CWE-based vulnerability reference (archived)',
   "<br>"
 ];
 
 interview = [
   "<br>",
-  '1. Interview Preparation <a href="' + interviewprep + '" target="_blank">Interview Question' + "</a>",
-  '2. Threat Modeling Preparation <a href="' + threatmodeling + '" target="_blank">Threat Modeling' + "</a>",
+  '<span class="command">Security Interview Prep:</span>',
+  "<br>",
+  '1. Interview Preparation <a href="' + interviewprep + '" target="_blank">interview.rajanagori.in/interview</a>',
+  '2. Threat Modeling <a href="' + threatmodeling + '" target="_blank">interview.rajanagori.in/threatmodel</a>',
+  '3. Zero to Hero <a href="' + zerotohero + '" target="_blank">interview.rajanagori.in/zerotohero</a>',
+  '4. Secure Source Code Review <a href="' + sourcecodereview + '" target="_blank">interview.rajanagori.in/source-code-review</a>',
+  "<br>"
+];
+
+nightingaleInfo = [
+  "<br>",
+  '<span class="command">Nightingale v2.0 — OWASP Docker for Pentesters</span>',
+  "<br>",
+  "A comprehensive penetration testing framework built on Docker with a modern web-based GUI.",
+  "<br><br>",
+  '<span class="command">Highlights:</span>',
+  "• 200+ pre-installed security tools across 6 categories",
+  "• Web console with multi-terminal support and embedded VS Code",
+  "• Security scans, playbooks, findings ingestion, and AI-assisted analysis",
+  "• OpenSSF Best Practices certified",
+  "• 300+ GitHub stars | Multi-arch (AMD64 + ARM64)",
+  "<br>",
+  '<span class="command">Links:</span>',
+  'Website    <a href="' + nightingaleSite + '" target="_blank">nightingale-security.com</a>',
+  'Dashboard  <a href="' + nightingaleDashboard + '" target="_blank">dashboard.nightingale-security.com</a>',
+  'GitHub     <a href="' + nightingale + '" target="_blank">github/RAJANAGORI/Nightingale</a>',
+  'Wiki       <a href="' + wiki + '" target="_blank">Nightingale Wiki</a>',
   "<br>"
 ];
 
@@ -175,7 +227,13 @@ blogMap = {
   'androidp2': androidp2,
   'android-part2': androidp2,
   'android-2': androidp2,
-  '6': androidp2
+  '6': androidp2,
+  'ipbypass': ipbypass,
+  '7': ipbypass,
+  'burplocalhost': burplocalhost,
+  '8': burplocalhost,
+  'xssautomation': xssautomation,
+  '9': xssautomation
 };
 
 blogs = [
@@ -186,11 +244,14 @@ blogs = [
   '4. iOS Application Vulnerability Assessment and Penetration Testing. <span class="command">[LOCAL]</span>', 
   '5. Android Vulnerability Assessment and Penetration Testing Part 1 <span class="command">[LOCAL]</span>', 
   '6. Android Vulnerability Assessment and Penetration Testing Part 2 <span class="command">[LOCAL]</span>',
+  '7. Bypass IP Block with X-Forwarded-For Header <span class="command">[MEDIUM]</span>',
+  '8. Why Localhost and Burp Suite Are Not Best Friends <span class="command">[MEDIUM]</span>',
+  '9. XSS Automation Using Waybackurl and GF Grep Finding <span class="command">[MEDIUM]</span>',
   "<br>",
   '<span class="command">Usage:</span> Type "blog [blog-name]" to read the full article',
-  '<span class="command">Note:</span> All blogs are available locally',
+  '<span class="command">Note:</span> [LOCAL] articles load in-terminal; [MEDIUM] opens on Medium',
   "<br>",
-  '<span class="command">Examples:</span> blog wireguard, blog 1, blog xss',
+  '<span class="command">Examples:</span> blog wireguard, blog 1, blog xss, blog ipbypass',
   "<br>"
 ];
 
@@ -266,6 +327,8 @@ skillsMatrix = [
   "Source Code Review        ███████████   90%",
   "DevSecOps                 █████████████ 92%",
   "Docker Security           █████████████ 95%",
+  "Supply Chain Security     ███████████   88%",
+  "SBOM Analysis             ██████████    82%",
   "Red Teaming               ████████      75%",
   "Scripting (Python/Bash)   ████████████ 90%",
   "OS Hardening              ████████████ 85%",
@@ -278,16 +341,18 @@ experienceTimeline = [
   "<span class='command'>Professional Journey:</span>",
   "<br>",
   "2024 - Present    Product Security Engineer @ Splunk",
-  "2022 - 2024       Lead OWASP-Nightingale Project",
+  "2023 - Present    Lead OWASP-Nightingale v2.0 (OWASP Incubator)",
+  "2022 - 2024       Built Nightingale Docker toolkit & community",
   "2021 - 2022       Security Researcher & Blogger",
   "2020 - 2021       Penetration Tester",
   "2019 - 2020       Computer Science Graduate",
   "<br>",
   "<span class='command'>Key Achievements:</span>",
-  "• Blackhat Arsenal Asia 2022, 2023, 2024",
+  "• Blackhat Arsenal Asia 2022, 2023, 2024 & EU London 2025",
   "• OWASP Global AppSec EU 2022 Speaker",
+  "• Nightingale v2.0 — 300+ GitHub stars, OpenSSF certified",
+  "• Supply Chain Attack Simulator — 22 hands-on security labs",
   "• 9+ Security Publications on Medium",
-  "• 200+ GitHub Stars across projects",
   "• Active OWASP Project Leader",
   "<br>"
 ];
@@ -300,10 +365,11 @@ help = [
   '<span class="command">video</span>          My Youtube Channel',
   '<span class="command">social</span>         My Social platforms',
   '<span class="command">projects</span>       My Open Source Projects',
+  '<span class="command">nightingale</span>    Nightingale v2.0 details',
   '<span class="command">resume</span>         My Resume',
   '<span class="command">wiki</span>           Nightingale Wiki',
   '<span class="command">conference</span>     Conference list',
-  '<span class="command">blog</span>           My Medium Blog',
+  '<span class="command">blog</span>           My Blog',
   '<span class="command">history</span>        Command history with search',
   '<span class="command">email</span>          My Email address',
   '<span class="command">interview</span>      Interview',
@@ -333,7 +399,7 @@ banner = [
   "|R|A|J|A| |N|A|G|O|R|I|",
   "+-+-+-+-+ +-+-+-+-+-+-+",
   "<span class=\"color2\">For a list of available commands, type</span> <span class=\"command\">'help'</span><span class=\"color2\">.</span>",
-  "<span class=\"color2\">NEW: Try</span> <span class=\"command\">'set-theme hacker'</span> <span class=\"color2\">or</span> <span class=\"command\">'skills-matrix'</span>",
+  "<span class=\"color2\">NEW: Try</span> <span class=\"command\">'nightingale'</span> <span class=\"color2\">or</span> <span class=\"command\">'projects'</span> <span class=\"color2\">to see latest work</span>",
   "<span class=\"color2\">Keyboard shortcuts:</span> <span class=\"command\">Ctrl+T</span> <span class=\"color2\">(themes),</span> <span class=\"command\">Tab</span> <span class=\"color2\">(autocomplete)</span>",
   "<span class=\"color2\">Inspiration: ForrestKnight</span> <span class=\"command\">'type youtube'</span><span class=\"color2\">.</span>",
   "<span class=\"color2\">Slack - #project-nightingale</span> <span class=\"command\">'type slack'</span><span class=\"color2\">.</span>",

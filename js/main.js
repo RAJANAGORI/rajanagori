@@ -131,6 +131,9 @@ function commander(cmd) {
     case "projects":
       loopLines(projects, "color2 margin", animationSpeed[currentAnimationSpeed]);
       break;
+    case "nightingale":
+      loopLines(nightingaleInfo, "color2 margin", animationSpeed[currentAnimationSpeed]);
+      break;
     case "wiki":
       addLine("Opening nightingale wiki...", "color2", animationSpeed[currentAnimationSpeed]);
       newTab(wiki);
@@ -286,7 +289,7 @@ function handleTabCompletion() {
   var currentInput = textarea.value.toLowerCase();
   var availableCommands = [
     'help', 'whois', 'conference', 'video', 'sudo', 'interview', 'youtube', 
-    'discuss', 'slack', 'social', 'projects', 'wiki', 'blog', 'resume', 
+    'discuss', 'slack', 'social', 'projects', 'nightingale', 'wiki', 'blog', 'resume',
     'password', 'history', 'email', 'clear', 'skills-matrix', 'experience', 
     'themes', 'settings', 'set-theme', 'set-animation', 
     'twitter', 'linkedin', 'instagram', 'github'
