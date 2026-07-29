@@ -223,7 +223,7 @@ function commander(cmd) {
         var speed = cmd.toLowerCase().substring(14);
         setAnimationSpeed(speed);
       } else if (cmd.toLowerCase().startsWith('blog ')) {
-        var blogName = cmd.toLowerCase().substring(5).trim();
+        var blogName = normalizeBlogName(cmd.substring(5));
         fetchBlogContent(blogName);
       } else {
         addLine("<span class=\"inherit\">Command not found. For a list of commands, type <span class=\"command\">'help'</span>.</span>", "error", 100);
@@ -347,6 +347,35 @@ function handleTabCompletion(e) {
     'themes', 'settings', 'set-theme', 'set-animation',
     'twitter', 'linkedin', 'instagram', 'github'
   ];
+
+  // Complete `blog <name>` against known local + medium blog keys
+  if (currentInput.startsWith('blog ')) {
+    var blogPrefix = currentInput.substring(5);
+    var blogKeys = getBlogCompletionKeys();
+    var blogMatches = blogKeys.filter(function (name) {
+      return name.startsWith(blogPrefix);
+    });
+    var ghostBlog = document.getElementById('ghost');
+    if (blogMatches.length === 1) {
+      var full = 'blog ' + blogMatches[0];
+      var suffix = full.slice(currentInput.length);
+      if (ghostBlog) ghostBlog.textContent = suffix;
+      if (e && e.key === 'Tab') {
+        e.preventDefault();
+        textarea.value = full;
+        command.innerHTML = textarea.value;
+        if (ghostBlog) ghostBlog.textContent = '';
+      }
+    } else if (blogMatches.length > 1 && e && e.key === 'Tab') {
+      e.preventDefault();
+      addLine("<br>", "", 0);
+      addLine(blogMatches.join('  '), "color2", 0);
+      if (ghostBlog) ghostBlog.textContent = '';
+    } else if (ghostBlog) {
+      ghostBlog.textContent = blogMatches.length === 1 ? ('blog ' + blogMatches[0]).slice(currentInput.length) : '';
+    }
+    return;
+  }
 
   var matches = availableCommands.filter(function (cmd) {
     return cmd.startsWith(currentInput);
@@ -744,251 +773,202 @@ function escapeHtml(text) {
   return text.replace(/[&<>"']/g, function(m) { return map[m]; });
 }
 
+function normalizeBlogName(raw) {
+  return String(raw || '')
+    .toLowerCase()
+    .trim()
+    .replace(/^blog\s+/, '')
+    .replace(/\s+/g, '-')
+    .replace(/_/g, '-');
+}
+
+function getBlogCompletionKeys() {
+  var keys = {};
+  var skipNumeric = /^\d+$/;
+  if (typeof localBlogMap === 'object' && localBlogMap) {
+    Object.keys(localBlogMap).forEach(function (k) {
+      if (!skipNumeric.test(k)) keys[k] = true;
+    });
+  }
+  if (typeof blogMap === 'object' && blogMap) {
+    Object.keys(blogMap).forEach(function (k) {
+      if (!skipNumeric.test(k)) keys[k] = true;
+    });
+  }
+  return Object.keys(keys).sort();
+}
+
+function getAvailableBlogHint() {
+  return getBlogCompletionKeys().join(', ');
+}
+
+/** Turn one raw man-page line into safe HTML (links/images/styles). */
+function formatBlogLineHtml(line) {
+  if (!line || !line.length) {
+    return '';
+  }
+
+  // Man-page header: NAME(7) ... NAME(7)
+  if (/^[A-Z][A-Z0-9_-]*\([0-9]+\)/.test(line)) {
+    return '<span class="command">' + escapeHtml(line) + '</span>';
+  }
+
+  // Section headers (NAME, DESCRIPTION, NOTES, SEE ALSO, COLOPHON, …)
+  if (/^[A-Z][A-Z0-9 ]+$/.test(line)) {
+    return '<span class="command">' + escapeHtml(line) + '</span>';
+  }
+
+  // Shell examples
+  if (/^\s*\$/.test(line)) {
+    return '<span class="blog-cmd">' + escapeHtml(line) + '</span>';
+  }
+
+  // Parse ⟨...⟩ markers into images or links; escape everything else
+  var markerRe = /⟨([^⟩]+)⟩/g;
+  var html = '';
+  var lastIndex = 0;
+  var match;
+
+  while ((match = markerRe.exec(line)) !== null) {
+    html += escapeHtml(line.slice(lastIndex, match.index));
+    var inner = match[1].trim();
+
+    if (/^\.\/blogs\/.+\.(png|jpg|jpeg|gif|svg)$/i.test(inner)) {
+      var safeSrc = escapeHtml(inner);
+      html += '<img class="blog-image" src="' + safeSrc + '" alt="Blog illustration" loading="lazy" />';
+    } else if (/^https?:\/\//i.test(inner)) {
+      var safeHref = escapeHtml(inner);
+      html += '<a class="blog-link" href="' + safeHref + '" target="_blank" rel="noopener noreferrer">' + safeHref + '</a>';
+    } else {
+      html += escapeHtml(match[0]);
+    }
+    lastIndex = match.index + match[0].length;
+  }
+
+  html += escapeHtml(line.slice(lastIndex));
+  return html;
+}
+
+/**
+ * Build a single safe man-page HTML block from raw .txt content.
+ * Also expands ```gist:URL ... ``` embedded blocks when present.
+ */
+function buildBlogManHtml(content) {
+  var lines = content.split('\n');
+  var parts = [];
+  var i = 0;
+
+  while (i < lines.length) {
+    var line = lines[i];
+
+    // Skip standalone ```gist:URL fences — content already shown via ⟨URL⟩ handling
+    // Prefer embedded gist body when present right after a ⟨gist⟩ line.
+    var gistLineMatch = line.match(/⟨(https:\/\/gist\.github\.com\/[^⟩]+)⟩/);
+    if (gistLineMatch) {
+      var gistUrl = gistLineMatch[1];
+      var before = line.slice(0, line.indexOf('⟨'));
+      var after = line.slice(line.indexOf('⟩') + 1);
+      if (before.trim()) parts.push(formatBlogLineHtml(before));
+      parts.push(formatBlogLineHtml('⟨' + gistUrl + '⟩'));
+
+      var j = i + 1;
+      var embedded = [];
+      var fenceStart = '```gist:' + gistUrl;
+      while (j < lines.length && j < i + 120) {
+        if (lines[j].trim().indexOf(fenceStart) === 0) {
+          j++;
+          while (j < lines.length && lines[j].trim().indexOf('```') !== 0) {
+            embedded.push(lines[j]);
+            j++;
+          }
+          if (j < lines.length) j++; // closing ```
+          i = j - 1;
+          break;
+        }
+        // Stop lookahead if we hit another section or unrelated content soon
+        if (j > i + 3 && lines[j].trim() !== '' && lines[j].indexOf('```gist:') !== 0) {
+          break;
+        }
+        j++;
+      }
+
+      if (embedded.length) {
+        parts.push('<span class="command">--- Gist Content ---</span>');
+        parts.push('<pre class="blog-gist">' + escapeHtml(embedded.join('\n')) + '</pre>');
+        parts.push('<span class="command">--- End Gist ---</span>');
+      }
+
+      if (after.trim()) parts.push(formatBlogLineHtml(after));
+      i++;
+      continue;
+    }
+
+    // Skip orphan ```gist / ``` fence lines so they do not pollute output
+    if (/^\s*```/.test(line)) {
+      i++;
+      continue;
+    }
+
+    parts.push(formatBlogLineHtml(line));
+    i++;
+  }
+
+  return parts.join('\n');
+}
+
 function fetchBlogContent(blogName) {
-  // Check if blog exists locally
+  blogName = normalizeBlogName(blogName);
+
+  if (!blogName) {
+    addLine('Usage: blog [name|number]', 'color2', 0);
+    addLine('Type <span class="command">blog</span> to list articles.', 'color2', 0);
+    return;
+  }
+
   if (localBlogMap && localBlogMap[blogName]) {
     var blogPath = localBlogMap[blogName];
-    addLine("Loading blog content from local file...", "color2", 0);
-    
-    // Fetch the blog content
+    addLine('Loading <span class="command">' + escapeHtml(blogName) + '</span>…', 'color2', 0);
+
     fetch(blogPath)
-      .then(response => {
+      .then(function (response) {
         if (!response.ok) {
-          throw new Error('Blog file not found');
+          throw new Error('Blog file not found (' + response.status + ')');
         }
         return response.text();
       })
-      .then(async content => {
-        // First, collect all gist URLs and fetch their content
-        var lines = content.split('\n');
-        var gistMap = {};
-        var gistUrls = [];
-        
-        // Find all gist URLs
-        for (var i = 0; i < lines.length; i++) {
-          var gistMatch = lines[i].match(/⟨(https:\/\/gist\.github\.com\/[^⟩]+)⟩/);
-          if (gistMatch) {
-            var gistUrl = gistMatch[1];
-            if (gistMap[gistUrl] === undefined) {
-              gistMap[gistUrl] = null; // Placeholder
-              gistUrls.push(gistUrl);
-            }
-          }
-        }
-        
-        // Fetch all gist contents in parallel with timeout
-        // Helper function to fetch with timeout
-        function fetchWithTimeout(url, options, timeout = 3000) {
-          return Promise.race([
-            fetch(url, options),
-            new Promise((_, reject) =>
-              setTimeout(() => reject(new Error('Timeout')), timeout)
-            )
-          ]);
-        }
-        
-        // Only try to fetch if there are gist URLs
-        if (gistUrls.length > 0) {
-          addLine("Loading blog content and fetching gist resources...", "color2", 0);
-          
-          var fetchPromises = gistUrls.map(async function(gistUrl) {
-            try {
-              // Try direct fetch first with short timeout
-              try {
-                var response = await fetchWithTimeout(gistUrl, {
-                  method: 'GET',
-                  mode: 'cors',
-                  cache: 'no-cache'
-                }, 2000);
-                
-                if (response.ok) {
-                  var gistContent = await response.text();
-                  gistMap[gistUrl] = gistContent;
-                  return;
-                }
-              } catch (error) {
-                // Direct fetch failed or timed out
-              }
-              
-              // Mark as failed - we'll show clickable links instead
-              gistMap[gistUrl] = null;
-            } catch (error) {
-              gistMap[gistUrl] = null;
-            }
-          });
-          
-          // Wait for all gists with a short overall timeout
-          try {
-            await Promise.race([
-              Promise.all(fetchPromises),
-              new Promise((resolve) =>
-                setTimeout(() => {
-                  resolve();
-                }, 5000)
-              )
-            ]);
-          } catch (timeoutError) {
-            // Continue anyway
-          }
-        } else {
-          addLine("Loading blog content...", "color2", 0);
-        }
-        
-        // Now display the content line by line
-        addLine("<br>", "", 0);
-        var delay = 0;
-        
-        for (var i = 0; i < lines.length; i++) {
-          var line = lines[i];
-          // Check for image references (format: ⟨./blogs/.../image.png⟩)
-          var imageMatch = line.match(/⟨(\.\/blogs\/[^⟩]+\.(png|jpg|jpeg|gif|svg))⟩/i);
-          
-          if (imageMatch) {
-            var imagePath = imageMatch[1];
-            var beforeLink = line.substring(0, line.indexOf('⟨'));
-            var afterLink = line.substring(line.indexOf('⟩') + 1);
-            
-            // Display text before the image
-            if (beforeLink.trim().length > 0) {
-              var formattedBefore = beforeLink.replace(/  /g, '&nbsp;&nbsp;');
-              addLine(formattedBefore, "color2", delay);
-              delay += 3;
-            }
-            
-            // Display the image
-            addLine("<br>", "", delay);
-            addLine("<img src='" + imagePath + "' alt='Blog Image' style='max-width: 100%; height: auto; border: 1px solid var(--command-color); margin: 10px 0; border-radius: 4px;' />", "color2", delay);
-            delay += 5;
-            addLine("<br>", "", delay);
-            
-            // Display text after the image if any
-            if (afterLink.trim().length > 0) {
-              var formattedAfter = afterLink.replace(/  /g, '&nbsp;&nbsp;');
-              addLine(formattedAfter, "color2", delay);
-              delay += 3;
-            }
-            continue;
-          }
-          
-          // Check for gist links (format: ⟨URL⟩)
-          var gistMatch = line.match(/⟨(https:\/\/gist\.github\.com\/[^⟩]+)⟩/);
-          
-          if (gistMatch) {
-            var gistUrl = gistMatch[1];
-            var beforeLink = line.substring(0, line.indexOf('⟨'));
-            var afterLink = line.substring(line.indexOf('⟩') + 1);
-            
-            // Display text before the link
-            if (beforeLink.trim().length > 0) {
-              var formattedBefore = beforeLink.replace(/  /g, '&nbsp;&nbsp;');
-              addLine(formattedBefore, "color2", delay);
-              delay += 3;
-            }
-            
-            // Check if there's embedded content in the next lines
-            var embeddedContent = null;
-            var embeddedLines = [];
-            var j = i + 1;
-            // Look ahead for embedded content block (between ```gist:URL and ```)
-            while (j < lines.length && j < i + 100) {
-              if (lines[j].trim().startsWith('```gist:' + gistUrl)) {
-                // Found start of embedded content
-                j++;
-                while (j < lines.length && !lines[j].trim().startsWith('```')) {
-                  embeddedLines.push(lines[j]);
-                  j++;
-                }
-                embeddedContent = embeddedLines.join('\n');
-                i = j; // Skip the embedded block
-                break;
-              }
-              j++;
-            }
-            
-            // Display gist content if available (embedded or fetched)
-            if (embeddedContent) {
-              // Display embedded content immediately
-              addLine("<br>", "", delay);
-              addLine("<span class='command'>--- Gist Content ---</span>", "command", delay);
-              delay += 5;
-              addLine("<pre style='background: rgba(0,0,0,0.2); padding: 10px; border-left: 3px solid var(--command-color); overflow-x: auto; font-family: monospace; white-space: pre-wrap; word-wrap: break-word; margin: 5px 0;'>" + 
-                      escapeHtml(embeddedContent) + "</pre>", "color2", delay);
-              delay += 5;
-              addLine("<span class='command'>--- End Gist ---</span>", "command", delay);
-              delay += 5;
-              addLine("<br>", "", delay);
-            } else if (gistMap[gistUrl] !== null && gistMap[gistUrl] !== undefined) {
-              // Display fetched content
-              var gistContent = gistMap[gistUrl];
-              addLine("<br>", "", delay);
-              addLine("<span class='command'>--- Gist Content ---</span>", "command", delay);
-              delay += 5;
-              addLine("<pre style='background: rgba(0,0,0,0.2); padding: 10px; border-left: 3px solid var(--command-color); overflow-x: auto; font-family: monospace; white-space: pre-wrap; word-wrap: break-word; margin: 5px 0;'>" + 
-                      escapeHtml(gistContent) + "</pre>", "color2", delay);
-              delay += 5;
-              addLine("<span class='command'>--- End Gist ---</span>", "command", delay);
-              delay += 5;
-              addLine("<br>", "", delay);
-            } else {
-              // If gist fetch failed, show clickable link
-              addLine("<br>", "", delay);
-              addLine("<span class='command'>Gist Content (click to view):</span> <a href='" + gistUrl + "' target='_blank' style='color: var(--command-color); text-decoration: underline;'>" + gistUrl + "</a>", "color2", delay);
-              delay += 3;
-              addLine("<br>", "", delay);
-            }
-            
-            // Display text after the link if any
-            if (afterLink.trim().length > 0) {
-              var formattedAfter = afterLink.replace(/  /g, '&nbsp;&nbsp;');
-              addLine(formattedAfter, "color2", delay);
-              delay += 3;
-            }
-          } else {
-            // Regular line processing
-            var formattedLine = line.replace(/  /g, '&nbsp;&nbsp;');
-            
-            // Style different types of lines
-            if (line.match(/^[A-Z_]+\([0-9]+\)/)) {
-              // Header line (e.g., WIREGUARD(7))
-              addLine(formattedLine, "command", delay);
-            } else if (line.match(/^[A-Z ]+$/)) {
-              // Section headers (all caps, no special chars)
-              addLine(formattedLine, "command", delay);
-            } else if (line.trim().startsWith('$')) {
-              // Command examples
-              addLine(formattedLine, "color2", delay);
-            } else if (line.trim().startsWith('**') && line.trim().endsWith('**')) {
-              // Bold text (markdown style)
-              addLine("<strong>" + formattedLine.replace(/\*\*/g, '') + "</strong>", "color2", delay);
-            } else if (line.trim().length > 0) {
-              // Regular content
-              addLine(formattedLine, "color2", delay);
-            } else {
-              // Empty lines
-              addLine("<br>", "", delay);
-            }
-            delay += 3;
-          }
-        }
-        
-        addLine("<br>", "", delay);
+      .then(function (content) {
+        var html = buildBlogManHtml(content);
+        addLine('<br>', '', 0);
+        // Insert as a real node so addLine's space→nbsp conversion cannot break wrapping
+        setTimeout(function () {
+          var wrap = document.createElement('div');
+          wrap.className = 'blog-wrap color2';
+          wrap.innerHTML = '<div class="blog-man">' + html + '</div>';
+          before.parentNode.insertBefore(wrap, before);
+          scrollTerminalToBottom(false);
+        }, 0);
+        addLine('<br>', '', 10);
+        addLine(
+          'Done. Type <span class="command">blog</span> for more, or <span class="command">clear</span> to reset.',
+          'color2',
+          20
+        );
       })
-      .catch(error => {
-        addLine("Error loading local blog: " + error.message, "error", 0);
-        addLine("Falling back to Medium link...", "color2", 100);
-        // Fall back to Medium link
+      .catch(function (error) {
+        addLine('Error loading local blog: ' + escapeHtml(error.message), 'error', 0);
         if (blogMap && blogMap[blogName]) {
+          addLine('Falling back to Medium link…', 'color2', 100);
           newTab(blogMap[blogName]);
         } else {
-          addLine("Blog not found. Type 'blog' to see available blogs.", "error", 0);
+          addLine("Blog not found. Type 'blog' to see available blogs.", 'error', 0);
+          addLine('Available: ' + getAvailableBlogHint(), 'color2', 0);
         }
       });
   } else if (blogMap && blogMap[blogName]) {
-    // Blog exists only on Medium
-    addLine("Opening Medium article...", "color2", 0);
+    addLine('Opening Medium article…', 'color2', 0);
     newTab(blogMap[blogName]);
   } else {
-    addLine("Blog not found. Type 'blog' to see available blogs.", "error", 0);
-    addLine("Available blogs: wireguard, xss, xxe, ios, androidp1, androidp2, ipbypass, xssautomation, burplocalhost", "color2", 0);
+    addLine("Blog not found. Type 'blog' to see available blogs.", 'error', 0);
+    addLine('Available: ' + getAvailableBlogHint(), 'color2', 0);
   }
 }

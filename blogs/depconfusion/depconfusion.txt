@@ -1,0 +1,208 @@
+DEPCONFUSION(7)           Miscellaneous Information Manual          DEPCONFUSION(7)
+
+NAME
+       depconfusion - understand dependency confusion (substitution) attacks
+       and how to close the registry race
+
+DESCRIPTION
+       Dependency confusion is not a typo.  It is a resolution bug in how
+       organizations mix private packages with public registries.
+
+       In 2021, researcher Alex Birsan demonstrated that publishing a
+       public package with the same name as an internal package — often
+       at a higher version — could win the install race inside Apple,
+       Microsoft, Tesla, and dozens of other build systems.  The bug
+       bounty payouts were large because the blast radius was CI: the
+       identity that installs packages often holds deploy keys, cloud
+       credentials, and source access.
+
+       This article explains the resolution mental model, how to
+       reproduce the race locally without touching public npm, and the
+       concrete mitigations that actually work.
+
+   The vulnerability in one paragraph
+       Many package managers consult more than one registry.  When an
+       internal package @org/auth-lib exists only on a private registry,
+       but an attacker publishes @org/auth-lib@999.0.0 on the public
+       registry, some resolver configurations prefer the higher public
+       version.  The build machine then downloads and executes the
+       attacker's postinstall as the CI user.
+
+       Typosquatting tricks humans.  Dependency confusion tricks the
+       resolver.  Both end in install-time code execution; the defenses
+       differ.
+
+   Resolution mental model
+       Draw three boxes and label the trust edges:
+
+       Developer / CI
+              Runs npm install / pip install / go get with whatever
+              .npmrc, pip.conf, or GOPROXY it inherited.
+
+       Private registry
+              Holds @techcorp/* packages that never should resolve from
+              the public internet.
+
+       Public registry
+              npmjs.com, PyPI, etc.  Anyone can publish names that look
+              internal if the scope or name is not reserved.
+
+       Confusion happens when the client's config says "for scope
+       @techcorp, use registry X" incorrectly, or when an unscoped
+       internal name is also fetchable from a public index with a
+       higher version.
+
+       Classic misconfiguration
+              .npmrc points @techcorp to a public or attacker-controlled
+              host, or omits scope routing entirely so the public
+              registry is consulted first.
+
+       Version race
+              Attacker publishes 999.999.999.  Naive "highest version
+              wins" logic selects it over 1.4.2 on the private registry.
+
+       Leakage of names
+              Internal package names leak via public repos, JS bundles,
+              error pages, job ads, and package.json screenshots.  Once
+              the name is known, the public package can be reserved.
+
+   Local reproduction (safe pattern)
+       Do not publish real confusion packages to public npm to "test."
+       Reproduce with a local registry and a misconfigured .npmrc.
+
+       Pattern used in SCAS Scenario 02:
+
+       1. Pack a malicious tarball
+              Build @techcorp/auth-lib@999.999.999 as a .tgz with a
+              postinstall that only beacons when TESTBENCH_MODE=enabled
+              and only to localhost.
+
+       2. Start a minimal registry on localhost
+              A small registry-server.js on port 4874 that serves the
+              tarball for the scoped name.
+
+       3. Misconfigure the victim app
+              corporate-app/.npmrc sets:
+
+                  @techcorp:registry=http://localhost:4874/
+
+              That line is the bug.  In a healthy enterprise setup,
+              @techcorp would point at the internal Artifactory / Verdaccio
+              / GitHub Packages endpoint, not an untrusted host.
+
+       4. Install and observe
+                  $ export TESTBENCH_MODE=enabled
+                  $ cd corporate-app
+                  $ npm install
+                  $ curl -s http://localhost:4874/…   # or your mock
+
+              The authentic Birsan-style race is now local: resolver
+              followed the scope map to attacker infrastructure.
+
+   Detection signals that matter
+       Watch for these in SIEM / package firewalls:
+
+       •  First-seen package name matching internal scope appearing on
+          a public registry (Socket, deps.dev, or your own crawler).
+
+       •  Version jumps to absurd majors (999.x) for internal packages.
+
+       •  CI install resolving from an unexpected registry host (log
+          npm config get registry and scoped registries in build logs).
+
+       •  postinstall / install scripts on packages that previously had
+          none.
+
+       Sample IOC shape
+              {"event":"registry_resolve","package":"@techcorp/auth-lib",
+               "version":"999.999.999","registry":"localhost:4874"}
+
+   Mitigations that close the race
+       Scope routing done right
+              Every internal scope must map explicitly to the private
+              registry.  Verify with:
+
+                  $ npm config get @techcorp:registry
+
+              Fail the build if the value is not in an allowlist.
+
+       Reserve public names
+              Publish empty placeholder packages (or use npm's org
+              protection features) for every internal name that could
+              leak.  Cheap insurance.
+
+       Disable public fallback for private scopes
+              Prefer package firewalls / proxies that never ask the
+              public registry for @techcorp/*.
+
+       Pin and lock
+              package-lock.json / npm ci remove "surprise highest
+              version" behavior for reproducible installs.  Still
+              verify the lockfile was not poisoned (see lockfile
+              manipulation labs).
+
+       Block install scripts in CI
+              ignore-scripts in CI plus a reviewed allowlist for the
+              few packages that truly need native builds.
+
+       OIDC publishing and short-lived tokens
+              Reduce the value of a stolen classic npm token so a
+              confusion foothold cannot easily republish your other
+              packages.
+
+       Network egress controls
+              CI runners that cannot reach arbitrary registries shrink
+              the attacker's delivery options.
+
+   Comparison: typosquat vs confusion
+       Typosquat
+              Victim types wrong name → public malicious package.
+              Defense: name proximity alerts, careful review, lockfiles.
+
+       Confusion
+              Victim types correct internal name → resolver fetches
+              public substitute.  Defense: scope routing, name
+              reservation, private-only resolution, firewall.
+
+       Both
+              Often deliver the same payload class: install-time script
+              with credential harvest.  Blue-team DETECT.md blocks can
+              share postinstall and beacon sections.
+
+   Interview / review checklist
+       When assessing an organization's npm/PyPI posture, ask:
+
+       1. Where is the authoritative .npmrc / pip index for CI defined?
+       2. Can a developer override registry with a user-level config?
+       3. Are internal package names reserved on public registries?
+       4. Do builds use npm ci with committed lockfiles?
+       5. Are install scripts allowed in CI by default?
+       6. Who can publish to the private registry, and with what token
+          lifetime?
+
+       Any "we are not sure" is a finding.
+
+NOTES
+       •  Dependency confusion is a configuration and resolution
+          problem first, a malware problem second.
+
+       •  Reproducing against a local registry teaches more than reading
+          the Birsan write-up alone — you feel how a single .npmrc line
+          rewires trust.
+
+       •  Mitigations stack: scope routing + name reservation + lockfiles
+          + ignore-scripts + egress controls.  Pick at least three.
+
+SEE ALSO
+       supplychain(7), sbomtrust(7), npm(1), npm-config(1)
+
+       Alex Birsan — Dependency Confusion (2021):
+       ⟨https://medium.com/@alex.birsan/dependency-confusion-4a5d60fec610⟩
+
+       SCAS Scenario 02:
+       ⟨https://github.com/RAJANAGORI/supply-chain-attack-simulator/tree/main/scenarios/02-dependency-confusion⟩
+
+COLOPHON
+       This page describes dependency confusion attacks, local safe
+       reproduction, and defenses.  Pair with supplychain(7) for lab
+       containment patterns and sbomtrust(7) for inventory integrity.

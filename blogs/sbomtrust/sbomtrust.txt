@@ -1,0 +1,186 @@
+SBOMTRUST(7)              Miscellaneous Information Manual             SBOMTRUST(7)
+
+NAME
+       sbomtrust - treat SBOMs as inventory claims that must be verified,
+       not as proof that software is safe
+
+DESCRIPTION
+       Software Bills of Materials became a procurement and compliance
+       checkbox almost overnight.  Teams generate CycloneDX or SPDX files
+       in CI, attach them to releases, and declare supply-chain maturity.
+
+       Attackers and buggy pipelines noticed.  If consumers trust the SBOM
+       without comparing it to what actually installed, omitting a
+       malicious dependency from the bill is enough to hide risk from
+       policy gates, auditors, and vulnerability dashboards.
+
+       This article covers three practical pieces:
+
+       1. Why SBOM ≠ enforcement
+       2. How an SBOM manipulation lab teaches the right distrust
+       3. How to build a living SBOM dashboard from CI artifacts that
+          still respects the verification mindset
+
+   Inventory is not a control
+       An SBOM answers: "What do we think we shipped?"
+
+       Security controls answer: "What is not allowed to run / merge /
+       deploy?"
+
+       Those are different questions.  Useful SBOMs feed controls
+       (block known-bad PURLs, require fixes, gate licenses).  Useless
+       SBOMs are PDFs nobody diffs against lockfiles.
+
+       Critical clarification for interviews and architecture reviews:
+       generating an SBOM does not secure the chain.  Cross-checking the
+       SBOM against a ground-truth install graph does.
+
+   Attack pattern: omit the bad package
+       In SCAS Scenario 19, a malicious or compromised SBOM generator
+       writes victim-app/sbom.json and deliberately omits malicious-lib
+       while the app still depends on it.  Reviewers who only open the
+       SBOM see a clean inventory.
+
+       Threat model snapshot
+              Asset: inventory integrity and compliance posture
+              Trust edge: SBOM accepted without cross-validation
+              Attacker goal: hide risky deps from review and policy
+              Blast radius: every downstream decision based on the lie
+
+       Lab flow (safe, localhost)
+                  $ cd scenarios/19-sbom-manipulation-attack
+                  $ ./setup.sh
+                  $ node infrastructure/mock-server.js   # terminal A
+                  $ cd victim-app && npm install && npm start
+                  $ node detection-tools/sbom-manipulation-validator.js \
+                        victim-app
+
+       Ground truth lives under truth/ (for example dependencies.json).
+       The validator's job is to fail closed on omission and mismatch —
+       the same job your CI should do.
+
+   Detection runbook you can copy
+       IOCs
+              •  sbom.json missing a package present in lockfile / truth
+              •  Generator output disagrees with truth/dependencies.json
+              •  Unexpected beacon to lab collector (in exercises)
+
+       Sigma-shaped idea
+              Alert when dependency_missing is raised for sbom.json
+              against the install graph — severity high.
+
+       Mitigations
+              •  Regenerate SBOMs in trusted CI from lockfiles / build
+                 rootfs — not from app-controlled scripts alone
+              •  Sign SBOMs and attach provenance attestations
+              •  Fail the pipeline on SBOM ↔ lockfile drift
+              •  Periodically diff release SBOMs against runtime
+                 inventory scans (Syft / Trivy filesystem)
+              •  Keep SBOM generation tools themselves in the trust
+                 boundary (pin versions; review updates)
+
+   Consuming CycloneDX like an AppSec engineer
+       When you open a CycloneDX document, triage in this order:
+
+       1. Components
+              Name, version, purl.  Are unexpected ecosystems present?
+
+       2. Vulnerabilities (if embedded) or matched VIA VEX/DB
+              Sort by severity, then by fixAvailability.  A critical with
+              a fix is today's ticket; a critical without a fix is a
+              risk acceptance conversation.
+
+       3. Licenses
+              Copyleft surprises before release, not after legal review.
+
+       4. Metadata / tools
+              Which generator produced this?  Old generators omit fields
+              attackers love to abuse.
+
+       Dashboard metrics that help humans
+              •  Counts by severity
+              •  fixAvailabilityRate
+              •  Top recurring CVEs across images
+              •  Filter by dataset (app vs base image vs language toolchain)
+
+   Building a living SBOM explorer from GitHub Actions
+       A practical pipeline used by the Nightingale SBOM explorer:
+
+       1. fetch-artifacts.mjs
+              Download CycloneDX zip artifacts from GitHub Actions with
+              a PAT scoped to actions:read (least privilege).
+
+       2. parse-sboms.mjs
+              Normalize into a consolidated parse-sboms.json snapshot.
+
+       3. Static dashboard
+              Alpine.js + filters + CSV export, hosted on GitHub Pages
+              or any static host.  Apply CSP and output encoding — yes,
+              your vulnerability dashboard can grow XSS too.
+
+       4. Schedule
+              Monthly or weekly Actions sync so the page is not a stale
+              screenshot of last quarter's risk.
+
+       Config stays in artifacts.json: which workflow artifacts to pull,
+       from which repos.  Engineers browse; CI remains the source of
+       generation truth.
+
+   Pair red and blue on purpose
+       Best teaching combo:
+
+       Morning
+              Run Scenario 19.  Watch a clean SBOM lie.
+
+       Afternoon
+              Point the SBOM explorer at real CI artifacts.  Practice
+              triage with filters and export.
+
+       Closing question
+              "What gate would have failed the lying SBOM before a
+              human ever opened the dashboard?"
+
+       If the answer is only "we would have noticed," you do not have a
+       control yet.
+
+   Policy language that survives audits
+       Prefer:
+
+              "Releases require a signed CycloneDX SBOM generated in CI
+               from the locked dependency graph.  Pipelines fail if the
+               SBOM component set drifts from the lockfile oracle."
+
+       Avoid:
+
+              "We maintain SBOMs for all critical applications."
+
+       The second sentence can be true while every SBOM is fiction.
+
+NOTES
+       •  SBOM is a claim about inventory.  Verify claims.
+
+       •  Omission is enough; attackers need not inject glamorous CVEs
+          into the bill — they simply leave things out.
+
+       •  Dashboards amplify verified data; they cannot create trust
+          that generation never earned.
+
+       •  Scope GitHub tokens for artifact fetch to actions:read.
+          Broader PATs turn your SBOM sync into a credential incident.
+
+SEE ALSO
+       supplychain(7), depconfusion(7), syft(1), trivy(1), cyclonedx(7)
+
+       SCAS Scenario 19:
+       ⟨https://github.com/RAJANAGORI/supply-chain-attack-simulator/tree/main/scenarios/19-sbom-manipulation-attack⟩
+
+       SBOM Parser & Explorer:
+       ⟨https://sbom.nightingale-security.com/⟩
+
+       CycloneDX:
+       ⟨https://cyclonedx.org/⟩
+
+COLOPHON
+       This page explains why SBOMs must be verified against ground
+       truth, how manipulation labs teach distrust, and how to operate
+       an SBOM dashboard without confusing visibility with enforcement.

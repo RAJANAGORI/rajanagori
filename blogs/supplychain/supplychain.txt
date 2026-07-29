@@ -1,0 +1,247 @@
+SUPPLYCHAIN(7)            Miscellaneous Information Manual           SUPPLYCHAIN(7)
+
+NAME
+       supplychain - build a safe supply-chain attack lab and walk a
+       typosquatting scenario end-to-end
+
+DESCRIPTION
+       Software supply-chain attacks no longer look like exotic research.
+       They show up as a one-character typo in an npm install, a hijacked
+       maintainer token, or a postinstall script that beacons credentials
+       before your CI even finishes.
+
+       Reading about these attacks is useful.  Reproducing them safely is
+       better.  This article walks through how to stand up an isolated
+       supply-chain test bench, run a typosquatting lab with real package
+       manager behavior, and leave with detection patterns you can take
+       back to your own pipelines.
+
+       The patterns come from building the Supply Chain Attack Simulator
+       (SCAS) — an educational platform with 20+ isolated scenarios,
+       localhost-only exfiltration, and detection runbooks.  You do not
+       need the full platform to apply the ideas; the containment model
+       and Scenario 01 flow are the takeaways.
+
+   Why "safe lab" is a first-class design problem
+       The primary risk of a malicious-package lab is not a sophisticated
+       attacker.  It is a curious engineer who runs the payload on a
+       laptop that already holds cloud tokens, SSH keys, and browser
+       cookies.
+
+       Treat accidental operator misuse as Threat #1.  Design gates that
+       fail closed:
+
+       Environment gate
+              Require an explicit flag such as TESTBENCH_MODE=enabled
+              before any harvest or exfil path runs.  Without the flag,
+              the "malicious" package should be inert or refuse to start.
+
+       Destination gate
+              Exfiltrate only to localhost (or a local mock server you
+              control).  Never point educational payloads at real
+              internet endpoints.
+
+       Network gate
+              Prefer an isolated VM, container, or disposable cloud box.
+              If you must use a workstation, revoke broad tokens first
+              and use a throwaway shell profile.
+
+       Teardown gate
+              Ship a kill-port / teardown script.  Labs that leave
+              listeners on :3000 forever become tomorrow's footgun.
+
+       Optional cloud track
+              If you need S3-style exfil signals for blue-team practice,
+              use a local AWS emulator (for example Floci / LocalStack)
+              behind an opt-in flag.  Real AWS accounts have no place in
+              default educational flows.
+
+   Mental model: where supply-chain trust breaks
+       Most package-manager compromise stories abuse one of these edges:
+
+       1. Human naming error
+              Typosquatting / brandjacking — request-lib vs requests-lib,
+              crossenv vs cross-env, jeIlyfish vs jellyfish.
+
+       2. Registry resolution surprise
+              Dependency confusion — public registry wins over private
+              when versions race (covered in blog depconfusion).
+
+       3. Trust in update channels
+              Compromised maintainer, malicious update, signing bypass,
+              mirror poisoning.
+
+       4. Install-time code execution
+              postinstall / setup.py / plugins that run as the developer
+              or CI identity.
+
+       5. Inventory lies
+              SBOM omissions that hide what actually shipped (covered in
+              blog sbomtrust).
+
+       Typosquatting is the right first lab because every developer has
+       mistyped a package name, and the detection lessons transfer to
+       every other theme.
+
+   Lab walkthrough: typosquatting in one evening
+       Goal: install a lookalike package, watch install-time or runtime
+       beaconing hit a mock collector, then write a detection rule from
+       the evidence.
+
+       Prerequisites
+              Node.js 16+, a disposable directory, and willingness to
+              keep TESTBENCH_MODE off unless you intend to run the lab.
+
+       Step 1 — Stand up a mock collector
+              Run a tiny HTTP server that accepts POST /collect and
+              serves GET /captured-data.  SCAS uses something like:
+
+                  $ node infrastructure/mock-server.js
+
+              Leave it listening on 127.0.0.1:3000.  Confirm nothing on
+              that port is a real app you care about.
+
+       Step 2 — Compare legitimate vs malicious templates
+              Read both packages side by side.  Note how the malicious
+              copy mirrors README text, version style, and API surface
+              while adding a postinstall or runtime harvest path.
+
+                  $ cat legitimate/requests-lib/index.js
+                  $ cat templates/malicious-package-template.js
+
+       Step 3 — Enable the gate and install the typo
+              From the victim app:
+
+                  $ export TESTBENCH_MODE=enabled
+                  $ cd victim-app
+                  $ npm install ../malicious-packages/request-lib
+                  $ npm start
+
+              Without TESTBENCH_MODE=enabled, the harvest path should
+              not fire.  Verify that property once — it is the most
+              important assertion in the whole lab.
+
+       Step 4 — Verify capture
+                  $ curl -s http://localhost:3000/captured-data
+
+              You should see exercise data (env samples, package name,
+              timestamps).  Clear between runs:
+
+                  $ curl -X DELETE http://localhost:3000/captured-data
+
+       Step 5 — Tear down
+                  $ ./scripts/kill-port.sh 3000
+                  $ ./scripts/teardown.sh   # if available
+
+   What the blue team should actually look for
+       After you can reproduce the attack, flip roles.  A useful
+       DETECT.md for any supply-chain lab has five blocks:
+
+       IOCs
+              Unexpected package name near a popular dependency;
+              install-time script execution from a newly introduced
+              package; outbound localhost beacon to 127.0.0.1:3000.
+
+       Sample log line
+              Prefer JSON you can paste into a SIEM parser:
+
+              {"scenario_id":"01","event_type":"install_beacon",
+               "source":"request-lib","destination":"127.0.0.1:3000"}
+
+       Sigma-style rule
+              Match npm install command lines that introduce the
+              unexpected package name, then correlate with child
+              process or network activity in the same minute.
+
+       YARA-like text rule
+              Match postinstall strings plus the known beacon host in
+              package archives before they land in CI cache.
+
+       Mitigation checklist
+              •  Commit package-lock.json and use npm ci in CI
+              •  Scope-restrict registries; verify signatures where
+                 supported
+              •  Scan new dependencies (npm audit, Socket, Snyk)
+              •  Code-review every new dependency: name, maintainer,
+                 download history, install scripts
+              •  Prefer private registries for internal names
+
+   Practical defenses you can ship this week
+       Lockfiles are not optional theater
+              npm ci fails closed when the lockfile drifts.  npm install
+              silently rewrites the world.  Production pipelines should
+              prefer the former.
+
+       Deny install scripts where possible
+              npm config set ignore-scripts true (or CI equivalent)
+              breaks many harvest paths.  Measure breakage on your
+              stack; document exceptions.
+
+       Name proximity monitoring
+              Alert when a newly resolved package is edit-distance-
+              close to an approved baseline name but is not itself
+              approved.
+
+       Least privilege for package tokens
+              Maintainer tokens that can publish everything are worm
+              fuel.  Scope publishes; prefer short-lived OIDC publish
+              flows over long-lived classic tokens.
+
+       Provenance over vibes
+              Attestations and signed releases raise the bar.  They do
+              not replace reviewing install scripts on first use of a
+              dependency.
+
+   Teaching tip: curriculum shape
+       If you run workshops, order labs as:
+
+       Beginner
+              Typosquatting → dependency confusion → compromised
+              package update.
+
+       Intermediate
+              Lockfile manipulation → transitive deps → git submodules
+              → cache poisoning.
+
+       Advanced
+              Build compromise → self-replicating postinstall patterns
+              → SBOM manipulation → container image supply chain.
+
+       Each lab should force three roles: red (reproduce), blue
+       (detect from logs), defender (write the gate that would have
+       blocked it).  Capstones beat slide decks.
+
+NOTES
+       Key takeaways to carry into production:
+
+       •  Containment is part of the content.  Educational malware
+          without gates is just malware with a README.
+
+       •  Typosquatting succeeds because humans and autocomplete both
+          make predictable mistakes.  Detection must watch names and
+          install-time behavior, not only known CVE IDs.
+
+       •  A DETECT.md with IOCs, sample logs, Sigma, and mitigations
+          is more valuable than a long narrative write-up.  Steal that
+          structure for your own internal labs.
+
+       •  Localhost exfil and TESTBENCH_MODE-style flags are patterns
+          you can reuse for XSS labs, SSRF labs, and AI-agent sandboxes.
+
+SEE ALSO
+       depconfusion(7), sbomtrust(7), npm-ci(1), package-lock(5)
+
+       Supply Chain Attack Simulator:
+       ⟨https://github.com/RAJANAGORI/supply-chain-attack-simulator⟩
+
+       Live simulator (if hosted):
+       ⟨https://simulator.rajanagori.in/⟩
+
+       OWASP Top 10 — A08 Software and Data Integrity Failures:
+       ⟨https://owasp.org/Top10/A08_2021-Software_and_Data_Integrity_Failures/⟩
+
+COLOPHON
+       This page describes how to design and run a safe supply-chain
+       attack lab using typosquatting as the first scenario.  For more
+       scenarios (Shai-Hulud-style postinstall worms, SBOM lying,
+       registry races), see the SCAS repository linked above.

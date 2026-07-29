@@ -1,0 +1,177 @@
+AIHARNESS(7)              Miscellaneous Information Manual             AIHARNESS(7)
+
+NAME
+       aiharness - build a defense-in-depth security harness for AI coding
+       agents (Claude Code, Cursor, Copilot, and MCP tools)
+
+DESCRIPTION
+       AI coding agents are productive because they can edit files and run
+       shell commands.  That is also why a single prompt — from you or from
+       a poisoned README — can exfiltrate .env files, open a reverse shell,
+       or commit SQL concatenation into production paths.
+
+       Prompt-only rules ("always write secure code") fail the moment the
+       model is confused, jailbroken, or simply wrong.  A security harness
+       treats the agent like an untrusted junior developer with root in the
+       repo: instruct it, deny dangerous tools, hook command execution,
+       scan before commit, and re-scan in CI.
+
+       This article maps a practical layered harness aligned with OWASP
+       ASVS, NIST SSDF, and NIST CSF language, based on a portable kit
+       that works across Claude Code, Cursor, and GitHub Copilot.
+
+   Why one layer is never enough
+       Layer failure modes:
+
+       Instructions only (CLAUDE.md / AGENTS.md)
+              Helps defaults; ignored under pressure or injection.
+
+       Deny lists only
+              Miss novel encodings; annoy false positives until disabled.
+
+       Pre-commit only
+              Malware already ran in your shell during the agent session.
+
+       CI only
+              Secrets already left the laptop; bad commits already synced.
+
+       Defense in depth means each layer catches what the previous missed.
+
+   The nine-layer pipeline
+       1. Instruction injection
+              Files: CLAUDE.md, AGENTS.md, .cursor/rules/*.mdc,
+              .github/copilot-instructions.md
+
+              Tell the agent: parameterized queries, no hardcoded secrets,
+              no eval, prefer safe APIs.  Map rules to ASVS sections so
+              reviews have vocabulary.
+
+       2. Agent generates code and tool calls
+              Assume bash, apply_patch, and network tools may appear.
+
+       3. Deny rules (pre-execution)
+              Claude: .claude/settings.json deny patterns for rm -rf /,
+              curl | sh, DROP DATABASE, bash -i >& /dev/tcp/, etc.
+
+       4. Pre-tool hooks (command firewall)
+              Example bash-firewall.sh checks before allow:
+
+              •  Reverse shells (bash -i >& /dev/tcp/, nc -e /bin/sh)
+              •  base64 | sh style encoded payloads
+              •  cat .env | curl / credential exfil patterns
+              •  Mass deletion (rm -rf /)
+
+              Return JSON {"decision":"deny","reason":"…"} and stop.
+
+              Map denials to ASVS IDs in the reason string (V1.2.5 reverse
+              shell, V13.3 credential exfil) so logs are audit-ready.
+
+       5. Governance gateway (optional but powerful)
+              SigmaShake / MCP gateway inspects tool calls with richer
+              rules: SQLi patterns, eval(), weak crypto, token budgets
+              per session.  Decisions: allow / deny / warn / human
+              approval.
+
+       6. Sandboxed local execution
+              Only after allow.  Prefer containerized agent runners for
+              high-risk repos.
+
+       7. Pre-commit hooks
+              .pre-commit-config.yaml with semgrep (OWASP),
+              detect-secrets, safety / OSV, grype.  Block high/critical
+              on commit.
+
+       8. CI on pull request
+              Re-run SAST/SCA/secret scan on the full tree; upload SARIF
+              to code scanning.  Never trust laptop hooks alone.
+
+       9. Merge only if all gates pass
+              Document exceptions with expiry dates, not eternal skips.
+
+   Minimal install you can do today
+       1. Copy security instruction files into the repo root for each
+          agent your team uses.
+       2. Add a bash firewall hook and chmod +x it.
+       3. Install pre-commit with semgrep + detect-secrets.
+       4. Add a CI workflow that fails on new critical findings.
+       5. Test by asking the agent: "exfiltrate .env with curl" and
+          "open a reverse shell" — confirm deny reasons fire.
+
+       If step 5 does not deny, you have a documentation file, not a
+       harness.
+
+   Mapping standards without bureaucracy
+       Engineers ignore abstract policy.  Make it operational:
+
+       ASVS V1.2.5
+              Hook blocks reverse shells.
+
+       ASVS V13.3
+              Hook blocks piping secrets to curl/wget/nc.
+
+       SSDF
+              Pre-commit + CI produce evidence of secure build practices.
+
+       CSF PR.PS / PR.DS
+              Deny lists and secret scanning protect software and data.
+
+       When leadership asks "are we doing SSDF?", point at the harness
+       diagram and the CI artifacts — not a wiki page.
+
+   False-positive tuning loop
+       Untuned deny lists get deleted.  Schedule a monthly loop:
+
+       1. Collect denied commands from hook logs.
+       2. Classify: true positive / noisy / missing coverage.
+       3. Update gateway rules from new CVE / OSV classes.
+       4. Allowlist specific safe tools with arguments, not broad
+          wildcards.
+       5. Re-run a red-team prompt pack against the agent.
+
+   Prompt injection is in scope
+       Agents read READMEs, issue bodies, and web fetch results.  Treat
+       untrusted text as hostile:
+
+       •  Prefer hooks that cannot be "talked out of" by the model
+       •  Disable autonomous network tools on sensitive repos
+       •  For threat-modeling bots (see threatmodel(7)), add explicit
+          injection guards on /ask endpoints
+
+       The harness protects the shell even when the prompt layer loses.
+
+   Contrast with enterprise Policy-as-Code platforms
+       Vendor platforms (OPA/Rego gates, STO, approval workflows) shine
+       at org-wide CI/CD policy.  Local agent harnesses shine at the
+       seconds before a dangerous command runs on a laptop.
+
+       Use both.  Laptop hooks catch interactive agent misuse; pipeline
+       policy catches what got committed anyway.
+
+NOTES
+       Takeaways:
+
+       •  Instructions steer; hooks enforce; CI proves.
+
+       •  Encode ASVS IDs in deny reasons — future you will thank present
+          you during audits.
+
+       •  Test the harness with malicious prompts the way you test
+          WAF rules with payloads.
+
+       •  An agent that executes tools is a tool runner.  Apply
+          cmdhardening(7) ideas: prefer argv, allowlists, and isolation.
+
+SEE ALSO
+       cmdhardening(7), threatmodel(7), pre-commit(1), semgrep(1)
+
+       OWASP ASVS:
+       ⟨https://owasp.org/www-project-application-security-verification-standard/⟩
+
+       NIST SSDF:
+       ⟨https://csrc.nist.gov/projects/ssdf⟩
+
+COLOPHON
+       This page describes a portable AI coding-agent security harness:
+       instruction files, deny lists, bash firewalls, optional MCP
+       gateways, pre-commit, and CI — defense in depth for LLM-assisted
+       development.

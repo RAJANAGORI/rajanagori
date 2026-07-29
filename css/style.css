@@ -527,6 +527,74 @@ p.whois {
   width: auto;
 }
 
+.blog-wrap {
+  width: 100%;
+  max-width: 100%;
+  margin: 0.35rem 0 0.75rem;
+  animation: none;
+}
+
+.blog-man {
+  margin: 0;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--surface-border);
+  border-radius: 8px;
+  background: rgba(1, 4, 9, 0.55);
+  color: var(--color2);
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100%;
+}
+
+.blog-man .command {
+  color: var(--command-color);
+  font-weight: 600;
+}
+
+.blog-man .blog-cmd {
+  color: var(--liner-color);
+}
+
+.blog-man .blog-link {
+  color: var(--inherit-link-color);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  word-break: break-all;
+}
+
+.blog-man .blog-link:hover {
+  color: var(--link-hover-color);
+  background: var(--link-hover-background-color);
+}
+
+.blog-man .blog-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0.75rem 0;
+  border: 1px solid var(--command-color);
+  border-radius: 4px;
+}
+
+.blog-man .blog-gist {
+  display: block;
+  margin: 0.5rem 0;
+  padding: 0.65rem 0.75rem;
+  background: rgba(0, 0, 0, 0.35);
+  border-left: 3px solid var(--command-color);
+  overflow-x: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
 .boot-line {
   color: var(--color2);
   font-size: 12px;
