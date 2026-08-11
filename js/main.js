@@ -180,7 +180,7 @@ function commander(cmd) {
       showSkillsMatrix();
       break;
     case "experience":
-      loopLines(experienceTimeline, "color2 margin", animationSpeed[currentAnimationSpeed]);
+      loopLines(getExperienceTimeline(), "color2 margin", animationSpeed[currentAnimationSpeed]);
       break;
     case "themes":
       showAvailableThemes();
@@ -250,13 +250,14 @@ function scrollTerminalToBottom(smooth) {
   });
 }
 
-function addHtmlBlock(html, className, time) {
+function addHtmlBlock(html, className, time, onReady) {
   setTimeout(function () {
     var block = document.createElement('div');
     block.className = className || 'terminal-block';
     block.innerHTML = html;
     before.parentNode.insertBefore(block, before);
     scrollTerminalToBottom(true);
+    if (typeof onReady === 'function') onReady(block);
   }, time || 0);
 }
 
@@ -348,7 +349,7 @@ function handleTabCompletion(e) {
     'twitter', 'linkedin', 'instagram', 'github'
   ];
 
-  // Complete `blog <name>` against known local + medium blog keys
+  // Complete `blog <name>` against known local blog keys
   if (currentInput.startsWith('blog ')) {
     var blogPrefix = currentInput.substring(5);
     var blogKeys = getBlogCompletionKeys();
@@ -790,11 +791,6 @@ function getBlogCompletionKeys() {
       if (!skipNumeric.test(k)) keys[k] = true;
     });
   }
-  if (typeof blogMap === 'object' && blogMap) {
-    Object.keys(blogMap).forEach(function (k) {
-      if (!skipNumeric.test(k)) keys[k] = true;
-    });
-  }
   return Object.keys(keys).sort();
 }
 
@@ -956,17 +952,9 @@ function fetchBlogContent(blogName) {
       })
       .catch(function (error) {
         addLine('Error loading local blog: ' + escapeHtml(error.message), 'error', 0);
-        if (blogMap && blogMap[blogName]) {
-          addLine('Falling back to Medium link…', 'color2', 100);
-          newTab(blogMap[blogName]);
-        } else {
-          addLine("Blog not found. Type 'blog' to see available blogs.", 'error', 0);
-          addLine('Available: ' + getAvailableBlogHint(), 'color2', 0);
-        }
+        addLine("Blog not found. Type 'blog' to see available blogs.", 'error', 0);
+        addLine('Available: ' + getAvailableBlogHint(), 'color2', 0);
       });
-  } else if (blogMap && blogMap[blogName]) {
-    addLine('Opening Medium article…', 'color2', 0);
-    newTab(blogMap[blogName]);
   } else {
     addLine("Blog not found. Type 'blog' to see available blogs.", 'error', 0);
     addLine('Available: ' + getAvailableBlogHint(), 'color2', 0);

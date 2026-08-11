@@ -215,7 +215,7 @@
       '<span class="boot-line">[    0.042891] Loading security modules: owasp, nightingale, sbom</span>',
       '<span class="boot-line">[    0.089234] Mounting /dev/projects — 5 repositories detected</span>',
       '<span class="boot-line">[    0.134567] Starting terminal session on tty1</span>',
-      '<span class="boot-line">[    0.178901] Network: linkedin, github, medium — all interfaces up</span>',
+      '<span class="boot-line">[    0.178901] Network: linkedin, github — all interfaces up</span>',
       '<span class="boot-line">[    0.223456] Welcome to Raja Nagori Portfolio v2.0</span>',
       '<br>'
     ];

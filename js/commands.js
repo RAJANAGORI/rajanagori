@@ -17,19 +17,65 @@ var interviewSite = 'https://interview.rajanagori.in/';
 var secucode = 'https://secucode.gitbook.io';
 var wiki = 'https://github.com/RAJANAGORI/Nightingale/wiki/1.-Nightingale-Docker-for-Pentesters';
 var resume = 'https://github.com/RAJANAGORI/rajanagori/blob/master/Raja_Nagori.pdf';
-var wiregaurd = 'https://medium.com/@rajanagori/wireguard-a-new-tunneling-protocol-207d4aa893d0';
-var xss = 'https://medium.com/@rajanagori/tales-of-xss-navigating-web-vulnerabilities-71f2ef61af9b';
-var xxe = 'https://medium.com/@rajanagori/a-long-story-of-xxe-vulnerability-6a9a33276602';
-var ios = 'https://medium.com/@rajanagori/ios-application-vulnerability-assessment-and-penetration-testing-263e9da452fd';
-var androidp1 = 'https://medium.com/@rajanagori/android-vulnerability-assessment-and-penetration-testing-part-1-382838a3d230';
-var androidp2 = 'https://medium.com/@rajanagori/android-vulnerability-assessment-and-penetration-testing-part-2-6558612c9382';
-var ipbypass = 'https://medium.com/@rajanagori/bypass-ip-block-with-the-x-forwarded-for-header-8c1dbd89ae58';
-var burplocalhost = 'https://medium.com/@rajanagori/why-localhost-and-burpsuite-are-not-best-friends-169e7ef1752c';
-var xssautomation = 'https://medium.com/@rajanagori/xss-automation-using-waybackurl-and-gf-grep-finding-4f6745f70a22';
 var interviewprep = 'https://interview.rajanagori.in/interview/';
 var threatmodeling = 'https://interview.rajanagori.in/threatmodel/';
 var zerotohero = 'https://interview.rajanagori.in/zerotohero/';
 var sourcecodereview = 'https://interview.rajanagori.in/source-code-review/';
+
+// Career start from first professional role (Habilelabs — Feb 2019)
+var CAREER_START = new Date(2019, 1, 1);
+
+function getExperienceDuration() {
+  var now = new Date();
+  var years = now.getFullYear() - CAREER_START.getFullYear();
+  var months = now.getMonth() - CAREER_START.getMonth();
+  var days = now.getDate() - CAREER_START.getDate();
+
+  if (days < 0) {
+    months -= 1;
+  }
+  if (months < 0) {
+    years -= 1;
+    months += 12;
+  }
+
+  return {
+    years: Math.max(0, years),
+    months: Math.max(0, months)
+  };
+}
+
+function getYearsOfExperience() {
+  return getExperienceDuration().years;
+}
+
+function getExperienceYearsLabel() {
+  var duration = getExperienceDuration();
+  var parts = [];
+  if (duration.years === 1) {
+    parts.push('1 year');
+  } else if (duration.years > 1) {
+    parts.push(duration.years + ' years');
+  }
+  if (duration.months === 1) {
+    parts.push('1 month');
+  } else if (duration.months > 1) {
+    parts.push(duration.months + ' months');
+  }
+  if (!parts.length) {
+    return 'Less than 1 month';
+  }
+  return parts.join(', ');
+}
+
+function getExperienceStatValue() {
+  var duration = getExperienceDuration();
+  if (duration.months === 0) {
+    return String(duration.years);
+  }
+  // Compact exact value for the whois stat chip, e.g. 7.5
+  return (duration.years + duration.months / 12).toFixed(1).replace(/\.0$/, '');
+}
 
 // Structured whois panel (rendered via showWhois in main.js)
 function getWhoisPanelHtml() {
@@ -52,7 +98,7 @@ function getWhoisPanelHtml() {
       '<div class="whois-stats">' +
         '<div class="whois-stat"><span class="whois-stat-value">300+</span><span class="whois-stat-label">GitHub Stars</span></div>' +
         '<div class="whois-stat"><span class="whois-stat-value">5×</span><span class="whois-stat-label">Blackhat Arsenal</span></div>' +
-        '<div class="whois-stat"><span class="whois-stat-value">9+</span><span class="whois-stat-label">Publications</span></div>' +
+        '<div class="whois-stat"><span class="whois-stat-value">' + getExperienceStatValue() + '</span><span class="whois-stat-label">Years Experience</span></div>' +
         '<div class="whois-stat"><span class="whois-stat-value">200+</span><span class="whois-stat-label">Pentest Tools</span></div>' +
       '</div>' +
       '<p class="whois-intro">Product Security Engineer passionate about penetration testing, threat modeling, DevSecOps, and building open-source security tools for the community.</p>' +
@@ -86,11 +132,10 @@ function getWhoisPanelHtml() {
           '</div>' +
         '</section>' +
         '<section class="whois-section">' +
-          '<h3 class="whois-section-title">Community &amp; Writing</h3>' +
+          '<h3 class="whois-section-title">Community &amp; Mentorship</h3>' +
           '<ul class="whois-list">' +
-            '<li>Leads <a href="' + nightingale + '" target="_blank">OWASP-Nightingale</a> (Incubator project)</li>' +
+            '<li>Leads <a href="' + nightingale + '" target="_blank">OWASP-Nightingale</a></li>' +
             '<li>Active on <strong>Hack The Box</strong> — continuous learning</li>' +
-            '<li>9+ security articles on <a href="https://rajanagori.medium.com/" target="_blank">Medium</a></li>' +
             '<li>OWASP chapter talks &amp; security community mentorship</li>' +
           '</ul>' +
         '</section>' +
@@ -141,7 +186,7 @@ projects = [
 projectCardsData = [
   {
     name: 'Nightingale v2.0',
-    tag: 'OWASP Incubator',
+    tag: 'OWASP',
     stars: '300+',
     tech: 'Docker · Python · JS',
     desc: 'Pentest framework with web GUI, 200+ tools, embedded VS Code, and AI-assisted analysis.',
@@ -246,75 +291,45 @@ localBlogMap = {
   '6': 'blogs/android_part2/part2.txt',
   'supplychain': 'blogs/supplychain/supplychain.txt',
   'scas': 'blogs/supplychain/supplychain.txt',
-  '10': 'blogs/supplychain/supplychain.txt',
+  '7': 'blogs/supplychain/supplychain.txt',
   'depconfusion': 'blogs/depconfusion/depconfusion.txt',
   'dependency-confusion': 'blogs/depconfusion/depconfusion.txt',
-  '11': 'blogs/depconfusion/depconfusion.txt',
+  '8': 'blogs/depconfusion/depconfusion.txt',
   'cmdhardening': 'blogs/cmdhardening/cmdhardening.txt',
   'command-hardening': 'blogs/cmdhardening/cmdhardening.txt',
-  '12': 'blogs/cmdhardening/cmdhardening.txt',
+  '9': 'blogs/cmdhardening/cmdhardening.txt',
   'aiharness': 'blogs/aiharness/aiharness.txt',
   'ai-harness': 'blogs/aiharness/aiharness.txt',
-  '13': 'blogs/aiharness/aiharness.txt',
+  '10': 'blogs/aiharness/aiharness.txt',
   'sbomtrust': 'blogs/sbomtrust/sbomtrust.txt',
   'sbom': 'blogs/sbomtrust/sbomtrust.txt',
-  '14': 'blogs/sbomtrust/sbomtrust.txt',
+  '11': 'blogs/sbomtrust/sbomtrust.txt',
   'threatmodel': 'blogs/threatmodel/threatmodel.txt',
   'chakravyuh': 'blogs/threatmodel/threatmodel.txt',
-  '15': 'blogs/threatmodel/threatmodel.txt'
-};
-
-// Blog mapping: name -> URL (for Medium links)
-blogMap = {
-  'wireguard': wiregaurd,
-  'wiregaurd': wiregaurd, // Support typo variant
-  '1': wiregaurd,
-  'xss': xss,
-  '2': xss,
-  'xxe': xxe,
-  '3': xxe,
-  'ios': ios,
-  '4': ios,
-  'androidp1': androidp1,
-  'android-part1': androidp1,
-  'android-1': androidp1,
-  '5': androidp1,
-  'androidp2': androidp2,
-  'android-part2': androidp2,
-  'android-2': androidp2,
-  '6': androidp2,
-  'ipbypass': ipbypass,
-  '7': ipbypass,
-  'burplocalhost': burplocalhost,
-  '8': burplocalhost,
-  'xssautomation': xssautomation,
-  '9': xssautomation
+  '12': 'blogs/threatmodel/threatmodel.txt'
 };
 
 blogs = [
   "<br>",
   '<span class="command">#</span>  <span class="command">name</span>            description',
   '--------------------------------------------------------------',
-  '1   wireguard       WireGuard tunneling protocol          <span class="command">local</span>',
-  '2   xss             Cross-Site Scripting types            <span class="command">local</span>',
-  '3   xxe             XML External Entity attacks           <span class="command">local</span>',
-  '4   ios             iOS application VAPT                  <span class="command">local</span>',
-  '5   androidp1       Android VAPT — static analysis        <span class="command">local</span>',
-  '6   androidp2       Android VAPT — dynamic analysis       <span class="command">local</span>',
-  '7   ipbypass        Bypass IP block with X-Forwarded-For  <span class="command">medium</span>',
-  '8   burplocalhost   Localhost and Burp Suite              <span class="command">medium</span>',
-  '9   xssautomation   XSS automation (waybackurls + gf)     <span class="command">medium</span>',
-  '10  supplychain     Safe supply-chain attack lab          <span class="command">local</span>',
-  '11  depconfusion    Dependency confusion / registry race  <span class="command">local</span>',
-  '12  cmdhardening    Hardening tool-execution platforms    <span class="command">local</span>',
-  '13  aiharness       Security harness for AI coding agents <span class="command">local</span>',
-  '14  sbomtrust       SBOM is inventory, not enforcement    <span class="command">local</span>',
-  '15  threatmodel     Hybrid AI threat modeling             <span class="command">local</span>',
+  '1   wireguard       WireGuard tunneling protocol',
+  '2   xss             Cross-Site Scripting types',
+  '3   xxe             XML External Entity attacks',
+  '4   ios             iOS application VAPT',
+  '5   androidp1       Android VAPT — static analysis',
+  '6   androidp2       Android VAPT — dynamic analysis',
+  '7   supplychain     Safe supply-chain attack lab',
+  '8   depconfusion    Dependency confusion / registry race',
+  '9   cmdhardening    Hardening tool-execution platforms',
+  '10  aiharness       Security harness for AI coding agents',
+  '11  sbomtrust       SBOM is inventory, not enforcement',
+  '12  threatmodel     Hybrid AI threat modeling',
   "<br>",
   '<span class="command">Usage:</span>    blog [name|number]',
-  '<span class="command">Examples:</span> blog 10 · blog supplychain · blog aiharness',
+  '<span class="command">Examples:</span> blog 7 · blog supplychain · blog aiharness',
   '<span class="command">Tip:</span>      Tab-complete after typing <span class="command">blog </span>',
-  'local = in-terminal man page · medium = opens Medium in a new tab',
+  'Opens an in-terminal man-style page for each article.',
   "<br>"
 ];
 
@@ -404,7 +419,6 @@ neofetch = [
   '<span class="neofetch-art">       \\   /   </span>  <span class="neofetch-label">Project:</span>  OWASP-Nightingale v2.0',
   '<span class="neofetch-art">        \'-\'    </span>  <span class="neofetch-label">Stars:</span>    300+ on Nightingale',
   '                          <span class="neofetch-label">Talks:</span>    Blackhat Arsenal ×5',
-  '                          <span class="neofetch-label">Blog:</span>     9+ Medium articles',
   '                          <span class="neofetch-label">Shell:</span>    portfolio-bash v2.0',
   '                          <span class="neofetch-label">Theme:</span>    try set-theme hacker',
   "<br>",
@@ -413,27 +427,28 @@ neofetch = [
   "<br>"
 ];
 
-// Experience timeline
-experienceTimeline = [
-  "<br>",
-  "<span class='command'>Professional Journey:</span>",
-  "<br>",
-  "2024 - Present    Product Security Engineer @ Splunk",
-  "2023 - Present    Lead OWASP-Nightingale v2.0 (OWASP Incubator)",
-  "2022 - 2024       Built Nightingale Docker toolkit & community",
-  "2021 - 2022       Security Researcher & Blogger",
-  "2020 - 2021       Penetration Tester",
-  "2019 - 2020       Computer Science Graduate",
-  "<br>",
-  "<span class='command'>Key Achievements:</span>",
-  "• Blackhat Arsenal Asia 2022, 2023, 2024 & EU London 2025",
-  "• OWASP Global AppSec EU 2022 Speaker",
-  "• Nightingale v2.0 — 300+ GitHub stars, OpenSSF certified",
-  "• Supply Chain Attack Simulator — 22 hands-on security labs",
-  "• 9+ Security Publications on Medium",
-  "• Active OWASP Project Leader",
-  "<br>"
-];
+// Experience timeline (from Raja_Nagori.pdf / LinkedIn)
+function getExperienceTimeline() {
+  return [
+    "<br>",
+    "<span class='command'>Professional Journey:</span>",
+    "<span class='color2'>Total experience: " + getExperienceYearsLabel() + "</span>",
+    "<br>",
+    "Oct 2023 – Present     Product Security Engineer @ Splunk (a Cisco Company)",
+    "Nov 2021 – Oct 2023    Information Security Analyst II @ FIS Global",
+    "May 2021 – Oct 2021    Information Security Consultant @ TAC Security",
+    "Feb 2019 – May 2021    Security and Automation Engineer @ Habilelabs Pvt. Ltd",
+    "2015 – 2019            B.Tech Computer Science & Engineering — Poornima Institute, Jaipur",
+    "<br>",
+    "<span class='command'>Key Achievements:</span>",
+    "• Blackhat Arsenal Asia 2022, 2023, 2024 & EU London 2025",
+    "• OWASP Global AppSec EU 2022 Speaker",
+    "• Nightingale v2.0 — 300+ GitHub stars, OpenSSF certified",
+    "• Supply Chain Attack Simulator — 22 hands-on security labs",
+    "• Active OWASP Project Leader",
+    "<br>"
+  ];
+}
 
 help = [
   "<br>",

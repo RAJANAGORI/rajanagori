@@ -43,7 +43,7 @@
 ## 🔧 Featured Projects
 
 - **[Nightingale v2.0 — Docker for Pentesters](https://nightingale-security.com/):**
-  - OWASP Incubator pentest framework with web GUI, 200+ tools, embedded VS Code, and AI-assisted analysis
+  - OWASP Nightingale pentest framework with web GUI, 200+ tools, embedded VS Code, and AI-assisted analysis
   - 300+ GitHub stars | OpenSSF Best Practices certified
   - **Tech:** Docker, Python, Bash, JavaScript
 
@@ -84,9 +84,8 @@
 
 ---
 
-## 📝 Writing
+## 🌐 Portfolio
 
-- **[My Blog](https://rajanagori.medium.com/):** Sharing tutorials, insights, and research in cybersecurity.
 - **[Portfolio](https://rajanagori.in/):** Interactive terminal-style portfolio.
 
 ---
