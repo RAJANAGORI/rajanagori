@@ -148,8 +148,10 @@ function commander(cmd) {
       loopLines(blogs, "color2 margin", animationSpeed[currentAnimationSpeed]);
       break;
     case "resume":
-      addLine("Opening resume...", "color2", animationSpeed[currentAnimationSpeed]);
-      newTab(resume);
+      showResumeLinks();
+      break;
+    case "template":
+      showResumeTemplate();
       break;
     case "password":
       addLine("<span class=\"inherit\"> Lol! You're joking, right? You\'re gonna have to try harder than that!😂</span>", "error", 100);
@@ -343,7 +345,7 @@ function handleTabCompletion(e) {
   var currentInput = textarea.value.toLowerCase();
   var availableCommands = [
     'help', 'whois', 'conference', 'video', 'sudo', 'interview', 'youtube',
-    'discuss', 'slack', 'social', 'projects', 'nightingale', 'wiki', 'blog', 'resume',
+    'discuss', 'slack', 'social', 'projects', 'nightingale', 'wiki', 'blog', 'resume', 'template',
     'password', 'history', 'email', 'clear', 'neofetch', 'cowsay', 'sound', 'skills-matrix', 'experience',
     'themes', 'settings', 'set-theme', 'set-animation',
     'twitter', 'linkedin', 'instagram', 'github'
@@ -585,6 +587,33 @@ function showWhois() {
     loopLines(whois, 'color2 margin whois', 0);
   }
   addLine('<br>', 'no-animation', 50);
+}
+
+function showResumeLinks() {
+  addLine('<br>', '', 0);
+  addLine('<span class="command">Resume</span>', 'color2', 0);
+  addLine(
+    'PDF     <a href="' + resume + '" target="_blank" rel="noopener">Raja_Nagori.pdf</a>',
+    'color2',
+    0
+  );
+  addLine(
+    'LaTeX   <a href="' + resumeTemplate + '" download="resume-template.tex">Download template.tex</a>',
+    'color2',
+    0
+  );
+  addLine('<br>', '', 0);
+}
+
+function showResumeTemplate() {
+  addLine('<br>', '', 0);
+  addLine(
+    'Download the LaTeX resume template: <a href="' + resumeTemplate + '" download="resume-template.tex">template.tex</a>',
+    'color2',
+    0
+  );
+  addLine('<span class="color2">Tip: compile with pdflatex / xelatex after filling in your details.</span>', 'color2', 0);
+  addLine('<br>', '', 0);
 }
 
 function showProjectCards() {

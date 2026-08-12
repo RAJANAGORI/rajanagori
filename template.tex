@@ -1,0 +1,261 @@
+\documentclass[10pt, letterpaper]{article}
+
+% Packages:
+\usepackage[
+    ignoreheadfoot,
+    top=0.75 cm,
+    bottom=0.75 cm,
+    left=0.75 cm,
+    right=0.75 cm,
+    footskip=1.0 cm,
+]{geometry}
+\usepackage{titlesec}
+\usepackage{tabularx}
+\usepackage{array}
+\usepackage[dvipsnames]{xcolor}
+\definecolor{primaryColor}{RGB}{0, 0, 0}
+\usepackage{enumitem}
+\usepackage{fontawesome5}
+\usepackage{amsmath}
+\usepackage[
+    pdftitle={Candidate Name - CV},
+    pdfauthor={Candidate Name},
+    pdfcreator={LaTeX with RenderCV},
+    colorlinks=true,
+    urlcolor=primaryColor
+]{hyperref}
+\usepackage[pscoord]{eso-pic}
+\usepackage{calc}
+\usepackage{bookmark}
+\usepackage{lastpage}
+\usepackage{changepage}
+\usepackage{paracol}
+\usepackage{ifthen}
+\usepackage{needspace}
+\usepackage{iftex}
+
+\ifPDFTeX
+    \input{glyphtounicode}
+    \pdfgentounicode=1
+    \usepackage[T1]{fontenc}
+    \usepackage[utf8]{inputenc}
+    \usepackage{lmodern}
+\fi
+
+\usepackage{charter}
+
+\raggedright
+\AtBeginEnvironment{adjustwidth}{\partopsep0pt}
+\pagestyle{empty}
+\setcounter{secnumdepth}{0}
+\setlength{\parindent}{0pt}
+\setlength{\topskip}{0pt}
+\setlength{\columnsep}{0.15cm}
+\pagenumbering{gobble}
+
+% ── Section title formatting ───────────────────────────────────────────────
+\titleformat{\section}{\needspace{3\baselineskip}\bfseries\large}{}{0pt}{}[\vspace{0.5pt}\titlerule]
+
+\titlespacing{\section}{
+    1pt
+}{
+    0.35 cm
+}{
+    0.18 cm
+}
+
+\renewcommand\labelitemi{$\vcenter{\hbox{\small$\bullet$}}$}
+
+\newenvironment{highlights}{
+    \begin{itemize}[
+        topsep=0.06 cm,
+        parsep=0.06 cm,
+        partopsep=0pt,
+        itemsep=0.03 cm,
+        leftmargin=0 cm + 10pt
+    ]
+}{
+    \end{itemize}
+}
+
+\newenvironment{highlightsforbulletentries}{
+    \begin{itemize}[
+        topsep=0.06 cm,
+        parsep=0.06 cm,
+        partopsep=0pt,
+        itemsep=0.03 cm,
+        leftmargin=10pt
+    ]
+}{
+    \end{itemize}
+}
+
+\newenvironment{onecolentry}{
+    \begin{adjustwidth}{0 cm + 0.00001 cm}{0 cm + 0.00001 cm}
+}{
+    \end{adjustwidth}
+}
+
+\newenvironment{twocolentry}[2][]{
+    \onecolentry
+    \def\secondColumn{#2}
+    \setcolumnwidth{\fill, 4.5 cm}
+    \begin{paracol}{2}
+}{
+    \switchcolumn \raggedleft \secondColumn
+    \end{paracol}
+    \endonecolentry
+}
+
+\newenvironment{threecolentry}[3][]{
+    \onecolentry
+    \def\thirdColumn{#3}
+    \setcolumnwidth{, \fill, 4.5 cm}
+    \begin{paracol}{3}
+    {\raggedright #2} \switchcolumn
+}{
+    \switchcolumn \raggedleft \thirdColumn
+    \end{paracol}
+    \endonecolentry
+}
+
+\newenvironment{header}{
+    \setlength{\topsep}{0pt}\par\kern\topsep\centering\linespread{1.5}
+}{
+    \par\kern\topsep
+}
+
+\newcommand{\linkicon}{\raisebox{0.1ex}{\scriptsize\faIcon{link}}}
+\let\hrefWithoutArrow\href
+
+\begin{document}
+    \newcommand{\AND}{\unskip
+        \cleaders\copy\ANDbox\hskip\wd\ANDbox
+        \ignorespaces
+    }
+    \newsavebox\ANDbox
+    \sbox\ANDbox{$|$}
+
+    %──────────────── HEADER ────────────────
+    \begin{header}
+        \fontsize{18 pt}{18 pt}\selectfont CANDIDATE NAME
+
+        \vspace{1 pt}
+
+        \normalsize
+        \mbox{\hrefWithoutArrow{mailto:your.email@example.com}{your.email@example.com}}%
+        \kern 5.0 pt%
+        \AND%
+        \kern 5.0 pt%
+        \mbox{\hrefWithoutArrow{tel:+00-0000000000}{+00 00000 00000}}%
+        \kern 5.0 pt%
+        \AND%
+        \kern 5.0 pt%
+        \mbox{City, Country}%
+        \kern 5.0 pt%
+        \AND%
+        \kern 5.0 pt%
+        \mbox{\hrefWithoutArrow{https://www.yourwebsite.com}{yourwebsite.com}}%
+        \kern 5.0 pt%
+        \AND%
+        \kern 5.0 pt%
+        \mbox{\hrefWithoutArrow{https://www.linkedin.com/in/your-profile}{linkedin.com/in/your-profile}}%
+        \kern 5.0 pt%
+        \AND%
+        \kern 5.0 pt%
+        \mbox{\hrefWithoutArrow{https://github.com/your-username}{github.com/your-username}}%
+    \end{header}
+
+    \vspace{3 pt - 0.3 cm}
+
+    %──────────────── PROFESSIONAL SUMMARY ────────────────
+\section{Professional Summary}
+
+        \begin{onecolentry}
+        \textbf{Cybersecurity professional} with \textbf{X+ years of experience} securing applications and infrastructure through \textbf{vulnerability assessment}, \textbf{threat modeling}, and \textbf{penetration testing}. Specializes in \textbf{product security}, building \textbf{security automation} and controls that reduce manual effort for engineering teams and strengthen organizational defenses.
+        \end{onecolentry}
+
+    %──────────────── PROFESSIONAL EXPERIENCE ────────────────
+    \section{Professional Experience}
+
+        % Job 1
+        \begin{twocolentry}{
+            MMM YYYY -- Present
+        }
+            \textbf{Job Title}, Company Name
+        \end{twocolentry}
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Replace this with a \textbf{key achievement} or responsibility from your current role.
+                \item Replace this with another \textbf{impact-focused} bullet (tools, scope, or outcome).
+                \item Replace this with a measurable result, e.g. improved X by \textbf{Y\%}.
+                \item Replace this with collaboration, ownership, or process work you led.
+            \end{highlights}
+        \end{onecolentry}
+
+        % Job 2
+        \begin{twocolentry}{
+            MMM YYYY -- MMM YYYY
+        }
+            \textbf{Job Title}, Company Name
+        \end{twocolentry}
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Replace this with a \textbf{key achievement} from this role.
+                \item Replace this with the main \textbf{skills or tools} you used.
+                \item Replace this with how you supported teams or delivered outcomes.
+                \item Replace this with an optional fourth bullet, or delete this line.
+            \end{highlights}
+        \end{onecolentry}
+
+        % Job 3
+        \begin{twocolentry}{
+            MMM YYYY -- MMM YYYY
+        }
+            \textbf{Job Title}, Company Name
+        \end{twocolentry}
+        \vspace{0.10 cm}
+        \begin{onecolentry}
+            \begin{highlights}
+                \item Replace this with a \textbf{key achievement} from this role.
+                \item Replace this with the scope of work (systems, products, or domains).
+                \item Replace this with a result stakeholders cared about.
+            \end{highlights}
+        \end{onecolentry}
+
+    %──────────────── SKILLS ────────────────
+    \section{Skills}
+
+        \begin{onecolentry}
+            \begin{highlightsforbulletentries}
+                \item \textbf{Domain 1}: [Skill A], [Skill B], [Skill C], [Skill D]
+                \item \textbf{Tools}: [Tool 1], [Tool 2], [Tool 3], [Tool 4]
+                \item \textbf{Languages \& Scripting}: [Language 1], [Language 2]
+                \item \textbf{Frameworks \& Standards}: [Standard 1], [Standard 2], [Standard 3]
+                \item \textbf{Platforms}: [Platform 1], [Platform 2], [Platform 3]
+            \end{highlightsforbulletentries}
+        \end{onecolentry}
+
+    %──────────────── EDUCATION ────────────────
+    \section{Education}
+
+        \begin{twocolentry}{YYYY -- YYYY}
+            \textbf{Degree Name in Major}\\
+            University / Institute Name, City, Country
+        \end{twocolentry}
+
+    %──────────────── OPEN SOURCE & COMMUNITY ────────────────
+    \section{Open Source \& Community}
+
+        \begin{onecolentry}
+            \begin{highlightsforbulletentries}
+                \item \textbf{Conference Talks}: [Conference 1], [Conference 2], [Conference 3]
+                \item \textbf{Project Name} -- \hrefWithoutArrow{https://github.com/your-username/project-name}{github.com/your-username/project-name}; one-line impact description and measurable outcomes.
+                \item \textbf{Project Name} -- \hrefWithoutArrow{https://example.com}{example.com}; one-line contribution summary.
+                \item \textbf{Project Name} -- \hrefWithoutArrow{https://github.com/your-username/project-name}{github.com/your-username/project-name}; one-line technical summary.
+            \end{highlightsforbulletentries}
+        \end{onecolentry}
+
+\end{document}
