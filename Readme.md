@@ -52,7 +52,7 @@
   - **Tech:** Node.js, Alpine.js, Tailwind CSS
 
 - **[Supply Chain Attack Simulator](https://simulator.rajanagori.in/):**
-  - 22 hands-on labs for understanding, practicing, and defending against supply chain attacks
+  - 25 hands-on labs for understanding, practicing, and defending against supply chain attacks
   - **Tech:** Python, Node.js, Shell
 
 - **[Interview Prep Platform](https://interview.rajanagori.in/):**

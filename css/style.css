@@ -424,6 +424,14 @@ a:focus {
   letter-spacing: 0.06em;
 }
 
+.whois-panel p {
+  white-space: normal;
+  overflow: visible;
+  overflow-wrap: break-word;
+  animation: none;
+  width: auto;
+}
+
 .whois-intro {
   font-size: 12px;
   line-height: 1.6;

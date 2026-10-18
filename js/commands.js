@@ -12,6 +12,7 @@ var sbomParser = 'https://github.com/RAJANAGORI/sbom-parser';
 var sbomSite = 'https://sbom.nightingale-security.com/';
 var scas = 'https://github.com/RAJANAGORI/supply-chain-attack-simulator';
 var scasSite = 'https://simulator.rajanagori.in/';
+var scasDocs = 'https://github.com/RAJANAGORI/supply-chain-attack-simulator/blob/main/documentation/index.md';
 var interviewRepo = 'https://github.com/RAJANAGORI/interview';
 var interviewSite = 'https://interview.rajanagori.in/';
 var secucode = 'https://secucode.gitbook.io';
@@ -120,7 +121,7 @@ function getWhoisPanelHtml() {
           '<ul class="whois-list whois-links">' +
             '<li><a href="' + nightingaleSite + '" target="_blank">Nightingale v2.0</a> — OWASP pentest framework</li>' +
             '<li><a href="' + sbomSite + '" target="_blank">SBOM Parser</a> — CycloneDX vulnerability explorer</li>' +
-            '<li><a href="' + scasSite + '" target="_blank">SCAS Labs</a> — 22 supply chain attack labs</li>' +
+            '<li><a href="' + scasSite + '" target="_blank">SCAS Labs</a> — 25 supply chain attack labs</li>' +
             '<li><a href="' + interviewSite + '" target="_blank">Interview Prep</a> — Security interview guides</li>' +
           '</ul>' +
         '</section>' +
@@ -142,7 +143,7 @@ function getWhoisPanelHtml() {
         '</section>' +
       '</div>' +
       '<p class="whois-footer">Beyond security: guitar, indie music, and long bike trips 🎸🚴</p>' +
-      '<p class="whois-cta"><span class="color2">Explore more →</span> <span class="command">projects</span> · <span class="command">nightingale</span> · <span class="command">blog</span> · <span class="command">social</span></p>' +
+      '<p class="whois-cta"><span class="color2">Explore more →</span> <span class="command">projects</span> · <span class="command">nightingale</span> · <span class="command">scas</span> · <span class="command">blog</span> · <span class="command">social</span></p>' +
     '</div>'
   );
 }
@@ -206,7 +207,7 @@ projectCardsData = [
   {
     name: 'SCAS Labs',
     tag: 'Education',
-    stars: '22 labs',
+    stars: '25 labs',
     tech: 'Python · Node.js',
     desc: 'Hands-on supply chain attack simulator for learning attack and defense patterns.',
     preview: 'Dependency confusion · Typosquatting · CI/CD poisoning · Mitigation playbooks',
@@ -261,6 +262,26 @@ nightingaleInfo = [
   'Dashboard  <a href="' + nightingaleDashboard + '" target="_blank">dashboard.nightingale-security.com</a>',
   'GitHub     <a href="' + nightingale + '" target="_blank">github/RAJANAGORI/Nightingale</a>',
   'Wiki       <a href="' + wiki + '" target="_blank">Nightingale Wiki</a>',
+  "<br>"
+];
+
+scasInfo = [
+  "<br>",
+  '<span class="command">Supply Chain Attack Simulator — SCAS</span>',
+  "<br>",
+  "Local labs for supply chain attacks: how they work, and how to spot and stop them.",
+  "<br><br>",
+  '<span class="command">Highlights:</span>',
+  "• 25 isolated labs, from typosquatting to a compromised GitHub Action",
+  "• Each lab walks the attack, then detection and mitigations",
+  "• Payloads stay inert until TESTBENCH_MODE is enabled",
+  "• Exfiltration stays on localhost, with a DETECT.md in every lab",
+  "• Optional dashboard: drills, quizzes, campaigns, and a score",
+  "<br>",
+  '<span class="command">Links:</span>',
+  'Website    <a href="' + scasSite + '" target="_blank">simulator.rajanagori.in</a>',
+  'GitHub     <a href="' + scas + '" target="_blank">github/RAJANAGORI/supply-chain-attack-simulator</a>',
+  'Docs       <a href="' + scasDocs + '" target="_blank">SCAS documentation</a>',
   "<br>"
 ];
 
@@ -445,7 +466,7 @@ function getExperienceTimeline() {
     "• Blackhat Arsenal Asia 2022, 2023, 2024 & EU London 2025",
     "• OWASP Global AppSec EU 2022 Speaker",
     "• Nightingale v2.0 — 300+ GitHub stars, OpenSSF certified",
-    "• Supply Chain Attack Simulator — 22 hands-on security labs",
+    "• Supply Chain Attack Simulator — 25 hands-on security labs",
     "• Active OWASP Project Leader",
     "<br>"
   ];
@@ -460,6 +481,7 @@ help = [
   '<span class="command">social</span>         My Social platforms',
   '<span class="command">projects</span>       My Open Source Projects',
   '<span class="command">nightingale</span>    Nightingale v2.0 details',
+  '<span class="command">scas</span>           Supply Chain Attack Simulator',
   '<span class="command">resume</span>         My Resume (PDF)',
   '<span class="command">template</span>       Download LaTeX resume template',
   '<span class="command">wiki</span>           Nightingale Wiki',
